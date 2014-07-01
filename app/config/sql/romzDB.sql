@@ -1,0 +1,20 @@
+CREATE DATABASE IF NOT EXISTS romzDB;
+GRANT SELECT, INSERT, UPDATE, DELETE ON romzDB.*
+    TO  romzDB_root@localhost 
+    IDENTIFIED BY 'romzDB_root';
+FLUSH PRIVILEGES;
+
+use romzDB;
+
+CREATE TABLE IF NOT EXISTS users(
+    id    INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    uname VARCHAR(250) NOT NULL,    
+    pword VARCHAR(250) NOT NULL,
+    fname VARCHAR(250) NOT NULL,
+    mname VARCHAR(250) NOT NULL,
+    lname VARCHAR(250) NOT NULL,
+    cnum  VARCHAR(50) NOT NULL,
+    home_add TEXT NOT NULL,
+    email_add VARCHAR(250) NOT NULL,
+    PRIMARY KEY(id)
+)ENGINE=InnoDB;

@@ -11,3 +11,7 @@ $s = htmlspecialchars($s, ENT_QUOTES);
 $s = nl2br($s);
 return $s;
 }
+
+function valid_username($username){
+    return preg_match('/[_[:alnum:]]/', $username);
+}

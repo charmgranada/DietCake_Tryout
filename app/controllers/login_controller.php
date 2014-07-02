@@ -9,8 +9,8 @@ class LoginController extends AppController
     $login->Password = $password;
     $filter_uname = valid_username($username);
     try {
-        if(!$filter_uname){
-            $status = "Username is Invalid";
+        if(!is_null($filter_uname)){
+            $status = $filter_uname;
         }else{
             $result = $login->verifyLogin();
             $status = $result['status'];

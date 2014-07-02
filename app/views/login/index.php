@@ -22,7 +22,6 @@
                 Submit</button></td>
             </tr>
         </table>
-    </form>
 <?php 
     if(isset($username) || isset($password)){
         if(empty($username) || empty($password)){
@@ -32,3 +31,4 @@
         }
     }
  ?>
+    </form>

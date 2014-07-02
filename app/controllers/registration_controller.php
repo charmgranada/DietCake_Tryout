@@ -40,6 +40,11 @@
 
             $errors['uname'] = valid_username($dataPassed['uname']);
             $errors['pass'] = is_pass_match($dataPassed['pword'], $dataPassed['cpword']);
+            $errors['fname'] = is_name($dataPassed['fname'],"First Name");
+            $errors['mname'] = is_name($dataPassed['mname'],"Middle Name");
+            $errors['lname'] = is_name($dataPassed['lname'],"Last Name");
+            $errors['cnum'] = is_number($dataPassed['cnum']);
+            $errors['email_add'] = is_email_address($dataPassed['email_add']);
             }else{
                 $status = "<font color=red>Please fill up all fields</font>";
             }

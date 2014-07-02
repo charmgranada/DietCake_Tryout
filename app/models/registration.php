@@ -49,8 +49,22 @@
             );
         public function validateData(){
             $this->validate();
-            if($this->hasError()){
+            if($this->hasError() || !is_null(valid_username($this->uname))
+                || !is_null(is_pass_match($this->pword, $this->cpword))){
                 throw new ValidationException("Data is Invalid");
+            }else{
+                $db = DB::conn();
+                $db->query("INSERT INTO users VALUES ('', ?, ?, ?, ?, ?, ?, ?, ?)",
+                    array(
+                        $this->uname,
+                        md5($this->pword),
+                        $this->fname,
+                        $this->mname,
+                        $this->lname,
+                        $this->cnum,
+                        $this->home_add,
+                        $this->email_add));
+                return "Success";
             }
         } 	
     }

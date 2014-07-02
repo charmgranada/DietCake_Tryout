@@ -92,7 +92,7 @@
         </tr>
    </table>
 
-<?= (isset($dataPassed["uname"]) && $empty > 0) 
+<?= (isset($dataPassed["uname"])) 
     ? "<center>" . $status
     : ""; ?>
 </form>

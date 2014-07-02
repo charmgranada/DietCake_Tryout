@@ -26,7 +26,7 @@
             }
             if($empty===0){
                 try {
-                    $registration->validateData();
+                    $status = $registration->validateData();
                 } catch (Exception $e) {
                     foreach ($dataPassed as $key => $value) {
                         if(!empty($registration->validation_errors[$key]['length'])){
@@ -35,6 +35,7 @@
                             $registration->validation[$key]['length'][2] . " long</font>";
                         }
                     }
+                    $status = "";
                 }
 
             $errors['uname'] = valid_username($dataPassed['uname']);

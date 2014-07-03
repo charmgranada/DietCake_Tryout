@@ -11,3 +11,17 @@ $s = htmlspecialchars($s, ENT_QUOTES);
 $s = nl2br($s);
 return $s;
 }
+function notice($string,$notice_type = NULL){
+	$msg = "";
+	switch ($notice_type) {
+		case 'error':
+			$msg .= "<font color=red size=2>";
+			break;
+		
+		default:
+			$msg .= "<font color=green size=2>";
+			break;
+	}
+	$msg .=$string. "</font>";
+	return $msg;
+}

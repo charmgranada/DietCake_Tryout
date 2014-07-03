@@ -19,7 +19,7 @@
                 <td><center>
                 <input type='hidden' name='page_next' value='home'>
                 <button type="submit" class="btn btn-primary">
-                Submit</button></td>
+                Login</button> Click <a href='<?php eh(url('registration/index')) ?>'>here</a> to register</td>
             </tr>
         </table>
 <?= $status; ?>

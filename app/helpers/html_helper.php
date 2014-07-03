@@ -12,7 +12,7 @@ $s = nl2br($s);
 return $s;
 }
 function notice($string,$notice_type = NULL){
-	$msg = "";
+	$msg = "<center>";
 	switch ($notice_type) {
 		case 'error':
 			$msg .= "<font color=red size=2>";

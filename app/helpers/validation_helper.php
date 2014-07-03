@@ -14,19 +14,6 @@ function user_logged_in(){
     }
     return true;
 }
-function notice($string, $type = NULL){
-    switch ($type) {
-    	case 'error':
-    		$msg = "<font color=red ";
-    		break;
-    	
-    	default:
-    		$msg = "<font color=green ";
-    		break;
-    }
-    $msg .= "size=2> " . $string . "</font>";
-    return $msg;
-}
 function redirect($controller){
     header("location: /user/" . $controller);
 }

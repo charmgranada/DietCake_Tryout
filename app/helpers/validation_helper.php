@@ -6,8 +6,27 @@ function validate_between($check, $min, $max)
     }
 function valid_username($check){
 
-	if ((preg_match('/[^a-zA-Z0-9_]/', $check)) || (preg_match('/_{2}/', $check))){
-		return "<center><font size=2 color=red>Username has invalid characters</font>";
-	}
-	return NULL;
+    return !((preg_match('/[^a-zA-Z0-9_]/', $check)) || (preg_match('/_{2}/', $check)));
+}
+function user_logged_in(){
+    if(!isset($_SESSION['id'])){
+        return false;
+    }
+    return true;
+}
+function notice($string, $type = NULL){
+    switch ($type) {
+    	case 'error':
+    		$msg = "<font color=red ";
+    		break;
+    	
+    	default:
+    		$msg = "<font color=green ";
+    		break;
+    }
+    $msg .= "size=2> " . $string . "</font>";
+    return $msg;
+}
+function redirect($controller){
+    header("location: /user/" . $controller);
 }

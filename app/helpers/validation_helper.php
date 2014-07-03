@@ -37,7 +37,6 @@ function is_number($string){
     return NULL;
 }
 function is_email_address($email){
-
     if (!preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/",$email)){
         return notice("Email address has an invalid format","error");
     }

@@ -9,55 +9,54 @@
                 'pword' => array(
                     'length' => array(
                         'validate_between',8,16
-                        )
+                        ),
                     ),
                 'cpword' => array(
                     'length' => array(
                         'validate_between',8,16
-                        )
+                        ),
                     ),
                 'fname' => array(
                     'length' => array(
-                        'validate_between',1,50
-                        )
+                        'validate_between',1,16
+                        ),
                     ),
                 'mname' => array(
                     'length' => array(
-                        'validate_between',1,50
-                        )
+                        'validate_between',1,16
+                        ),
                     ),
                 'lname' => array(
                     'length' => array(
-                        'validate_between',1,50
-                        )
+                        'validate_between',1,16
+                        ),
                     ),
                 'cnum' => array(
                     'length' => array(
-                        'validate_between',1,50
-                        )
+                        'validate_between',1,16
+                        ),
                     ),
                 'home_add' => array(
                     'length' => array(
-                        'validate_between',1,100
-                        )
+                        'validate_between',1,16
+                        ),
                     ),
                 'email_add' => array(
                     'length' => array(
-                        'validate_between',1,32
-                        )
-                    )
+                        'validate_between',1,16
+                        ),
+                    ),
             );
         public function validateData(){
             $this->validate();
-            if($this->hasError() || !is_null(valid_username($this->uname))
-                || !is_null(is_pass_match($this->pword, $this->cpword))){
+            if($this->hasError()){
                 throw new ValidationException("Data is Invalid");
             }else{
                 $db = DB::conn();
                 $db->query("INSERT INTO users VALUES ('', ?, ?, ?, ?, ?, ?, ?, ?)",
                     array(
                         $this->uname,
-                        md5($this->pword),
+                        sha1($this->pword),
                         $this->fname,
                         $this->mname,
                         $this->lname,

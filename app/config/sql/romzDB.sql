@@ -18,3 +18,21 @@ CREATE TABLE IF NOT EXISTS users(
     email_add VARCHAR(250) NOT NULL,
     PRIMARY KEY(id)
 )ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS thread (
+id          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+title           VARCHAR(255) NOT NULL,
+created         DATETIME NOT NULL,
+PRIMARY KEY (id)
+)ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS comment (
+id          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+thread_id       INT UNSIGNED NOT NULL,
+username        VARCHAR(255) NOT NULL,
+body            TEXT NOT NULL,
+created         DATETIME NOT NULL,
+PRIMARY KEY (id),
+INDEX (thread_id, created)
+)ENGINE=InnoDB;
+

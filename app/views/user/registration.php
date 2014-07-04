@@ -1,6 +1,5 @@
 <?php $title = "User Registration" ?>
-<form method="post" class="well" style="box-shadow: 0px 0px 10px black"
-    action="<?php eh(url("")); ?>">
+<form method="post" class="well" action="<?php eh(url("")); ?>">
     <b>User Registration</b>
     <table align="center" cellpadding=1>
         <tr>
@@ -95,4 +94,7 @@
 <?= (isset($dataPassed["uname"])) 
     ? "<center>" . $status
     : ""; ?>
+<a href="<?php eh(url('user/index'))?>">
+&larr; Back to Login
+</a>
 </form>

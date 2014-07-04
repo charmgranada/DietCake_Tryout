@@ -17,7 +17,7 @@
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
-          <?php if(user_logged_in()): ?>
+          <?php if(user_logged_in()===true): ?>
             <a class="brand" href="#">Welcome <?= $_SESSION['uname']?></a>   
             <a href='<?php eh(url('user/logout'))?>'>
               <button style='float:right;' class="btn btn-primary">

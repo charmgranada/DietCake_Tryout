@@ -3,47 +3,47 @@
         public $validation = array(
                 'uname' => array(
                     'length' => array(
-                        'validate_between',8,16
+                        'validate_between',MIN_LENGTH,MAX_LENGTH
                         ),
                     ),
                 'pword' => array(
                     'length' => array(
-                        'validate_between',8,16
+                        'validate_between',PASS_MIN_LENGTH,PASS_MAX_LENGTH
                         ),
                     ),
                 'cpword' => array(
                     'length' => array(
-                        'validate_between',8,16
+                        'validate_between',PASS_MIN_LENGTH,PASS_MAX_LENGTH
                         ),
                     ),
                 'fname' => array(
                     'length' => array(
-                        'validate_between',1,16
+                        'validate_between',MIN_LENGTH,MAX_LENGTH
                         ),
                     ),
                 'mname' => array(
                     'length' => array(
-                        'validate_between',1,16
+                        'validate_between',MIN_LENGTH,MAX_LENGTH
                         ),
                     ),
                 'lname' => array(
                     'length' => array(
-                        'validate_between',1,16
+                        'validate_between',MIN_LENGTH,MAX_LENGTH
                         ),
                     ),
                 'cnum' => array(
                     'length' => array(
-                        'validate_between',1,16
+                        'validate_between',MIN_LENGTH,MAX_LENGTH
                         ),
                     ),
                 'home_add' => array(
                     'length' => array(
-                        'validate_between',1,16
+                        'validate_between',MIN_LENGTH,MAX_TEXT_LENGTH
                         ),
                     ),
                 'email_add' => array(
                     'length' => array(
-                        'validate_between',1,16
+                        'validate_between',MIN_LENGTH,MAX_LENGTH
                         ),
                     ),
             );

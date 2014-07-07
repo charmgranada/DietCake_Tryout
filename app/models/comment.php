@@ -38,7 +38,7 @@
             );
             return $rows[0]["COUNT(*)"];            
         }
-        public function edit()
+        public function save()
         {
             $this->validation['body']['format'][] = $this->body;
             if (!$this->validate()) {

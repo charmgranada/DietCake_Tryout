@@ -18,10 +18,14 @@
       <div class="navbar-inner">
         <div class="container">
           <?php if(user_logged_in()===true): ?>
-            <a class="brand" href="#">Welcome <?= $_SESSION['uname']?></a>   
+            <a class="brand" href="#">
+              Welcome <?= $_SESSION['uname']?>
+            </a>   
             <a href='<?php eh(url('user/logout'))?>'>
               <button style='float:right;' class="btn btn-primary">
-                Logout</button></a>         
+                Logout
+              </button>
+            </a>         
           <?php else: ?>
             <a class="brand" href="#">DietCake ni Romz</a>
           <?php endif;?>

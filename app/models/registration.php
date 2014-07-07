@@ -58,7 +58,9 @@
             if($this->hasError()){
                 throw new ValidationException("");
             }else{
-                $db->query("INSERT INTO users VALUES ('', ?, ?, ?, ?, ?, ?, ?, ?)",
+                $query = "INSERT INTO users set uname = ?, pword = ?, 
+                fname = ?, mname = ?, lname = ?, cnum = ?, home_add = ?, email_add = ?";
+                $db->query($query ,
                     array(
                         $this->uname,
                         sha1($this->pword),
@@ -67,8 +69,9 @@
                         $this->lname,
                         $this->cnum,
                         $this->home_add,
-                        $this->email_add));
-                return "Success";
+                        $this->email_add
+                        )
+                    );
             }
         }     
     }

@@ -49,7 +49,7 @@
                 case 'edit_end':
                     $comment->body = Param::get('body');
                     try {
-                        $comment->edit();
+                        $comment->save();
                     } catch (ValidationException $e) {
                         $page = 'edit';
                     }

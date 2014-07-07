@@ -64,8 +64,9 @@
                             throw new Exception("");                                                                        
                         }
                     }
-                    $status = $registration->validateData();
+                    $registration->validateData();
                     redirect('user','index');
+                    $status = "";
                 } catch (Exception $e) {
                     foreach ($dataPassed as $key => $value) {
                         if(!empty($registration->validation_errors[$key]['length'])){

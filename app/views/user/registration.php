@@ -90,11 +90,10 @@
             </td>
         </tr>
    </table>
-
-<?= (isset($dataPassed["uname"])) 
-    ? "<center>" . $status . "</center>"
-    : ""; ?>
-<a href="<?php eh(url('user/index'))?>">
-&larr; Back to Login
-</a>
+    <?= (isset($dataPassed["uname"])) 
+        ? "<center>" . $status . "</center>"
+        : ""; ?>
+    <a href="<?php eh(url('user/index'))?>">
+        &larr; Back to Login
+    </a>
 </form>

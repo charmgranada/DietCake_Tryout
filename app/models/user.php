@@ -31,4 +31,11 @@ class User extends AppModel{
             return $rows;
         }
     }
+    public function getInfo(){
+        $db = DB::conn();
+        $rows = $db->rows('SELECT * FROM users WHERE id = ?', 
+        array($this->id)); 
+        return $rows;
+
+    }
 }

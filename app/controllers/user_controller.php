@@ -17,7 +17,7 @@
             }else{
                 try {
                     $result = $user->authenticate($username, $password);
-                    $_SESSION['id'] = $result[0]['id'];
+                    $_SESSION['user_id'] = $result[0]['id'];
                     $_SESSION['uname'] = $result[0]['uname'];
                     redirect('thread','index');
                 } catch (Exception $e) {
@@ -41,9 +41,6 @@
                 $dataPassed[$field] = Param::get($field);
             }
             $errors = array();
-                foreach ($dataPassed as $key => $value) {
-                    $errors[$key] = "";
-                }
             foreach ($dataPassed as $key => $value) {
                 if(empty($value)){
                     $empty++;
@@ -53,7 +50,7 @@
             }
             if($empty===0){
                 try {
-                    $status = $registration->validateData();
+                    $errors = array();
                     $errors['uname'] = !valid_username($dataPassed['uname'])
                     ? notice("Username is invalid","error") : "";
                     $errors['pass'] = is_pass_match($dataPassed['pword'], $dataPassed['cpword']);
@@ -62,6 +59,12 @@
                     $errors['lname'] = is_name($dataPassed['lname'],"Last Name");
                     $errors['cnum'] = is_number($dataPassed['cnum']);
                     $errors['email_add'] = is_email_address($dataPassed['email_add']);
+                    foreach ($errors as $key => $value) {
+                        if(!empty($value)){
+                            throw new Exception("");                                                                        
+                        }
+                    }
+                    $status = $registration->validateData();
                     redirect('user','index');
                 } catch (Exception $e) {
                     foreach ($dataPassed as $key => $value) {
@@ -71,7 +74,7 @@
                             $registration->validation[$key]['length'][2] . " long</font>";
                         }
                     }
-                    $status = "";
+                    $status = $e->getMessage();
                 }
             }else{
                 $status = "<font color=red>Please fill up all fields</font>";

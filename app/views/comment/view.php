@@ -1,4 +1,5 @@
-<?php if ($comment->hasError()): ?>
+<?php // HERE ARE THE ERRORS FOR THE VALIDATION //
+if ($comment->hasError()): ?>
 
 <div class="alert alert-block">
     <h4 class="alert-heading">Validation error!</h4>
@@ -21,7 +22,7 @@
 </div>
 <?php endif ?>
 
-<h1><?php 
+<h1><?php // THIS IS THE START OF THE THREAD COMMENTS //
 $title = "Comments on '" . $thread->title . "' thread";
 eh($thread->title); ?></h1>
 
@@ -41,9 +42,14 @@ eh($thread->title); ?></h1>
     <p style='padding:10px;margin-left:30px;'>
         <?php echo readable_text($v->body) ?>
     </p>
-    <?php if($v->username == $_SESSION['uname']): ?>
-        <p align='right'><a href="<?php eh(url('comment/delete', array('comment_id' => $v->id , 'thread_id' => $thread->id)))?>">
-            <button class="btn btn-danger">Delete</button>
+    <?php // FOR EDIT AND DELETE IF THE COMMENT CAME FROM THE USER LOGGED IN //
+        if($v->username == $_SESSION['uname']): ?>
+        <p align='right'>
+            <a style='color:green;' href="<?php eh(url('comment/edit', array('thread_id' => $thread->id, 'comment_id' => $v->id)))?>">
+                Edit
+            </a> | 
+            <a style='color:red;' href="<?php eh(url('comment/delete', array('thread_id' => $thread->id, 'comment_id' => $v->id)))?>">
+                Delete
         </a></p>
     <?php endif; ?>
 </div>
@@ -84,8 +90,14 @@ foreach ($pagination as $key => $value) {
 /*---------------------------END OF PAGINATION CONTROLS-------------------------------*/ 
 ?>
 </center>
-
-
+<p align='left'>
+    <a href="<?php eh(url('thread/edit', array('thread_id' => $thread->id)))?>">
+        <button class="btn btn-success">Edit Title</button>
+    </a>
+    <a href="<?php eh(url('thread/delete', array('thread_id' => $thread->id)))?>">
+        <button class="btn btn-danger">Delete Thread</button>
+    </a>
+</p>
 <hr>
 <form class="well" method="post" action="<?php eh(url('comment/view', array('thread_id' => $thread->id))) ?>">
     <center>

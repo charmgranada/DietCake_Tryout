@@ -1,11 +1,11 @@
 <?php
-	class CommentController extends AppController{
+    class CommentController extends AppController{
 
-	    public function view()
+        public function view()
         {       
-            check_user_logged_out(); 	
-	    	$comment = new Comment();
-	    	$id = Param::get('thread_id');
+            check_user_logged_out();     
+            $comment = new Comment();
+            $id = Param::get('thread_id');
             $thread = Thread::get($id);
             // FOR PAGINATION //
             $rows_seen = 5;
@@ -13,7 +13,7 @@
             $totalRows = Comment::getTotalCount($id);
             $pagination = getPageLimit($totalRows, $rows_seen, $pn);
             // PASS LIMIT TO THE COMMENT QUERY //
-            $comments = $comment->getComments($id, $pagination['limit']);
+            $comments = $comment->getAll($id, $pagination['limit']);
             $page = Param::get('page_next', 'view');
             switch ($page) {
                 case 'view':
@@ -35,14 +35,42 @@
             $this->set(get_defined_vars());
             $this->render($page);
         }
+        public function edit(){       
+            check_user_logged_out();   
+            $id = Param::get('thread_id');
+            $thread = Thread::get($id);   
+            $comment = new Comment();
+            $comment->id = Param::get('comment_id');
+            $comment->getComment();
+            $page = Param::get('page_next', 'edit');
+            switch ($page) {
+                case 'edit':
+                    break;
+                case 'edit_end':
+                    $comment->body = Param::get('body');
+                    try {
+                        $comment->edit();
+                    } catch (ValidationException $e) {
+                        $page = 'edit';
+                    }
+                    break;
+                default:
+                    throw new NotFoundException("{$page} is not found");
+                    break;
+            }
+            $this->set(get_defined_vars());
+            $this->render($page);
+        }
         // DELETES A COMMENT //
         public function delete(){
             check_user_logged_out();
-        	$comment_id = Param::get('comment_id');
-        	$thread_id = Param::get('thread_id');
-        	Comment::delete($comment_id);
-        	redirect('comment','view', array("thread_id" => $thread_id));
+            $comment_id = Param::get('comment_id');
+            $id = Param::get('thread_id');
+            $thread = Thread::get($id);
+            $thread_title = $thread->title;
+            Comment::delete($comment_id);  
+            $this->set(get_defined_vars());
         }
-	}
+    }
 
 ?>

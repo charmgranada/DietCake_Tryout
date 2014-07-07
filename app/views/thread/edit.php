@@ -1,5 +1,5 @@
-<?php $title = "Create a Thread" ?>
-<h1>Create a thread</h1>
+<?php $title = "Edit '". $thread_title ."' Thread" ?>
+<h1>Edit '<?= $thread_title; ?>' thread</h1>
 <?php if ($thread->hasError() || $comment->hasError()): ?>
 <div class="alert alert-block">
     <h4 class="alert-heading">Validation error!</h4>
@@ -23,11 +23,12 @@
 <?php endif ?>
 <form class="well" method="post" action="<?php eh(url('')) ?>">
     <label>Title</label>
-    <input type="text" class="span2" name="title" value="<?php eh(Param::get('title')) ?>">
+    <input type="text" class="span2" name="title" value="<?php 
+         echo $thread->title; ?>">
     <input type="hidden" name="username" value="<?php eh($_SESSION['uname']) ?>">
     <label>Comment</label>
     <textarea name="body"><?php eh(Param::get('body')) ?></textarea>
     <br />
-    <input type="hidden" name="page_next" value="create_end">
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <input type="hidden" name="page_next" value="edit_end">
+    <button type="submit" class="btn btn-primary">Save Changes</button>
 </form>

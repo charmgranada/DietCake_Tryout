@@ -92,7 +92,7 @@
    </table>
 
 <?= (isset($dataPassed["uname"])) 
-    ? "<center>" . $status
+    ? "<center>" . $status . "</center>"
     : ""; ?>
 <a href="<?php eh(url('user/index'))?>">
 &larr; Back to Login

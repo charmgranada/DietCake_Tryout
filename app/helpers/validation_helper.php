@@ -48,17 +48,17 @@ function must_fit_screen($text){
 ///////FOR SESSION VALIDATION//////////
 
 function check_user_logged_in(){
-    if(isset($_SESSION['id'])){
+    if(isset($_SESSION['user_id'])){
         redirect('thread','index');
     }
 }
 function check_user_logged_out(){
-    if(!isset($_SESSION['id'])){
+    if(!isset($_SESSION['user_id'])){
         redirect('user','index');
     }
 }
 function user_logged_in(){
-    if(!isset($_SESSION['id'])){
+    if(!isset($_SESSION['user_id'])){
         return false;
     }
     return true;

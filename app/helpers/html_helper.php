@@ -27,7 +27,7 @@ function notice($string,$notice_type = NULL){
 			$msg .= "<font color=green size=2>";
 			break;
 	}
-	$msg .=$string. "</font>";
+	$msg .=$string. "</font></center>";
 	return $msg;
 }
 define("MIN_LENGTH", 1);

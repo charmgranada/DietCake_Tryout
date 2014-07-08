@@ -1,6 +1,10 @@
 <?php
-    class CommentController extends AppController{
-
+    class CommentController extends AppController
+    {
+        /**
+         *VIEW ALL COMMENTS OF A THREAD
+         *@throws NotFoundException
+         */
         public function view()
         {       
             check_user_logged_out();     
@@ -35,6 +39,10 @@
             $this->set(get_defined_vars());
             $this->render($page);
         }
+        /**
+         *EDIT A COMMENT
+         *@throws NotFoundException
+         */
         public function edit(){       
             check_user_logged_out();   
             $id = Param::get('thread_id');
@@ -61,7 +69,9 @@
             $this->set(get_defined_vars());
             $this->render($page);
         }
-        // DELETES A COMMENT //
+        /**
+         *DELETE A COMMENT
+         */
         public function delete(){
             check_user_logged_out();
             $comment_id = Param::get('comment_id');

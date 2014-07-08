@@ -8,7 +8,9 @@
                 ),
             )
         );
-
+        /**
+         *RETURNS ALL THREADS IN DATABASE
+         */
         public static function getAll()
         {
             $threads = array();
@@ -19,12 +21,21 @@
             }
             return $threads;
         }
+        /**
+         *REGISTERS A SPECIFIC THREAD
+         *@param $id
+         */
         public static function get($id)
         {
             $db = DB::conn();
             $row = $db->row('SELECT * FROM thread WHERE id = ?', array($id));
             return new self($row);
         }
+        /**
+         *CREATES A NEW THREAD WITH A COMMENT
+         *@param $comment
+         *@throws ValidationException
+         */
         public function create(Comment $comment)
         {
             $this->validate();
@@ -34,12 +45,12 @@
             }
             $db = DB::conn();
             $db->begin();
+                $query = 'INSERT INTO thread SET title = ?, user_created = ?, created = NOW()';
                 $params = array(
-                    'title' => $this->title, 
-                    'user_created' => $this->user_id,
-                    'created' => 'NOW()'
+                    $this->title, 
+                    $this->user_id
                     );
-                $db->insert('thread',$params);
+                $db->query($query, $params);
                 $newID = $db->lastInsertId();
                 $this->id = $newID;
                 $comment->thread_id = $newID;
@@ -47,6 +58,11 @@
                 $comment->write($comment);
             $db->commit();
         }
+        /**
+         *EDITS A THREAD AND ADDS A COMMENT FOR IT
+         *@param $comment
+         *@throws ValidationException
+         */
         public function edit(Comment $comment)
         {
             $this->validate();
@@ -63,6 +79,10 @@
             $comment->write($comment);
             $db->commit();
         }
+        /**
+         *DELETES A THREAD AND ALL OF IT'S COMMENTS 
+         *@param $id
+         */
         public static function delete($id){
             $db = DB::conn();
             $db->query(

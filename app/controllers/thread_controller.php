@@ -1,6 +1,9 @@
 <?php
     class ThreadController extends AppController
     {
+        /**
+         *VIEW ALL THREADS
+         */        
         public function index()
         {
             check_user_logged_out();
@@ -8,6 +11,10 @@
             $threads = Thread::getAll();
             $this->set(get_defined_vars());
         }
+        /**
+         *CREATE A NEW THREAD
+         *@throws NotFoundException
+         */
         public function create()
         {
             check_user_logged_out();
@@ -35,6 +42,10 @@
             $this->set(get_defined_vars());
             $this->render($page);
         }
+        /**
+         *EDIT A THREAD
+         *@throws NotFoundException
+         */
         public function edit(){            
             $id = Param::get('thread_id');
             $thread = Thread::get($id);
@@ -62,7 +73,9 @@
             $this->set(get_defined_vars());
             $this->render($page);
         }
-        // DELETES A THREAD //
+        /**
+         *DELETE A THREAD
+         */
         public function delete(){
             check_user_logged_out();
             $id = Param::get('thread_id');

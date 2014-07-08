@@ -47,13 +47,17 @@
                         ),
                     ),
             );
+        /**
+         *REGISTERS A NEW USER
+         *@throws ValidationException
+         */
         public function NewUser(){
             $this->validate();
             $db = DB::conn();
             $rows = $db->rows('SELECT * FROM users WHERE uname = ? OR email_add = ?', 
             array($this->uname,$this->email_add));
             if($rows){
-                throw new Exception(notice("Username/Email Address has already been used","error"));
+                throw new ValidationException(notice("Username/Email Address has already been used","error"));
             }    
             else if($this->hasError()){
                 throw new ValidationException("");

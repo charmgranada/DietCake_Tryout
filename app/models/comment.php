@@ -1,6 +1,6 @@
 <?php
-
-    class Comment extends AppModel{
+    class Comment extends AppModel
+    {
         public $validation = array(
             'body' => array(
                 'length' => array(
@@ -11,6 +11,11 @@
                 )
             )
         );
+        /**
+         *RETURNS ALL COMMENTS OF A THREAD
+         *@param $id
+         *@param $limit
+         */
         public function getAll($id, $limit)
             {
             $comments = array();
@@ -22,6 +27,9 @@
             }
             return $comments;
         }
+        /**
+         *RETURNS A SPECIFIC COMMENT
+         */
         public function getComment()
             {
             $comments = array();
@@ -30,6 +38,10 @@
             $row = $db->rows($query,array($this->id));
             $this->body = $row[0]['body'];
         }
+        /**
+         *RETURNS TOTAL NUMBER OF COMMENTS
+         *@param $id
+         */
         public static function getTotalCount($id){
             $db = DB::conn();
             $rows = $db->rows(
@@ -38,6 +50,10 @@
             );
             return $rows[0]["COUNT(*)"];            
         }
+        /**
+         *SAVE CHANGES MADE TO A COMMENT
+         *@throws ValidationException
+         */
         public function save()
         {
             $this->validation['body']['format'][] = $this->body;
@@ -50,6 +66,10 @@
             array($this->body, $this->id)
             );
         }
+        /**
+         *CREATES A NEW COMMENT
+         *@throws ValidationException
+         */
         public function write()
         {
             $this->validation['body']['format'][] = $this->body;
@@ -57,14 +77,17 @@
                 throw new ValidationException('invalid comment');
             }
             $db = DB::conn();
+            $query = 'INSERT INTO comment SET thread_id = ?, username = ?, body = ?, created = NOW()';
             $params = array(
-                'thread_id' => $this->thread_id, 
-                'username' => $this->username, 
-                'body' => $this->body,
-                'created' => 'NOW()'
+                $this->thread_id, 
+                $this->username, 
+                $this->body
                 );
-            $db->insert('comment',$params);
+            $db->query($query,$params);
         }
+        /**
+         *DELETES A COMMENT
+         */
         public static function delete($id){
             $db = DB::conn();
             $db->query(

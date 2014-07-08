@@ -15,6 +15,12 @@
                     ),
                 ),
             );
+        /**
+         *LOGIN A REGISTERED USER
+         *@param $username
+         *@param $password
+         *@throws ValidationException
+         */
         public function authenticate($username,$password){
             $this->Username = $username;
             $this->Password = $password;
@@ -31,6 +37,9 @@
                 return $rows;
             }
         }
+        /**
+         *RETURNS ALL INFO OF A USER
+         */
         public function getInfo(){
             $db = DB::conn();
             $rows = $db->rows('SELECT * FROM users WHERE id = ?', 

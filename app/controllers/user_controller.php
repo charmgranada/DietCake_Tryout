@@ -1,7 +1,9 @@
 <?php
     class UserController extends AppController
     {
-    /***********************LOGIN A USER************************/
+        /**
+         *USER LOGIN
+         */
         public function index()
         {
             check_user_logged_in();
@@ -26,8 +28,10 @@
             }
             $this->set(get_defined_vars());
         }
-        
-    /***********************REGISTER A USER************************/
+        /**
+         *REGISTER A NEW USER
+         *@throws Exception
+         */
         public function registration()
         {
             check_user_logged_in();
@@ -82,8 +86,9 @@
             }
             $this->set(get_defined_vars());
         }
-
-    /***********************LOGOUT ACCOUNT************************/
+        /**
+         *LOGOUT ACCOUNT
+         */
         public function logout()
         {
             session_unset();

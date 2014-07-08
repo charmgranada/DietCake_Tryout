@@ -8,6 +8,7 @@
                 ),
             )
         );
+
         /**
          *RETURNS ALL THREADS IN DATABASE
          */
@@ -21,6 +22,7 @@
             }
             return $threads;
         }
+
         /**
          *REGISTERS A SPECIFIC THREAD
          *@param $id
@@ -31,6 +33,7 @@
             $row = $db->row('SELECT * FROM thread WHERE id = ?', array($id));
             return new self($row);
         }
+
         /**
          *CREATES A NEW THREAD WITH A COMMENT
          *@param $comment
@@ -58,6 +61,7 @@
                 $comment->write($comment);
             $db->commit();
         }
+
         /**
          *EDITS A THREAD AND ADDS A COMMENT FOR IT
          *@param $comment
@@ -79,19 +83,20 @@
             $comment->write($comment);
             $db->commit();
         }
+        
         /**
          *DELETES A THREAD AND ALL OF IT'S COMMENTS 
          *@param $id
          */
-        public static function delete($id){
+        public function delete(){
             $db = DB::conn();
             $db->query(
             'DELETE FROM thread WHERE id = ?',
-            array($id)
+            array($this->id)
             );    
             $db->query(
             'DELETE FROM comment WHERE thread_id = ?',
-            array($id)
+            array($this->id)
             );    
         }
     }

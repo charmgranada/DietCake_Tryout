@@ -1,7 +1,7 @@
 <h2>
     <?php
-        $title = "Successfully deleted Comment on '" . $thread_title . "' thread";
-        eh($thread_title); 
+        $title = "Successfully deleted Comment on '" . $thread->title . "' thread";
+        eh($thread->title); 
     ?>
 </h2>
 <p class="alert alert-success">

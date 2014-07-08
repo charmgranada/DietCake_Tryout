@@ -22,6 +22,6 @@
                 Login</button> Click <a href='<?php eh(url('user/registration')) ?>'>here</a> to register</td>
             </tr>
         </table>
-        <?= $status; ?>
+        <?php eh($status); ?>
     </form>
 </center>

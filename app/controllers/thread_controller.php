@@ -11,6 +11,7 @@
             $threads = Thread::getAll();
             $this->set(get_defined_vars());
         }
+
         /**
          *CREATE A NEW THREAD
          *@throws NotFoundException
@@ -42,13 +43,14 @@
             $this->set(get_defined_vars());
             $this->render($page);
         }
+
         /**
          *EDIT A THREAD
          *@throws NotFoundException
          */
         public function edit(){            
-            $id = Param::get('thread_id');
-            $thread = Thread::get($id);
+            $thread_id = Param::get('thread_id');
+            $thread = Thread::get($thread_id);
             $thread_title = $thread->title;
             $comment = new Comment;
             $page = Param::get('page_next', 'edit');
@@ -73,15 +75,15 @@
             $this->set(get_defined_vars());
             $this->render($page);
         }
+        
         /**
          *DELETE A THREAD
          */
         public function delete(){
             check_user_logged_out();
-            $id = Param::get('thread_id');
-            $thread = Thread::get($id);
+            $thread = Thread::get(Param::get('thread_id'));
             $thread_title = $thread->title;
-            Thread::delete($id);  
+            $thread->delete();  
             $this->set(get_defined_vars());
         }
     }

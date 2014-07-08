@@ -29,8 +29,16 @@
         $msg .=$string. "</font></center>";
         return $msg;
     }
+    function today()
+    {
+        $timeZone = date_default_timezone_get();
+        $dateTimeZone = new DateTimeZone($timeZone);
+        $now = new DateTime("now", $dateTimeZone);
+        return $now->format('Y-m-d h:i:s');
+    }
     define("MIN_LENGTH", 1);
     define("MAX_LENGTH", 50);
     define("MAX_TEXT_LENGTH", 200);
     define("PASS_MIN_LENGTH", 8);
     define("PASS_MAX_LENGTH", 16);
+    define("ROWS_PER_PAGE", 5);

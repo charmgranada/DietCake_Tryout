@@ -47,11 +47,12 @@
                         ),
                     ),
             );
+
         /**
          *REGISTERS A NEW USER
          *@throws ValidationException
          */
-        public function NewUser(){
+        public function newUser(){
             $this->validate();
             $db = DB::conn();
             $rows = $db->rows('SELECT * FROM users WHERE uname = ? OR email_add = ?', 

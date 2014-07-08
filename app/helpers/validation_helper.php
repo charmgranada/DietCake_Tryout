@@ -26,14 +26,6 @@
             return NULL;
         }
     /*---------------------------------------------------------------------------------------*/
-    function is_number($string)
-        {
-            if ((preg_match('/[^0-9]/', $string))){
-                return notice("Contact number must be numbers only","error");
-            }
-            return NULL;
-        }
-    /*---------------------------------------------------------------------------------------*/
     function is_email_address($email)
         {
             if (!preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/",$email)){

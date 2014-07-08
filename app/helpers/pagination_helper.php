@@ -1,8 +1,7 @@
 <?php
-
-    function getPageLimit($totalCount,$rows_seen,$pn){
+    function getPageLimit($totalCount,$pn){
         $pagination = array();
-        $last_page = (int) ($totalCount/$rows_seen);
+        $last_page = ceil($totalCount/ROWS_PER_PAGE);
         if($last_page < 1){
             $last_page = 1;
         }
@@ -17,12 +16,10 @@
             $cur_page = $last_page;
         }
         // SETS THE LIMIT PER PAGE //    
-        $limitPage = ($cur_page - 1) * $rows_seen;
-        $limit = "LIMIT " . $limitPage . ',' . $rows_seen;
+        $limitPage = ($cur_page - 1) * ROWS_PER_PAGE;
+        $limit = "LIMIT " . $limitPage . ',' . ROWS_PER_PAGE;
         $pagination['last_page'] = $last_page;
         $pagination['cur_page'] = $cur_page;
         $pagination['limit'] = $limit;
         return $pagination; 
     }
-
-?>

@@ -9,21 +9,20 @@
         {       
             check_user_logged_out();     
             $comment = new Comment();
-            $id = Param::get('thread_id');
-            $thread = Thread::get($id);
+            $thread_id = Param::get('thread_id');
+            $thread = Thread::get($thread_id);
             // FOR PAGINATION //
-            $rows_seen = 5;
-            $pn = Param::get('pn');
-            $totalRows = Comment::getTotalCount($id);
-            $pagination = getPageLimit($totalRows, $rows_seen, $pn);
+            $cur_page = Param::get('pn');
+            $totalRows = Comment::getTotalCount($thread_id);
+            $pagination = getPageLimit($totalRows, $cur_page);
             // PASS LIMIT TO THE COMMENT QUERY //
-            $comments = $comment->getAll($id, $pagination['limit']);
+            $comments = $comment->getAll($thread_id, $pagination['limit']);
             $page = Param::get('page_next', 'view');
             switch ($page) {
                 case 'view':
                     break;
                 case 'write_end':
-                    $comment->thread_id = $id;
+                    $comment->thread_id = $thread_id;
                     $comment->username = Param::get('username');
                     $comment->body = Param::get('body');
                     try {
@@ -39,14 +38,15 @@
             $this->set(get_defined_vars());
             $this->render($page);
         }
+
         /**
          *EDIT A COMMENT
          *@throws NotFoundException
          */
         public function edit(){       
             check_user_logged_out();   
-            $id = Param::get('thread_id');
-            $thread = Thread::get($id);   
+            $thread_id = Param::get('thread_id');
+            $thread = Thread::get($thread_id);   
             $comment = new Comment();
             $comment->id = Param::get('comment_id');
             $comment->getComment();
@@ -69,16 +69,17 @@
             $this->set(get_defined_vars());
             $this->render($page);
         }
+        
         /**
          *DELETE A COMMENT
          */
         public function delete(){
             check_user_logged_out();
-            $comment_id = Param::get('comment_id');
-            $id = Param::get('thread_id');
-            $thread = Thread::get($id);
-            $thread_title = $thread->title;
-            Comment::delete($comment_id);  
+            $comment = new Comment;
+            $comment->id = Param::get('comment_id');
+            $comment->delete();  
+            $thread_id = Param::get('thread_id');
+            $thread = Thread::get($thread_id);
             $this->set(get_defined_vars());
         }
     }

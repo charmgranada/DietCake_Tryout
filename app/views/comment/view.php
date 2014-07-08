@@ -29,16 +29,16 @@ if ($comment->hasError()): ?>
 <p align='right' style='font-size:12px;line-height:12px;'>
     Total of 
         <b>
-            <?= $totalRows; ?>
+            <?php eh($totalRows); ?>
         </b>
     comments<br/>
     Page 
         <b>
-            <?= $pagination['cur_page'] ?>
+            <?php eh($pagination['cur_page']); ?>
         </b> 
     of 
         <b>
-            <?= $pagination['last_page'] ?>
+            <?php eh($pagination['last_page']); ?>
         </b>
 </p>
 
@@ -80,14 +80,14 @@ foreach ($pagination as $key => $value) {
         // THESE ARE THE PAGINATION CONTROLS SHOWN ON THE LEFT OF THE CURRENT PAGE //
         if($cur_page > 1){            
             $previous = $cur_page - 1;?>
-            <a href='<?php eh(url("comment/view", array( "thread_id" =>  $id, "pn" => $previous))) ?>'>
+            <a href='<?php eh(url("comment/view", array( "thread_id" =>  $thread->id, "pn" => $previous))) ?>'>
                 Previous
             </a> &nbsp; &nbsp; 
             <?php
             for($i = $cur_page - 4 ; $i < $cur_page ; $i++){
                 if($i > 0){ ?>
-                    <a href='<?php eh(url("comment/view", array( "thread_id" =>  $id, "pn" => $i)))?>'>
-                        <?= $i ?>
+                    <a href='<?php eh(url("comment/view", array( "thread_id" =>  $thread->id, "pn" => $i)))?>'>
+                        <?php eh($i); ?>
                     </a> 
                     &nbsp; <?php
                 }
@@ -97,8 +97,8 @@ foreach ($pagination as $key => $value) {
         echo "" . $cur_page . "&nbsp ";
         // THESE ARE THE PAGINATION CONTROLS SHOWN ON THE RIGHT OF THE CURRENT PAGE //        
         for($i = $cur_page + 1 ; $i <= $last_page ; $i++){ ?>
-            <a href='<?php eh(url("comment/view", array( "thread_id" =>  $id, "pn" => $i)))?>'>
-                <?= $i?>
+            <a href='<?php eh(url("comment/view", array( "thread_id" =>  $thread->id, "pn" => $i)))?>'>
+                <?php eh($i); ?>
             </a> &nbsp; <?php
             if($i >= $cur_page + 4){
                 break;
@@ -107,7 +107,7 @@ foreach ($pagination as $key => $value) {
         if($cur_page != $last_page){
             $next = $cur_page + 1;?>
             &nbsp; &nbsp; 
-            <a href='<?php eh(url("comment/view", array( "thread_id" =>  $id, "pn" => $next)))?> '>
+            <a href='<?php eh(url("comment/view", array( "thread_id" =>  $thread->id, "pn" => $next)))?> '>
                 Next
             </a>
             <?php

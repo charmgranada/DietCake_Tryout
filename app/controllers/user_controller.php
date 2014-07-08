@@ -28,6 +28,7 @@
             }
             $this->set(get_defined_vars());
         }
+
         /**
          *REGISTER A NEW USER
          *@throws Exception
@@ -61,14 +62,15 @@
                     $errors['fname'] = is_name($dataPassed['fname'],"First Name");
                     $errors['mname'] = is_name($dataPassed['mname'],"Middle Name");
                     $errors['lname'] = is_name($dataPassed['lname'],"Last Name");
-                    $errors['cnum'] = is_number($dataPassed['cnum']);
+                    $errors['cnum'] = !is_numeric($dataPassed['cnum']) 
+                    ? notice("Contact number must be numbers only","error") : "";
                     $errors['email_add'] = is_email_address($dataPassed['email_add']);
                     foreach ($errors as $key => $value) {
                         if(!empty($value)){
                             throw new Exception("");                                                                        
                         }
                     }
-                    $registration->NewUser();
+                    $registration->newUser();
                     redirect('user','index');
                     $status = "";
                 } catch (Exception $e) {
@@ -86,6 +88,7 @@
             }
             $this->set(get_defined_vars());
         }
+        
         /**
          *LOGOUT ACCOUNT
          */

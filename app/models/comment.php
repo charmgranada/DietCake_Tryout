@@ -57,10 +57,13 @@
                 throw new ValidationException('invalid comment');
             }
             $db = DB::conn();
-            $db->query(
-            'INSERT INTO comment SET thread_id = ?, username = ?, body = ?, created = NOW()',
-            array($this->id, $this->username, $this->body)
-            );
+            $params = array(
+                'thread_id' => $this->thread_id, 
+                'username' => $this->username, 
+                'body' => $this->body,
+                'created' => 'NOW()'
+                );
+            $db->insert('comment',$params);
         }
         public static function delete($id){
             $db = DB::conn();

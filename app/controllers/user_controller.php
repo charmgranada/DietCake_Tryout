@@ -64,7 +64,7 @@
                             throw new Exception("");                                                                        
                         }
                     }
-                    $registration->validateData();
+                    $registration->NewUser();
                     redirect('user','index');
                     $status = "";
                 } catch (Exception $e) {

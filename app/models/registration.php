@@ -47,7 +47,7 @@
                         ),
                     ),
             );
-        public function validateData(){
+        public function NewUser(){
             $this->validate();
             $db = DB::conn();
             $rows = $db->rows('SELECT * FROM users WHERE uname = ? OR email_add = ?', 
@@ -55,23 +55,20 @@
             if($rows){
                 throw new Exception(notice("Username/Email Address has already been used","error"));
             }    
-            if($this->hasError()){
+            else if($this->hasError()){
                 throw new ValidationException("");
             }else{
-                $query = "INSERT INTO users set uname = ?, pword = ?, 
-                fname = ?, mname = ?, lname = ?, cnum = ?, home_add = ?, email_add = ?";
-                $db->query($query ,
-                    array(
-                        $this->uname,
-                        sha1($this->pword),
-                        $this->fname,
-                        $this->mname,
-                        $this->lname,
-                        $this->cnum,
-                        $this->home_add,
-                        $this->email_add
-                        )
+                $params = array(
+                    'uname' => $this->uname,
+                    'pword' => sha1($this->pword),
+                    'fname' => $this->fname,
+                    'mname' => $this->mname,
+                    'lname' => $this->lname,
+                    'cnum' => $this->cnum,
+                    'home_add' => $this->home_add,
+                    'email_add' => $this->email_add
                     );
+                $db->insert('users',$params);
             }
-        }     
+        }
     }

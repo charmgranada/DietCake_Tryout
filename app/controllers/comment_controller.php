@@ -19,7 +19,7 @@
                 case 'view':
                     break;
                 case 'write_end':
-                    $comment->id = $id;
+                    $comment->thread_id = $id;
                     $comment->username = Param::get('username');
                     $comment->body = Param::get('body');
                     try {

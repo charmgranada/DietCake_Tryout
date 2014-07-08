@@ -36,6 +36,5 @@ class User extends AppModel{
         $rows = $db->rows('SELECT * FROM users WHERE id = ?', 
         array($this->id)); 
         return $rows;
-
     }
 }

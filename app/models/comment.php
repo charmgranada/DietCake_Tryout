@@ -18,7 +18,7 @@
             $query = "SELECT * FROM comment WHERE thread_id = ? ORDER BY created DESC {$limit}";
             $rows = $db->rows($query,array($id));
             foreach ($rows as $row) {
-                $comments[] = new Comment($row);
+                $comments[] = new self($row);
             }
             return $comments;
         }

@@ -14,7 +14,7 @@
 
         /**
          *CREATE A NEW THREAD
-         *@throws NotFoundException
+         *@throws PageNotFoundException
          */
         public function create()
         {
@@ -37,7 +37,7 @@
                     }
                     break;
                 default:
-                    throw new NotFoundException("{$page} is not found");
+                    throw new PagePageNotFoundException("{$page} is not found");
                     break;
             }
             $this->set(get_defined_vars());
@@ -46,12 +46,11 @@
 
         /**
          *EDIT A THREAD
-         *@throws NotFoundException
+         *@throws PageNotFoundException
          */
         public function edit()
         {            
-            $thread_id = Param::get('thread_id');
-            $thread = Thread::get($thread_id);
+            $thread = Thread::get(Param::get('thread_id'));
             $thread_title = $thread->title;
             $comment = new Comment;
             $page = Param::get('page_next', 'edit');
@@ -70,7 +69,7 @@
                     }
                     break;
                 default:
-                    throw new NotFoundException("{$page} is not found");
+                    throw new PagePageNotFoundException("{$page} is not found");
                     break;
             }
             $this->set(get_defined_vars());

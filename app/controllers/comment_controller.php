@@ -3,7 +3,7 @@
     {
         /**
          *VIEW ALL COMMENTS OF A THREAD
-         *@throws NotFoundException
+         *@throws PageNotFoundException
          */
         public function view()
         {       
@@ -31,7 +31,7 @@
                     }
                     break;
                 default:
-                    throw new NotFoundException("{$page} is not found");
+                    throw new PageNotFoundException("{$page} is not found");
                     break;
             }
             $this->set(get_defined_vars());
@@ -40,7 +40,7 @@
 
         /**
          *EDIT A COMMENT
-         *@throws NotFoundException
+         *@throws PageNotFoundException
          */
         public function edit()
         {       
@@ -60,7 +60,7 @@
                     }
                     break;
                 default:
-                    throw new NotFoundException("{$page} is not found");
+                    throw new PageNotFoundException("{$page} is not found");
                     break;
             }
             $this->set(get_defined_vars());

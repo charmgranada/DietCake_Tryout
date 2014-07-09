@@ -18,12 +18,14 @@
                 $status = notice("Please fill up all fields","error");
             } else {
                 try {
-                    $existing_user = $user->authenticate($username, $password);
+                    $existing_user = $user->authenticate($username, $password);     
                     $_SESSION['user_id'] = $existing_user->id;
                     $_SESSION['uname'] = $existing_user->uname;
                     redirect('thread','index');
-                } catch (Exception $e) {
+                } catch (ValidationException $e) {
                     $status = notice($e->getMessage(),"error");
+                } catch (RecordNotFoundException $e) {
+                        $status = notice($e->getMessage(),"error");                        
                 }
             }
             $this->set(get_defined_vars());
@@ -31,7 +33,8 @@
 
         /**
          *REGISTER A NEW USER
-         *@throws Exception
+         *@throws ErrorFoundException
+         *@throws ValidationException
          */
         public function register()
         {
@@ -67,13 +70,13 @@
                     $errors['email_add'] = is_email_address($form['email_add']);
                     foreach ($errors as $field => $value) {
                         if ($value) {
-                            throw new Exception("");                                                                        
+                            throw new ErrorFoundException("");                                                                        
                         }
                     }
                     $registration->newUser();
                     redirect('user','index');
                     $status = "";
-                } catch (Exception $e) {
+                } catch (ValidationException $e) {
                     foreach ($form as $field => $value) {
                         if (!empty($registration->validation_errors[$field]['length'])) {
                             $errors[$field] = "<center><font size=2 color=red>Character length must be ". 
@@ -81,6 +84,8 @@
                             $registration->validation[$field]['length'][2] . " long</font>";
                         }
                     }
+                    $status = $e->getMessage();
+                } catch (ExistingUserException $e) {
                     $status = $e->getMessage();
                 }
             } else {

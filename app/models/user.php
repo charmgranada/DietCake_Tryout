@@ -37,7 +37,7 @@
                 $where_params = array($username, sha1($password));
                 $row = $db->row($query, $where_params);
                 if(!$row){
-                    throw new Exception("Username/Password is incorrect");
+                    throw new RecordNotFoundException("Username/Password is incorrect");
                 }        
                 return new self ($row);
             }

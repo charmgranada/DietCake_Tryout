@@ -61,7 +61,7 @@
             $where_params = array($this->uname, $this->email_add);
             $row = $db->search(User::table, $where, $where_params);
             if ($row) {
-                throw new ValidationException(notice("Username/Email Address has already been used","error"));
+                throw new ExistingUserException(notice("Username/Email Address has already been used","error"));
             } else if(!$this->validate()) {
                 throw new ValidationException("");
             } else {

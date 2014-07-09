@@ -1,43 +1,58 @@
 <?php
     class Registration extends AppModel{
-        const PASS_MIN_LENGTH = 8;
-        const PASS_MAX_LENGTH = 16;
-
         public $validation = array(
             'uname' => array(
                 'length' => array(
                     'validate_between' , MIN_LENGTH, MAX_LENGTH
                     ),
+                'format' => array(
+                    'is_valid_username', 'Invalid format for Username' 
+                    ),
                 ),
             'pword' => array(
                 'length' => array(
-                    'validate_between' , self::PASS_MIN_LENGTH, self::PASS_MAX_LENGTH
+                    'validate_between' , User::PASS_MIN_LENGTH, User::PASS_MAX_LENGTH
                     ),
                 ),
             'cpword' => array(
                 'length' => array(
-                        'validate_between', self::PASS_MIN_LENGTH, self::PASS_MAX_LENGTH
+                        'validate_between', User::PASS_MIN_LENGTH, User::PASS_MAX_LENGTH
+                    ),
+                'format' => array(
+                    'is_pass_match', 'Passwords do not match' 
                     ),
                 ),
             'fname' => array(
                 'length' => array(
                     'validate_between', MIN_LENGTH, MAX_LENGTH
                     ),
+                'format' => array(
+                        'is_valid_name', 'First Name has invalid characters'
+                    )
                 ),
             'mname' => array(
                 'length' => array(
                     'validate_between', MIN_LENGTH, MAX_LENGTH
                     ),
+                'format' => array(
+                        'is_valid_name', 'Middle Name has invalid characters'
+                    )
                 ),
             'lname' => array(
                 'length' => array(
                     'validate_between', MIN_LENGTH, MAX_LENGTH
                     ),
+                'format' => array(
+                        'is_valid_name', 'Last Name has invalid characters'
+                    )
                 ),
             'cnum' => array(
                 'length' => array(
                     'validate_between', MIN_LENGTH, MAX_LENGTH
                     ),
+                'format' => array(
+                        'is_numeric'
+                    )
                 ),
             'home_add' => array(
                 'length' => array(
@@ -48,6 +63,9 @@
                 'length' => array(
                     'validate_between', MIN_LENGTH, MAX_LENGTH
                     ),
+                'format' => array(
+                        'is_valid_email', 'Invalid format for Email Address'
+                    )
                 ),
             );
         /**
@@ -63,7 +81,7 @@
             if ($row) {
                 throw new ExistingUserException(notice("Username/Email Address has already been used","error"));
             } else if(!$this->validate()) {
-                throw new ValidationException("");
+                    throw new ValidationException(notice("Validation Error", 'error'));
             } else {
                 $where_params = array(
                     'uname' => $this->uname,

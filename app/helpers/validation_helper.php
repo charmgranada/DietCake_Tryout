@@ -4,43 +4,36 @@
         $n = mb_strlen($string);
         return $min <= $n && $n <= $max;
     }
-    /*---------------------------------------------------------------------------------------*/
-    function validate_format($username)
+
+    function is_valid_username($username)
     {
         return !((preg_match('/[^a-zA-Z0-9_]/', $username)) || (preg_match('/_{2}/', $username)));
     }
-    /*---------------------------------------------------------------------------------------*/
-    function is_pass_match($password, $confirm_password)
+
+    function is_pass_match($confirm_password)
     {
-        if ($password !== $confirm_password) {
-            return notice("Passwords do not match","error");
-        }
-        return NULL;
+        $password = Param::get('pword');
+        return $password === $confirm_password;
     }
-    /*---------------------------------------------------------------------------------------*/
-    function is_name($string,$nameType)
+
+    function is_valid_name($string)
     {
-        if ((preg_match('/[^a-zA-Z\']/', $string)) || (preg_match('/\'{2}/', $string))) {
-            return notice("{$nameType} has invalid characters","error");
-        }
-        return NULL;
+        return !((preg_match('/[^a-zA-Z\']/', $string)) || (preg_match('/\'{2}/', $string)));
     }
-    /*---------------------------------------------------------------------------------------*/
-    function is_email_address($email)
+     
+    function is_valid_email($email)
     {
-        if (!preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/",$email)) {
-            return notice("Email address has an invalid format","error");
-        }
-        return NULL;
+        return (preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/",$email));
     }
-    /*---------------------------------------------------------------------------------------*/
-    function check_for_spaces($text)
+     
+    function is_valid_comment($text)
     {
         if (preg_match('/([^ ]){125}/', $text)) {
             return false;
         }
         return true;
     }
+
     // FOR SESSION VALIDATION //
     function check_user_logged_in()
     {
@@ -49,12 +42,14 @@
             redirect('thread','index');
         }
     }
+
     function check_user_logged_out()
     {
         if (!isset($_SESSION['user_id'])) {
             redirect('user','index');
         }
     }
+
     function user_logged_in()
     {
         if (!isset($_SESSION['user_id'])) {
@@ -62,6 +57,7 @@
         }
         return true;
     }
+    
     // FOR REDIRECT //
     function redirect($controller, $view)
     {

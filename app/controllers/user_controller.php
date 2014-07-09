@@ -40,7 +40,7 @@
         {
             check_user_logged_in();
             $registration = new Registration();
-            $empty = 0;
+            $empty_field_ctr = 0;
             $form = array(
                 'uname', 'pword', 'cpword',
                 'fname', 'mname', 'lname',
@@ -51,45 +51,38 @@
             $errors = array();
             foreach ($form as $field => $value) {
                 if (!$value) {
-                    $empty++;
+                    $empty_field_ctr++;
                 } else {
                     $registration->$field = $value;
                 }
             }
-            if ($empty===0) {
+            if ($empty_field_ctr===0) {
                 try {
                     $errors = array();
-                    $errors['uname'] = !validate_format($form['uname'])
-                        ? notice("Username is invalid","error") : "";
-                    $errors['pass'] = is_pass_match($form['pword'], $form['cpword']);
-                    $errors['fname'] = is_name($form['fname'],"First Name");
-                    $errors['mname'] = is_name($form['mname'],"Middle Name");
-                    $errors['lname'] = is_name($form['lname'],"Last Name");
-                    $errors['cnum'] = !is_numeric($form['cnum']) 
-                        ? notice("Contact number must be numbers only","error") : "";
-                    $errors['email_add'] = is_email_address($form['email_add']);
-                    foreach ($errors as $field => $value) {
-                        if ($value) {
-                            throw new ErrorFoundException("");                                                                        
-                        }
-                    }
                     $registration->registerUser();
                     redirect('user','index');
                     $status = "";
                 } catch (ValidationException $e) {
                     foreach ($form as $field => $value) {
                         if (!empty($registration->validation_errors[$field]['length'])) {
-                            $errors[$field] = "<center><font size=2 color=red>Character length must be ". 
+                            $errors[$field] = notice("Character length must be ". 
                             $registration->validation[$field]['length'][1]. " - " .
-                            $registration->validation[$field]['length'][2] . " long</font>";
+                            $registration->validation[$field]['length'][2] . " long", 'error');
+                        }
+                        if (!empty($registration->validation_errors[$field]['format'])) {
+                            if($field == 'cnum'){
+                                $errors[$field] = notice('Contact number must be numbers only', 'error');
+                            } else {
+                                $errors[$field] = notice($registration->validation[$field]['format'][1], 'error');
+                            }
                         }
                     }
-                    $status = $e->getMessage();
+                    $status = "";
                 } catch (ExistingUserException $e) {
                     $status = $e->getMessage();
                 }
             } else {
-                $status = "<font color=red>Please fill up all fields</font>";
+                $status = notice("Please fill up all fields",'error');
             }
             $this->set(get_defined_vars());
         }

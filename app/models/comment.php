@@ -8,7 +8,7 @@
                     'validate_between' , MIN_LENGTH, MAX_TEXT_LENGTH
                 ),
                 'format' => array(
-                    'check_for_spaces'
+                    'is_valid_comment'
                 )
             )
         );

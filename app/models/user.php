@@ -10,7 +10,7 @@
                     'validate_between' , MIN_LENGTH, MAX_LENGTH
                     ),
                 'format' => array(
-                    'validate_format' 
+                    'is_valid_username'
                     ),
                 ),
             'password' => array(

@@ -87,12 +87,10 @@
         <tr>
             <td colspan=2><center>
                 <button type='submit' class="btn btn-primary">Submit</button>
+                <?php echo (isset($form["uname"]) ? "<br/>" . $status : ""); ?>
             </td>
         </tr>
    </table>
-    <?php echo (isset($form["uname"]) 
-        ? "<center>" . $status . "</center>"
-        : ""); ?>
     <a href="<?php eh(url('user/index'))?>">
         &larr; Back to Login
     </a>

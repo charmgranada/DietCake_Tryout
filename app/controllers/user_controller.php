@@ -1,6 +1,6 @@
 <?php
     class UserController extends AppController
-    {
+    {        
         /**
          *USER LOGIN
          */
@@ -12,15 +12,15 @@
             $password = Param::get('password');
             $user = new User();
             $page = Param::get('page_next','index');
-            if(!isset($username) || !isset($password)){
+            if (!isset($username) || !isset($password)) {
                 $status = "";
-            }else if(empty($username) || empty($password)){
+            } else if (!($username) || !($password)) {
                 $status = notice("Please fill up all fields","error");
-            }else{
+            } else {
                 try {
-                    $result = $user->authenticate($username, $password);
-                    $_SESSION['user_id'] = $result[0]['id'];
-                    $_SESSION['uname'] = $result[0]['uname'];
+                    $existing_user = $user->authenticate($username, $password);
+                    $_SESSION['user_id'] = $existing_user->id;
+                    $_SESSION['uname'] = $existing_user->uname;
                     redirect('thread','index');
                 } catch (Exception $e) {
                     $status = notice($e->getMessage(),"error");
@@ -33,40 +33,40 @@
          *REGISTER A NEW USER
          *@throws Exception
          */
-        public function registration()
+        public function register()
         {
             check_user_logged_in();
             $registration = new Registration();
             $empty = 0;
-            $dataPassed = array(
+            $form = array(
                 'uname', 'pword', 'cpword',
                 'fname', 'mname', 'lname',
                 'cnum', 'home_add', 'email_add');
-            foreach($dataPassed as $field){
-                $dataPassed[$field] = Param::get($field);
+            foreach($form as $field) {
+                $form[$field] = Param::get($field);
             }
             $errors = array();
-            foreach ($dataPassed as $key => $value) {
-                if(empty($value)){
+            foreach ($form as $field => $value) {
+                if (!$value) {
                     $empty++;
-                }else{
-                    $registration->$key = $value;
+                } else {
+                    $registration->$field = $value;
                 }
             }
-            if($empty===0){
+            if ($empty===0) {
                 try {
                     $errors = array();
-                    $errors['uname'] = !valid_username($dataPassed['uname'])
-                    ? notice("Username is invalid","error") : "";
-                    $errors['pass'] = is_pass_match($dataPassed['pword'], $dataPassed['cpword']);
-                    $errors['fname'] = is_name($dataPassed['fname'],"First Name");
-                    $errors['mname'] = is_name($dataPassed['mname'],"Middle Name");
-                    $errors['lname'] = is_name($dataPassed['lname'],"Last Name");
-                    $errors['cnum'] = !is_numeric($dataPassed['cnum']) 
-                    ? notice("Contact number must be numbers only","error") : "";
-                    $errors['email_add'] = is_email_address($dataPassed['email_add']);
-                    foreach ($errors as $key => $value) {
-                        if(!empty($value)){
+                    $errors['uname'] = !validate_format($form['uname'])
+                        ? notice("Username is invalid","error") : "";
+                    $errors['pass'] = is_pass_match($form['pword'], $form['cpword']);
+                    $errors['fname'] = is_name($form['fname'],"First Name");
+                    $errors['mname'] = is_name($form['mname'],"Middle Name");
+                    $errors['lname'] = is_name($form['lname'],"Last Name");
+                    $errors['cnum'] = !is_numeric($form['cnum']) 
+                        ? notice("Contact number must be numbers only","error") : "";
+                    $errors['email_add'] = is_email_address($form['email_add']);
+                    foreach ($errors as $field => $value) {
+                        if ($value) {
                             throw new Exception("");                                                                        
                         }
                     }
@@ -74,16 +74,16 @@
                     redirect('user','index');
                     $status = "";
                 } catch (Exception $e) {
-                    foreach ($dataPassed as $key => $value) {
-                        if(!empty($registration->validation_errors[$key]['length'])){
-                            $errors[$key] = "<center><font size=2 color=red>Character length must be ". 
-                            $registration->validation[$key]['length'][1]. " - " .
-                            $registration->validation[$key]['length'][2] . " long</font>";
+                    foreach ($form as $field => $value) {
+                        if (!empty($registration->validation_errors[$field]['length'])) {
+                            $errors[$field] = "<center><font size=2 color=red>Character length must be ". 
+                            $registration->validation[$field]['length'][1]. " - " .
+                            $registration->validation[$field]['length'][2] . " long</font>";
                         }
                     }
                     $status = $e->getMessage();
                 }
-            }else{
+            } else {
                 $status = "<font color=red>Please fill up all fields</font>";
             }
             $this->set(get_defined_vars());

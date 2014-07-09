@@ -29,7 +29,7 @@ if ($comment->hasError()): ?>
 <p align='right' style='font-size:12px;line-height:12px;'>
     Total of 
         <b>
-            <?php eh($totalRows); ?>
+            <?php eh($num_rows); ?>
         </b>
     comments<br/>
     Page 
@@ -42,7 +42,7 @@ if ($comment->hasError()): ?>
         </b>
 </p>
 
-<?php foreach ($comments as $k => $v): ?>
+<?php foreach ($all_comments as $k => $v): ?>
     <div class="alert alert-info">
         <div class="meta">
             <b><?php eh($v->username) ?></b> said:  

@@ -1,17 +1,21 @@
-<?php
+<?php    
     class User extends AppModel{
+        const table = 'users';
+        const PASS_MIN_LENGTH = 8;
+        const PASS_MAX_LENGTH = 16;
+
         public $validation = array(
-            'Username' => array(
+            'username' => array(
                 'length' => array(
                     'validate_between' , MIN_LENGTH, MAX_LENGTH
                     ),
                 'format' => array(
-                    'valid_username' 
+                    'validate_format' 
                     ),
                 ),
-            'Password' => array(
+            'password' => array(
                 'length' => array(
-                    'validate_between' , PASS_MIN_LENGTH, PASS_MAX_LENGTH
+                    'validate_between' , self::PASS_MIN_LENGTH, self::PASS_MAX_LENGTH
                     ),
                 ),
             );
@@ -21,30 +25,33 @@
          *@param $password
          *@throws ValidationException
          */
-        public function authenticate($username,$password){
-            $this->Username = $username;
-            $this->Password = $password;
-            $this->validate();
-            if($this->hasError()){
+        public function authenticate($username,$password)
+        {
+            $this->username = $username;
+            $this->password = $password;
+            if (!$this->validate()) {
                 throw new ValidationException('Invalid Username/Password');
-            }else{
+            } else {
                 $db = DB::conn();
-                $rows = $db->rows('SELECT * FROM users WHERE uname = ? AND pword = ?', 
-                array($username,sha1($password)));
-                if(!$rows){
+                $query = 'SELECT * FROM users WHERE uname = ? AND pword = ?';
+                $where_params = array($username, sha1($password));
+                $row = $db->row($query, $where_params);
+                if(!$row){
                     throw new Exception("Username/Password is incorrect");
                 }        
-                return $rows;
+                return new self ($row);
             }
         }
         /**
          *RETURNS ALL INFO OF A USER
          */
-        public function getInfo(){
+        public static function get($id)
+        {
             $db = DB::conn();
-            $rows = $db->rows('SELECT * FROM users WHERE id = ?', 
-            array($this->id)); 
-            return $rows;
+            $query = "SELECT * FROM users WHERE id = ?";
+            $where_params = array($id);
+            $row = $db->row($query, $where_params); 
+            return new self ($row);
         }
     }
 ?>

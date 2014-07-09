@@ -1,69 +1,70 @@
 <?php
-    function validate_between($check, $min, $max)
-        {
-            $n = mb_strlen($check);
-            return $min <= $n && $n <= $max;
-        }
+    function validate_between($string, $min, $max)
+    {
+        $n = mb_strlen($string);
+        return $min <= $n && $n <= $max;
+    }
     /*---------------------------------------------------------------------------------------*/
-    function valid_username($check)
-        {
-            return !((preg_match('/[^a-zA-Z0-9_]/', $check)) || (preg_match('/_{2}/', $check)));
-        }
+    function validate_format($username)
+    {
+        return !((preg_match('/[^a-zA-Z0-9_]/', $username)) || (preg_match('/_{2}/', $username)));
+    }
     /*---------------------------------------------------------------------------------------*/
-    function is_pass_match($pword, $cpword)
-        {
-            if($pword !== $cpword){
-                return notice("Passwords do not match","error");
-            }
-            return NULL;
+    function is_pass_match($password, $confirm_password)
+    {
+        if ($password !== $confirm_password) {
+            return notice("Passwords do not match","error");
         }
+        return NULL;
+    }
     /*---------------------------------------------------------------------------------------*/
     function is_name($string,$nameType)
-        {
-            if ((preg_match('/[^a-zA-Z\']/', $string)) || (preg_match('/\'{2}/', $string))){
-                return notice("{$nameType} has invalid characters","error");
-            }
-            return NULL;
+    {
+        if ((preg_match('/[^a-zA-Z\']/', $string)) || (preg_match('/\'{2}/', $string))) {
+            return notice("{$nameType} has invalid characters","error");
         }
+        return NULL;
+    }
     /*---------------------------------------------------------------------------------------*/
     function is_email_address($email)
-        {
-            if (!preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/",$email)){
-                return notice("Email address has an invalid format","error");
-            }
-            return NULL;
+    {
+        if (!preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/",$email)) {
+            return notice("Email address has an invalid format","error");
         }
+        return NULL;
+    }
     /*---------------------------------------------------------------------------------------*/
-    function must_fit_screen($text)
-        {
-            if(preg_match('/([^ ]){125}/', $text)){
-                return false;
-            }
-            return true;
+    function check_for_spaces($text)
+    {
+        if (preg_match('/([^ ]){125}/', $text)) {
+            return false;
         }
-    ///////FOR SESSION VALIDATION//////////
+        return true;
+    }
+    // FOR SESSION VALIDATION //
     function check_user_logged_in()
-        {
-            if(isset($_SESSION['user_id'])){
-                redirect('thread','index');
-            }
+    {
+        if (isset($_SESSION['user_id'])) {
+            $user = User::get($_SESSION['user_id']);
+            redirect('thread','index');
         }
+    }
     function check_user_logged_out()
-        {
-            if(!isset($_SESSION['user_id'])){
-                redirect('user','index');
-            }
+    {
+        if (!isset($_SESSION['user_id'])) {
+            redirect('user','index');
         }
+    }
     function user_logged_in()
-        {
-            if(!isset($_SESSION['user_id'])){
-                return false;
-            }
-            return true;
+    {
+        if (!isset($_SESSION['user_id'])) {
+            return false;
         }
-    ////////FOR REDIRECT/////////////
+        return true;
+    }
+    // FOR REDIRECT //
     function redirect($controller, $view)
-        {
-            $url = "/$controller/$view";
-            header("location: {$url}");
-        }
+    {
+        $url = "/$controller/$view";
+        header("location: {$url}");
+    }

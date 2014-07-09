@@ -1,13 +1,14 @@
 <?php
     class Comment extends AppModel
     {
+        const table = 'comment';
         public $validation = array(
             'body' => array(
                 'length' => array(
                     'validate_between' , MIN_LENGTH, MAX_TEXT_LENGTH
                 ),
                 'format' => array(
-                    'must_fit_screen'
+                    'check_for_spaces'
                 )
             )
         );
@@ -17,13 +18,16 @@
          *@param $thread_id
          *@param $limit
          */
-        public function getAll($thread_id, $limit)
-            {
+        public function getAll($limit)
+        {
             $comments = array();
             $db = DB::conn();
-            $query = "SELECT * FROM comment WHERE thread_id = ? ORDER BY created DESC {$limit}";
-            $rows = $db->rows($query,array($thread_id));
-            foreach ($rows as $row) {
+            $where = 'thread_id = ?';
+            $where_params = array($this->thread_id);
+            $order = 'created DESC';
+            $rows = $db->search(self::table, $where, $where_params, $order, $limit);
+            foreach ($rows as $row) 
+            {
                 $comments[] = new self($row);
             }
             return $comments;
@@ -32,75 +36,77 @@
         /**
          *RETURNS A SPECIFIC COMMENT
          */
-        public function getComment()
-            {
+        public static function get($comment_id)
+        {
             $comments = array();
             $db = DB::conn();
-            $query = "SELECT body FROM comment WHERE id = ?";
-            $row = $db->rows($query,array($this->id));
-            $this->body = $row[0]['body'];
+            $query = "SELECT * FROM comment WHERE id = ?";
+            $where_params = array($comment_id);
+            $row = $db->row($query, $where_params);
+            return new self ($row);
         }
 
         /**
          *RETURNS TOTAL NUMBER OF COMMENTS
          *@param $id
          */
-        public static function getTotalCount($thread_id){
+        public function getNumRows()
+        {
             $db = DB::conn();
-            $rows = $db->rows(
-            'SELECT COUNT(*) FROM comment WHERE thread_id = ?',
-            array($thread_id)
-            );
-            return $rows[0]["COUNT(*)"];            
+            $query = 'SELECT COUNT(*) FROM comment WHERE thread_id = ?';
+            $where_params = array($this->thread_id);
+            $row = $db->row($query, $where_params);
+            return $row["COUNT(*)"];            
         }
 
         /**
          *SAVE CHANGES MADE TO A COMMENT
          *@throws ValidationException
          */
-        public function save()
+        public function setBody()
         {
             $this->validation['body']['format'][] = $this->body;
             if (!$this->validate()) {
                 throw new ValidationException('invalid comment');
             }
             $db = DB::conn();
-            $db->query(
-            'UPDATE comment SET body = ?, created = NOW() WHERE id = ?',
-            array($this->body, $this->id)
-            );
+            $set_params = array(
+                'body' => $this->body,
+                'created' => date('Y-m-d h:i:s')
+                );
+            $where_params = array('id' => $this->id);
+            $db->update(self::table, $set_params, $where_params);
         }
 
         /**
          *CREATES A NEW COMMENT
          *@throws ValidationException
          */
-        public function write()
+        public function createNew()
         {
             $this->validation['body']['format'][] = $this->body;
             if (!$this->validate()) {
                 throw new ValidationException('invalid comment');
             }
             $db = DB::conn();
-            $query = 'INSERT INTO comment SET thread_id = ?, username = ?, body = ?, created = NOW()';
-            $params = array(
+            $set_params = array(
                 'thread_id' => $this->thread_id, 
                 'username' => $this->username, 
                 'body' => $this->body,
-                'created' => today()
+                'created' => date('Y-m-d h:i:s')
                 );
-            $db->insert('comment',$params);
+            $db->insert(self::table, $set_params);
         }
         
         /**
          *DELETES A COMMENT
          */
-        public function delete(){
+        public function delete()
+        {
             $db = DB::conn();
-            $db->query(
-            'DELETE FROM comment WHERE id = ?',
-            array($this->id)
-            );    
+            $query = 'DELETE FROM comment WHERE id = ?';
+            $where_params = array($this->id);
+            $db->query($query, $where_params);    
         }
     }
 ?>

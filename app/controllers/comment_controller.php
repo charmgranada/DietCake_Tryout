@@ -8,25 +8,24 @@
         public function view()
         {       
             check_user_logged_out();     
+            $thread = Thread::get(Param::get('thread_id'));
             $comment = new Comment();
-            $thread_id = Param::get('thread_id');
-            $thread = Thread::get($thread_id);
+            $comment->thread_id = $thread->id;
             // FOR PAGINATION //
             $cur_page = Param::get('pn');
-            $totalRows = Comment::getTotalCount($thread_id);
-            $pagination = getPageLimit($totalRows, $cur_page);
+            $num_rows = $comment->getNumRows();
+            $pagination = getPageLimit($num_rows, $cur_page);
             // PASS LIMIT TO THE COMMENT QUERY //
-            $comments = $comment->getAll($thread_id, $pagination['limit']);
+            $all_comments = $comment->getAll($pagination['limit']);
             $page = Param::get('page_next', 'view');
             switch ($page) {
                 case 'view':
                     break;
                 case 'write_end':
-                    $comment->thread_id = $thread_id;
                     $comment->username = Param::get('username');
                     $comment->body = Param::get('body');
                     try {
-                        $comment->write($thread);
+                        $comment->createNew($thread);
                     } catch (ValidationException $e) {
                         $page = 'view';
                     }
@@ -43,13 +42,11 @@
          *EDIT A COMMENT
          *@throws NotFoundException
          */
-        public function edit(){       
+        public function edit()
+        {       
             check_user_logged_out();   
-            $thread_id = Param::get('thread_id');
-            $thread = Thread::get($thread_id);   
-            $comment = new Comment();
-            $comment->id = Param::get('comment_id');
-            $comment->getComment();
+            $thread = Thread::get(Param::get('thread_id'));   
+            $comment = Comment::get(Param::get('comment_id'));
             $page = Param::get('page_next', 'edit');
             switch ($page) {
                 case 'edit':
@@ -57,7 +54,7 @@
                 case 'edit_end':
                     $comment->body = Param::get('body');
                     try {
-                        $comment->save();
+                        $comment->setBody();
                     } catch (ValidationException $e) {
                         $page = 'edit';
                     }
@@ -73,13 +70,12 @@
         /**
          *DELETE A COMMENT
          */
-        public function delete(){
+        public function delete()
+        {
             check_user_logged_out();
-            $comment = new Comment;
-            $comment->id = Param::get('comment_id');
+            $thread = Thread::get(Param::get('thread_id'));
+            $comment = Comment::get(Param::get('comment_id'));
             $comment->delete();  
-            $thread_id = Param::get('thread_id');
-            $thread = Thread::get($thread_id);
             $this->set(get_defined_vars());
         }
     }

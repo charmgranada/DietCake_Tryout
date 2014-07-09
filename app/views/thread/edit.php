@@ -21,6 +21,22 @@ if ($thread->hasError() || $comment->hasError()): ?>
                 <?php eh($comment->validation['body']['length'][2]) ?> characters in length.
             </div>
         <?php endif ?>
+        
+        <?php  // ERRORS FOR TOO LONG CHARACTERS WITH NO SPACES AND CAN'T FIT THE SCREEN ANYMORE //
+        if (!empty($comment->validation_errors['body']['format'])): ?>
+            <div>
+                <em>Comment</em> must have spaces to fit the screen.
+            </div>        
+        <?php endif ?>
+
+        <?php  // ERRORS FOR BODY LENGTH VALIDATION //
+        if (!empty($comment->validation_errors['body']['length'])): ?>        
+            <div>
+                <em>Comment</em> must be between
+                <?php eh($comment->validation['body']['length'][1]) ?> and
+                <?php eh($comment->validation['body']['length'][2]) ?> characters in length.
+            </div>        
+        <?php endif ?>
     </div>
 <?php endif ?>
 

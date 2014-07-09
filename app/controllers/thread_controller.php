@@ -31,7 +31,7 @@
                     $comment->username = Param::get('username');
                     $comment->body = Param::get('body');
                     try {
-                        $thread->create($comment);
+                        $thread->createNew($comment);
                     } catch (ValidationException $e) {
                         $page = 'create';
                     }
@@ -48,7 +48,8 @@
          *EDIT A THREAD
          *@throws NotFoundException
          */
-        public function edit(){            
+        public function edit()
+        {            
             $thread_id = Param::get('thread_id');
             $thread = Thread::get($thread_id);
             $thread_title = $thread->title;
@@ -63,7 +64,7 @@
                     $comment->username = Param::get('username');
                     $comment->body = Param::get('body');
                     try {
-                        $thread->edit($comment);
+                        $thread->setTitle($comment);
                     } catch (ValidationException $e) {
                         $page = 'edit';
                     }
@@ -79,7 +80,8 @@
         /**
          *DELETE A THREAD
          */
-        public function delete(){
+        public function delete()
+        {
             check_user_logged_out();
             $thread = Thread::get(Param::get('thread_id'));
             $thread_title = $thread->title;

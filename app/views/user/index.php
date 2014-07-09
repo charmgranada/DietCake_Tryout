@@ -19,9 +19,9 @@
                 <td><center>
                 <input type='hidden' name='page_next' value='home'>
                 <button type="submit" class="btn btn-primary">
-                Login</button> Click <a href='<?php eh(url('user/registration')) ?>'>here</a> to register</td>
+                Login</button> Click <a href='<?php eh(url('user/register')) ?>'>here</a> to register</td>
             </tr>
         </table>
-        <?php eh($status); ?>
+        <?php echo $status; ?>
     </form>
 </center>

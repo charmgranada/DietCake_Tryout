@@ -90,7 +90,7 @@
             </td>
         </tr>
    </table>
-    <?php echo (isset($dataPassed["uname"]) 
+    <?php echo (isset($form["uname"]) 
         ? "<center>" . $status . "</center>"
         : ""); ?>
     <a href="<?php eh(url('user/index'))?>">

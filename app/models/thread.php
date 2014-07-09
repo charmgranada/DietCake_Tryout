@@ -52,8 +52,7 @@
             $db->begin();
                 $set_params = array(
                     'title' => $this->title, 
-                    'user_created' => $this->user_id,
-                    'created' => date('Y-m-d h:i:s')
+                    'user_created' => $this->user_id
                     );
                 $db->insert(self::table, $set_params);
                 $this->id = $db->lastInsertId();

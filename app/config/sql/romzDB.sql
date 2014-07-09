@@ -20,19 +20,20 @@ CREATE TABLE IF NOT EXISTS users(
 )ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS thread (
-id          INT UNSIGNED NOT NULL AUTO_INCREMENT,
-title           VARCHAR(255) NOT NULL,
-created         DATETIME NOT NULL,
-PRIMARY KEY (id)
+    id              INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    user_created    VARCHAR(255) NOT NULL,
+    title           VARCHAR(255) NOT NULL,
+    created         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
 )ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS comment (
-id          INT UNSIGNED NOT NULL AUTO_INCREMENT,
-thread_id       INT UNSIGNED NOT NULL,
-username        VARCHAR(255) NOT NULL,
-body            TEXT NOT NULL,
-created         DATETIME NOT NULL,
-PRIMARY KEY (id),
-INDEX (thread_id, created)
+    id              INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    thread_id       INT UNSIGNED NOT NULL,
+    username        VARCHAR(255) NOT NULL,
+    body            TEXT NOT NULL,
+    created         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    INDEX (thread_id, created)
 )ENGINE=InnoDB;
 

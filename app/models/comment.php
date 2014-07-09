@@ -71,8 +71,7 @@
             }
             $db = DB::conn();
             $set_params = array(
-                'body' => $this->body,
-                'created' => date('Y-m-d h:i:s')
+                'body' => $this->body
                 );
             $where_params = array('id' => $this->id);
             $db->update(self::table, $set_params, $where_params);
@@ -92,8 +91,7 @@
             $set_params = array(
                 'thread_id' => $this->thread_id, 
                 'username' => $this->username, 
-                'body' => $this->body,
-                'created' => date('Y-m-d h:i:s')
+                'body' => $this->body
                 );
             $db->insert(self::table, $set_params);
         }

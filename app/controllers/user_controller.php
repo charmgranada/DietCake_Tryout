@@ -73,7 +73,7 @@
                             throw new ErrorFoundException("");                                                                        
                         }
                     }
-                    $registration->newUser();
+                    $registration->registerUser();
                     redirect('user','index');
                     $status = "";
                 } catch (ValidationException $e) {

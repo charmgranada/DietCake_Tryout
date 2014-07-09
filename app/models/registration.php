@@ -54,7 +54,7 @@
          *REGISTERS A NEW USER
          *@throws ValidationException
          */
-        public function newUser()
+        public function registerUser()
         {
             $db = DB::conn();
             $where = 'uname = ? OR email_add = ?';

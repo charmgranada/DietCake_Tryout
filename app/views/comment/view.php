@@ -72,47 +72,7 @@ if ($comment->hasError()): ?>
 <center>
 <?php 
 /*---------------------------------PAGINATION CONTROLS-------------------------------*/ 
-foreach ($pagination as $key => $value) {
-        $$key = $value;
-    }
-    // PAGINATION CONTROLS WILL ONLY APPEAR IF THERE ARE MORE THAN 1 PAGES //   
-    if($last_page != 1){
-        // THESE ARE THE PAGINATION CONTROLS SHOWN ON THE LEFT OF THE CURRENT PAGE //
-        if($cur_page > 1){            
-            $previous = $cur_page - 1;?>
-            <a href='<?php eh(url("comment/view", array( "thread_id" =>  $thread->id, "pn" => $previous))) ?>'>
-                Previous
-            </a> &nbsp; &nbsp; 
-            <?php
-            for($i = $cur_page - 4 ; $i < $cur_page ; $i++){
-                if($i > 0){ ?>
-                    <a href='<?php eh(url("comment/view", array( "thread_id" =>  $thread->id, "pn" => $i)))?>'>
-                        <?php eh($i); ?>
-                    </a> 
-                    &nbsp; <?php
-                }
-            }
-        }
-        // ECHO THE CURRENT PAGE SINCE IT DOESN'T NEED A LINK ANYMORE 
-        echo "" . $cur_page . "&nbsp ";
-        // THESE ARE THE PAGINATION CONTROLS SHOWN ON THE RIGHT OF THE CURRENT PAGE //        
-        for($i = $cur_page + 1 ; $i <= $last_page ; $i++){ ?>
-            <a href='<?php eh(url("comment/view", array( "thread_id" =>  $thread->id, "pn" => $i)))?>'>
-                <?php eh($i); ?>
-            </a> &nbsp; <?php
-            if($i >= $cur_page + 4){
-                break;
-            }
-        }
-        if($cur_page != $last_page){
-            $next = $cur_page + 1;?>
-            &nbsp; &nbsp; 
-            <a href='<?php eh(url("comment/view", array( "thread_id" =>  $thread->id, "pn" => $next)))?> '>
-                Next
-            </a>
-            <?php
-        }
-    }
+echo $pagination['controls'];
 /*---------------------------END OF PAGINATION CONTROLS-------------------------------*/ 
 ?>
 </center>

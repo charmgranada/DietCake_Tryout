@@ -14,7 +14,7 @@
             // FOR PAGINATION //
             $cur_page = Param::get('pn');
             $num_rows = $comment->getNumRows();
-            $pagination = getPageLimit($num_rows, $cur_page);
+            $pagination = pagination($thread->id, $num_rows, $cur_page);
             // PASS LIMIT TO THE COMMENT QUERY //
             $all_comments = $comment->getAll($pagination['limit']);
             $page = Param::get('page_next', 'view');

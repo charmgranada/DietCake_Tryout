@@ -31,16 +31,15 @@
             $this->password = $password;
             if (!$this->validate()) {
                 throw new ValidationException("Invalid Username/Password");
-            } else {
-                $db = DB::conn();
-                $query = "SELECT * FROM " . self::USERS_TABLE . " WHERE uname = ? AND pword = ?";
-                $where_params = array($username, sha1($password));
-                $row = $db->row($query, $where_params);
-                if(!$row) {
-                    throw new RecordNotFoundException("Username/Password is incorrect");
-                }        
-                return new self ($row);
             }
+            $db = DB::conn();
+            $query = "SELECT * FROM " . self::USERS_TABLE . " WHERE uname = ? AND pword = ?";
+            $where_params = array($username, sha1($password));
+            $row = $db->row($query, $where_params);
+            if(!$row) {
+                throw new RecordNotFoundException("Username/Password is incorrect");
+            }        
+            return new self ($row);
         }
         /**
          *RETURNS ALL INFO OF A USER

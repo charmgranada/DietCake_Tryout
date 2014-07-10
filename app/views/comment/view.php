@@ -71,9 +71,9 @@ if ($comment->hasError()): ?>
 
 <center>
 <?php 
-/*---------------------------------PAGINATION CONTROLS-------------------------------*/ 
+// PAGINATION CONTROLS // 
 echo $pagination['controls'];
-/*---------------------------END OF PAGINATION CONTROLS-------------------------------*/ 
+// END OF PAGINATION CONTROLS // 
 ?>
 </center>
 <?php // THE EDIT AND DELETE CONTROLS FOR THE THREAD, ACCESSED ONLY BY THE USER WHO CREATED IT

@@ -36,7 +36,7 @@
                 $query = 'SELECT * FROM users WHERE uname = ? AND pword = ?';
                 $where_params = array($username, sha1($password));
                 $row = $db->row($query, $where_params);
-                if(!$row){
+                if(!$row) {
                     throw new RecordNotFoundException("Username/Password is incorrect");
                 }        
                 return new self ($row);

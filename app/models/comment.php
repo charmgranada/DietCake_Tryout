@@ -26,8 +26,7 @@
             $where_params = array($this->thread_id);
             $order = 'created DESC';
             $rows = $db->search(self::TABLE, $where, $where_params, $order, $limit);
-            foreach ($rows as $row) 
-            {
+            foreach ($rows as $row) {
                 $comments[] = new self($row);
             }
             return $comments;

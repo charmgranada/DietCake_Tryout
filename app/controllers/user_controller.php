@@ -70,7 +70,7 @@
                             $registration->validation[$field]['length'][2] . " long", 'error');
                         }
                         if (!empty($registration->validation_errors[$field]['format'])) {
-                            if($field == 'cnum'){
+                            if ($field == 'cnum') {
                                 $errors[$field] = notice('Contact number must be numbers only', 'error');
                             } else {
                                 $errors[$field] = notice($registration->validation[$field]['format'][1], 'error');

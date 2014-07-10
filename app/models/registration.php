@@ -77,7 +77,7 @@
             $db = DB::conn();
             $where = 'uname = ? OR email_add = ?';
             $where_params = array($this->uname, $this->email_add);
-            $row = $db->search(User::table, $where, $where_params);
+            $row = $db->search(User::TABLE, $where, $where_params);
             if ($row) {
                 throw new ExistingUserException(notice("Username/Email Address has already been used","error"));
             } else if(!$this->validate()) {
@@ -93,7 +93,7 @@
                     'home_add' => $this->home_add,
                     'email_add' => $this->email_add
                     );
-                $db->insert(User::table, $where_params);
+                $db->insert(User::TABLE, $where_params);
             }
         }
     }

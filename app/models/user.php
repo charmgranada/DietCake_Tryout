@@ -1,6 +1,6 @@
 <?php    
     class User extends AppModel{
-        const table = 'users';
+        const TABLE = 'users';
         const PASS_MIN_LENGTH = 8;
         const PASS_MAX_LENGTH = 16;
 

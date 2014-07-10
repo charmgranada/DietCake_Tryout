@@ -1,7 +1,7 @@
 <?php
     class Comment extends AppModel
     {
-        const table = 'comment';
+        const TABLE = 'comment';
         public $validation = array(
             'body' => array(
                 'length' => array(
@@ -25,7 +25,7 @@
             $where = 'thread_id = ?';
             $where_params = array($this->thread_id);
             $order = 'created DESC';
-            $rows = $db->search(self::table, $where, $where_params, $order, $limit);
+            $rows = $db->search(self::TABLE, $where, $where_params, $order, $limit);
             foreach ($rows as $row) 
             {
                 $comments[] = new self($row);
@@ -74,7 +74,7 @@
                 'body' => $this->body
                 );
             $where_params = array('id' => $this->id);
-            $db->update(self::table, $set_params, $where_params);
+            $db->update(self::TABLE, $set_params, $where_params);
         }
 
         /**
@@ -93,7 +93,7 @@
                 'username' => $this->username, 
                 'body' => $this->body
                 );
-            $db->insert(self::table, $set_params);
+            $db->insert(self::TABLE, $set_params);
         }
         
         /**

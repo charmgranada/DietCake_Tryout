@@ -1,7 +1,7 @@
 <?php
     class Thread extends AppModel
     {
-        const table = 'thread';
+        const TABLE = 'thread';
         public $validation = array(
             'title' => array(
                 'length' => array(
@@ -54,7 +54,7 @@
                     'title' => $this->title, 
                     'user_created' => $this->user_id
                     );
-                $db->insert(self::table, $set_params);
+                $db->insert(self::TABLE, $set_params);
                 $this->id = $db->lastInsertId();
                 $comment->thread_id = $this->id;
                 // write first comment at the same time
@@ -76,7 +76,7 @@
             $db->begin();
             $set_params = array('title' => $this->title);
             $where_params = array('id' => $this->id);
-            $db->update(self::table, $set_params, $where_params);
+            $db->update(self::TABLE, $set_params, $where_params);
             $comment->thread_id = $this->id;
             // write first comment at the same time
             $comment->createNew();

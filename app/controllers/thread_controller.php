@@ -1,14 +1,19 @@
 <?php
     class ThreadController extends AppController
     {
+        const THREADS_PER_PAGE = 10;
         /**
          *VIEW ALL THREADS
          */        
         public function index()
         {
             check_user_logged_out();
+            $cur_page = Param::get('pn');
+            $num_rows = Thread::getNumRows();
+            $url = "thread/index";
+            $pagination = pagination($url, $num_rows, $cur_page, self::THREADS_PER_PAGE);
             // TODO: Get all threads
-            $threads = Thread::getAll();
+            $threads = Thread::getAll($pagination['limit']);
             $this->set(get_defined_vars());
         }
 

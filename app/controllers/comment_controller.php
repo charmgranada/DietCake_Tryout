@@ -1,6 +1,7 @@
 <?php
     class CommentController extends AppController
     {
+        const COMMENTS_PER_PAGE = 5;
         /**
          *VIEW ALL COMMENTS OF A THREAD
          *@throws PageNotFoundException
@@ -14,7 +15,8 @@
             // FOR PAGINATION //
             $cur_page = Param::get('pn');
             $num_rows = $comment->getNumRows();
-            $pagination = pagination($thread->id, $num_rows, $cur_page);
+            $url = "comment/view";
+            $pagination = pagination($url, $num_rows, $cur_page, self::COMMENTS_PER_PAGE, array("thread_id" => $thread->id));
             // PASS LIMIT TO THE COMMENT QUERY //
             $all_comments = $comment->getAll($pagination['limit']);
             $page = Param::get('page_next', 'view');

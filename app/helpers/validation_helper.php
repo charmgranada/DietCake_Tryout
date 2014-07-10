@@ -55,7 +55,7 @@
         if (!isset($_SESSION['user_id'])) {
             return false;
         }
-        return true;
+        return $user = User::get($_SESSION['user_id']);
     }
     
     // FOR REDIRECT //

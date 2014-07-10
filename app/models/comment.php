@@ -15,7 +15,6 @@
 
         /**
          *RETURNS ALL COMMENTS OF A THREAD
-         *@param $thread_id
          *@param $limit
          */
         public function getAll($limit)
@@ -34,6 +33,7 @@
 
         /**
          *RETURNS A SPECIFIC COMMENT
+         *@param $comment_id
          */
         public static function get($comment_id)
         {
@@ -47,7 +47,6 @@
 
         /**
          *RETURNS TOTAL NUMBER OF COMMENTS
-         *@param $id
          */
         public function getNumRows()
         {

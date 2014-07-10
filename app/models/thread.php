@@ -13,11 +13,11 @@
         /**
          *RETURNS ALL THREADS IN DATABASE
          */
-        public static function getAll()
+        public static function getAll($limit)
         {
             $db = DB::conn();
             $threads = array();
-            $query = "SELECT * FROM " . self::THREAD_TABLE;
+            $query = "SELECT * FROM " . self::THREAD_TABLE . " LIMIT " . $limit;
             $rows = $db->rows($query);
             foreach ($rows as $row) {
                 $threads[] = new self($row);
@@ -36,6 +36,17 @@
             $where_params = array($thread_id);
             $row = $db->row($query, $where_params);
             return new self($row);
+        }
+
+        /**
+         *RETURNS TOTAL NUMBER OF THREADS
+         */
+        public static function getNumRows()
+        {
+            $db = DB::conn();
+            $query = "SELECT COUNT(*) FROM " . self::THREAD_TABLE;
+            $count = $db->value($query);
+            return $count;            
         }
 
         /**

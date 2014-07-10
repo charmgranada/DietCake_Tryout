@@ -1,9 +1,8 @@
 <?php
-    function pagination($thread_id, $totalCount,$pn) 
+    function pagination($url, $total_rows,$pn, $rows_per_page, array $url_query = NULL) 
     {
-        define("ROWS_PER_PAGE", 5);
         $pagination = array();
-        $last_page = ceil($totalCount/ROWS_PER_PAGE);
+        $last_page = ceil($total_rows/$rows_per_page);
         if ($last_page < 1) {
             $last_page = 1;
         }
@@ -18,19 +17,21 @@
             $cur_page = $last_page;
         }
         // SETS THE LIMIT PER PAGE //    
-        $limit_page = ($cur_page - 1) * ROWS_PER_PAGE;
-        $limit = $limit_page . ',' . ROWS_PER_PAGE;
+        $limit_page = ($cur_page - 1) * $rows_per_page;
+        $limit = $limit_page . ',' . $rows_per_page;
         // PAGINATION CONTROLS WILL ONLY APPEAR IF THERE ARE MORE THAN 1 PAGES //   
         $controls = '';
+        $page_link =& $url_query['pn'];
         if ($last_page != 1) {
             // THESE ARE THE PAGINATION CONTROLS SHOWN ON THE LEFT OF THE CURRENT PAGE //
             if ($cur_page > 1) {            
-                $previous = $cur_page - 1;
-                $controls .= "<a href='" . url('comment/view', array('thread_id' =>  $thread_id, 'pn' => $previous)) . "'> 
+                $page_link = $cur_page - 1;
+                $controls .= "<a href='" . url($url, $url_query) . "'> 
                     Previous </a> &nbsp; &nbsp;";
                 for ($i = $cur_page - 4 ; $i < $cur_page ; $i++) {
                     if ($i > 0) { 
-                        $controls .= "<a href='" . url('comment/view', array('thread_id' =>  $thread_id, 'pn' => $i)) . "'>
+                        $page_link = $i;
+                        $controls .= "<a href='" . url($url, $url_query) . "'>
                             $i</a> &nbsp; ";
                     }
                 }
@@ -39,16 +40,17 @@
             $controls .=  "" . $cur_page . "&nbsp ";
             // THESE ARE THE PAGINATION CONTROLS SHOWN ON THE RIGHT OF THE CURRENT PAGE //        
             for ($i = $cur_page + 1 ; $i <= $last_page ; $i++) { 
-                $controls .= "<a href='" . url('comment/view', array('thread_id' =>  $thread_id, 'pn' => $i)) . "'>
+                $page_link = $i;
+                $controls .= "<a href='" . url($url, $url_query) . "'>
                     $i</a> &nbsp; ";
                 if ($i >= $cur_page + 4) {
                     break;
                 }
             }
             if ($cur_page != $last_page) {
-                $next = $cur_page + 1;
+                $page_link = $cur_page + 1;
                 $controls .= " &nbsp; &nbsp; 
-                    <a href='" . url('comment/view', array('thread_id' =>  $thread_id, 'pn' => $next)) . "'> Next </a> ";
+                    <a href='" . url($url, $url_query) . "'> Next </a> ";
             }
         }
 

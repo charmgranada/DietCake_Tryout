@@ -55,8 +55,8 @@
             $db = DB::conn();
             $query = 'SELECT COUNT(*) FROM comment WHERE thread_id = ?';
             $where_params = array($this->thread_id);
-            $row = $db->row($query, $where_params);
-            return $row["COUNT(*)"];            
+            $count = $db->value($query, $where_params);
+            return $count;            
         }
 
         /**

@@ -25,7 +25,7 @@
                 } catch (ValidationException $e) {
                     $status = notice($e->getMessage(),"error");
                 } catch (RecordNotFoundException $e) {
-                        $status = notice($e->getMessage(),"error");                        
+                    $status = notice($e->getMessage(),"error");                        
                 }
             }
             $this->set(get_defined_vars());

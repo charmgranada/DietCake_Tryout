@@ -15,7 +15,6 @@ if ($comment->hasError()): ?>
                 <?php eh($comment->validation['body']['length'][2]) ?> characters in length.
             </div>        
         <?php endif ?>
-
     </div>
 <?php endif ?>
 

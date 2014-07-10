@@ -1,21 +1,21 @@
 <?php    
     class User extends AppModel{
-        const TABLE = 'users';
+        const USERS_TABLE = "users";
         const PASS_MIN_LENGTH = 8;
         const PASS_MAX_LENGTH = 16;
 
         public $validation = array(
-            'username' => array(
-                'length' => array(
-                    'validate_between' , MIN_LENGTH, MAX_LENGTH
+            "username" => array(
+                "length" => array(
+                    "validate_between" , MIN_LENGTH, MAX_LENGTH
                     ),
-                'format' => array(
-                    'is_valid_username'
+                "format" => array(
+                    "is_valid_username"
                     ),
                 ),
-            'password' => array(
-                'length' => array(
-                    'validate_between' , self::PASS_MIN_LENGTH, self::PASS_MAX_LENGTH
+            "password" => array(
+                "length" => array(
+                    "validate_between" , self::PASS_MIN_LENGTH, self::PASS_MAX_LENGTH
                     ),
                 ),
             );
@@ -30,10 +30,10 @@
             $this->username = $username;
             $this->password = $password;
             if (!$this->validate()) {
-                throw new ValidationException('Invalid Username/Password');
+                throw new ValidationException("Invalid Username/Password");
             } else {
                 $db = DB::conn();
-                $query = 'SELECT * FROM users WHERE uname = ? AND pword = ?';
+                $query = "SELECT * FROM " . self::USERS_TABLE . " WHERE uname = ? AND pword = ?";
                 $where_params = array($username, sha1($password));
                 $row = $db->row($query, $where_params);
                 if(!$row) {
@@ -48,7 +48,7 @@
         public static function get($id)
         {
             $db = DB::conn();
-            $query = "SELECT * FROM users WHERE id = ?";
+            $query = "SELECT * FROM " . self::USERS_TABLE . " WHERE id = ?";
             $where_params = array($id);
             $row = $db->row($query, $where_params); 
             return new self ($row);

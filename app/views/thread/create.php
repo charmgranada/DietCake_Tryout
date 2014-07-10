@@ -25,13 +25,15 @@ if ($thread->hasError() || $comment->hasError()): ?>
 
 <form class="well" method="post" action="<?php eh(url('')) ?>">
     <label>Title</label>
-    <input type="text" class="span2" name="title" value="<?php eh(Param::get('title')) ?>">
+    <input style='width=100%;' type="text" class="span2" name="title" value="<?php eh(Param::get('title')) ?>">
     <input type="hidden" name="username" value="<?php eh($_SESSION['uname']) ?>">
 
     <label>Comment</label>
-    <textarea name="body"><?php eh(Param::get('body')) ?></textarea>
+    <textarea style='width=100%;' name="body"><?php eh(Param::get('body')) ?></textarea><br/>
     
-    <br />
     <input type="hidden" name="page_next" value="create_end">
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary">Submit</button><br/><br/>
+    <a href="<?php eh(url('thread/index'))?>">
+        &larr; Back to All Threads
+    </a>
 </form>

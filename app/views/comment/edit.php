@@ -29,8 +29,7 @@ if ($comment->hasError()): ?>
 
 <form class="well" method="post" action="<?php eh(url('comment/edit', array('thread_id' => $thread->id, 'comment_id' => $comment->id))) ?>">
     <center>
-        <textarea name="body" style='width:100%;'><?php eh($comment->body) ?></textarea>
-        <br />
+        <textarea name="body" style='width:100%;'><?php eh($comment->body) ?></textarea><br/>
         <input type="hidden" name="thread_id" value="<?php eh($thread->id) ?>">
         <input type="hidden" name="page_next" value="edit_end">
         <button type="submit" style='float:right;' class="btn btn-primary">Save Changes</button>

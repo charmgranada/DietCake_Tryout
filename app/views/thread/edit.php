@@ -50,5 +50,8 @@ if ($thread->hasError() || $comment->hasError()): ?>
     <br />
 
     <input type="hidden" name="page_next" value="edit_end">
-    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <button type="submit" class="btn btn-primary">Save Changes</button><br/><br/>
+    <a href="<?php eh(url('comment/view', array('thread_id' => $thread->id))) ?>">
+        &larr; Back to All Threads
+    </a>
 </form>

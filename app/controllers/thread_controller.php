@@ -77,7 +77,8 @@
             check_user_logged_out();
             $thread = Thread::get(Param::get('thread_id'));
             $thread_title = $thread->title;
-            $thread->delete();  
+            $thread->delete(); 
+            redirect("thread", "index");
             $this->set(get_defined_vars());
         }
     }

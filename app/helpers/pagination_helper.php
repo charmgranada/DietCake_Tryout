@@ -1,5 +1,5 @@
 <?php
-    function pagination($url, $total_rows,$pn, $rows_per_page, array $url_query = NULL) 
+    function pagination($total_rows,$pn, $rows_per_page, array $url_query = NULL) 
     {
         $pagination = array();
         $last_page = ceil($total_rows/$rows_per_page);
@@ -26,12 +26,12 @@
             // THESE ARE THE PAGINATION CONTROLS SHOWN ON THE LEFT OF THE CURRENT PAGE //
             if ($cur_page > 1) {            
                 $page_link = $cur_page - 1;
-                $controls .= "<a href='" . url($url, $url_query) . "'> 
+                $controls .= "<a href='" . url('', $url_query) . "'> 
                     Previous </a> &nbsp; &nbsp;";
                 for ($i = $cur_page - 4 ; $i < $cur_page ; $i++) {
                     if ($i > 0) { 
                         $page_link = $i;
-                        $controls .= "<a href='" . url($url, $url_query) . "'>
+                        $controls .= "<a href='" . url('', $url_query) . "'>
                             $i</a> &nbsp; ";
                     }
                 }
@@ -41,7 +41,7 @@
             // THESE ARE THE PAGINATION CONTROLS SHOWN ON THE RIGHT OF THE CURRENT PAGE //        
             for ($i = $cur_page + 1 ; $i <= $last_page ; $i++) { 
                 $page_link = $i;
-                $controls .= "<a href='" . url($url, $url_query) . "'>
+                $controls .= "<a href='" . url('', $url_query) . "'>
                     $i</a> &nbsp; ";
                 if ($i >= $cur_page + 4) {
                     break;
@@ -50,7 +50,7 @@
             if ($cur_page != $last_page) {
                 $page_link = $cur_page + 1;
                 $controls .= " &nbsp; &nbsp; 
-                    <a href='" . url($url, $url_query) . "'> Next </a> ";
+                    <a href='" . url('', $url_query) . "'> Next </a> ";
             }
         }
 

@@ -25,21 +25,23 @@ if ($comment->hasError()): ?>
     ?>
 </h1>
 
-<p align='right' style='font-size:12px;line-height:12px;'>
-    Total of 
-        <b>
-            <?php eh($num_rows); ?>
-        </b>
-    comments<br/>
-    Page 
-        <b>
-            <?php eh($pagination['cur_page']); ?>
-        </b> 
-    of 
-        <b>
-            <?php eh($pagination['last_page']); ?>
-        </b>
-</p>
+<?php if($num_rows > 0): ?>
+    <p align='right' style='font-size:12px;line-height:12px;'>
+        Total of 
+            <b>
+                <?php eh($num_rows); ?>
+            </b>
+        <?php echo ($num_rows==1) ? "comment" : "comments"; ?><br/>
+        Page 
+            <b>
+                <?php eh($pagination['cur_page']); ?>
+            </b> 
+        of 
+            <b>
+                <?php eh($pagination['last_page']); ?>
+            </b>
+    </p>
+<?php endif; ?>
 
 <?php foreach ($all_comments as $k => $v): ?>
     <div class="alert alert-info">
@@ -75,27 +77,12 @@ echo $pagination['controls'];
 // END OF PAGINATION CONTROLS // 
 ?>
 </center>
-<?php // THE EDIT AND DELETE CONTROLS FOR THE THREAD, ACCESSED ONLY BY THE USER WHO CREATED IT
-if($thread->user_created == $_SESSION['user_id']): ?>
-    <p align='left'>
-        <a href="<?php eh(url('thread/edit', array('thread_id' => $thread->id)))?>">
-            <button class="btn btn-success">Edit Title</button>
-        </a>
-        <a href="<?php eh(url('thread/delete', array('thread_id' => $thread->id)))?>">
-            <button class="btn btn-danger">
-                Delete Thread
-            </button>
-        </a>
-    </p>
-<?php endif; ?>
 <hr/>
 <form class="well" method="post" action="<?php eh(url('comment/view', array('thread_id' => $thread->id))) ?>">
     <center>
-    <input type="hidden" name="username" value="<?php eh($_SESSION['uname']) ?>">
     <textarea name="body" style='width:100%;'><?php eh(Param::get('body')) ?></textarea>
     <br/>
     <input type="hidden" name="thread_id" value="<?php eh($thread->id) ?>">
-    <input type="hidden" name="page_next" value="write_end">
     <button type="submit" style='float:right;' class="btn btn-primary">Add Comment</button>
     </center>
     <a href="<?php eh(url('thread/index'))?>">

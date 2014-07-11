@@ -12,32 +12,24 @@
             $thread = Thread::get(Param::get('thread_id'));
             $comment = new Comment();
             $comment->thread_id = $thread->id;
+            $body = Param::get('body');
             // FOR PAGINATION //
             $cur_page = Param::get('pn');
             $num_rows = $comment->getNumRows();
-            $url = "comment/view";
-            $pagination = pagination($url, $num_rows, $cur_page, self::COMMENTS_PER_PAGE, array("thread_id" => $thread->id));
+            $pagination = pagination($num_rows, $cur_page, self::COMMENTS_PER_PAGE, array("thread_id" => $thread->id));
             // PASS LIMIT TO THE COMMENT QUERY //
             $all_comments = $comment->getAll($pagination['limit']);
-            $page = Param::get('page_next', 'view');
-            switch ($page) {
-                case 'view':
-                    break;
-                case 'write_end':
-                    $comment->username = Param::get('username');
-                    $comment->body = Param::get('body');
-                    try {
-                        $comment->createNew($thread);
-                    } catch (ValidationException $e) {
-                        $page = 'view';
-                    }
-                    break;
-                default:
-                    throw new PageNotFoundException("{$page} is not found");
-                    break;
+            if($body){
+                try {
+                    $comment->username = $_SESSION['uname'];
+                    $comment->body = $body;
+                    $comment->createNew($thread);
+                    redirect("comment", "view", array("thread_id" => $thread->id));
+                } catch (ValidationException $e) {
+
+                }
             }
             $this->set(get_defined_vars());
-            $this->render($page);
         }
 
         /**
@@ -49,24 +41,17 @@
             check_user_logged_out();   
             $thread = Thread::get(Param::get('thread_id'));   
             $comment = Comment::get(Param::get('comment_id'));
-            $page = Param::get('page_next', 'edit');
-            switch ($page) {
-                case 'edit':
-                    break;
-                case 'edit_end':
+            $body = Param::get('body');
+            if($body){
+                try {
                     $comment->body = Param::get('body');
-                    try {
-                        $comment->setBody();
-                    } catch (ValidationException $e) {
-                        $page = 'edit';
-                    }
-                    break;
-                default:
-                    throw new PageNotFoundException("{$page} is not found");
-                    break;
+                    $comment->setBody();
+                    redirect("comment", "view", array("thread_id" => $thread->id));
+                } catch (ValidationException $e) {
+
+                }
             }
             $this->set(get_defined_vars());
-            $this->render($page);
         }
         
         /**
@@ -77,7 +62,8 @@
             check_user_logged_out();
             $thread = Thread::get(Param::get('thread_id'));
             $comment = Comment::get(Param::get('comment_id'));
-            $comment->delete();  
+            $comment->delete(); 
+            redirect("comment", "view", array("thread_id" => $thread->id));
             $this->set(get_defined_vars());
         }
     }

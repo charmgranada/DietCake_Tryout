@@ -2,20 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>DietCake <?php eh($title) ?></title>
-    <script src="/bootstrap/css/bootstrap.min.js"></script>
-    <script language="javascript" type="text/javascript">
-        var xmlhttp=new XMLHttpRequest();
-        xmlhttp.onreadystatechange=function()
-          {
-          if (xmlhttp.readyState==4 && xmlhttp.status==200)
-            {
-            document.getElementById("threads").innerHTML=xmlhttp.responseText;
-            }
-          }
-        xmlhttp.open("GET",<?php eh(url('thread/index'))?>,true);
-        xmlhttp.send();
-    </script>
+    <title>KLabForums <?php eh($title) ?></title>
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <style>
       body {
@@ -29,7 +16,8 @@
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
-          <a class="brand" href="#">DietCake ni Romz</a>
+          <img class="logo" src="/bootstrap/img/klab-logo.png">
+          <font class="brand" href="#">Forums</font>
           <?php if($user = user_logged_in()): ?>
             <div style="float:right">
               <select style="width:auto;" class="btn btn-small btn-info" 

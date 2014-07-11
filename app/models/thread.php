@@ -17,7 +17,8 @@
         {
             $db = DB::conn();
             $threads = array();
-            $query = "SELECT * FROM " . self::THREAD_TABLE . " LIMIT " . $limit;
+            $query = "SELECT t.*, c.uname FROM " . self::THREAD_TABLE . " t 
+            INNER JOIN " . User::USERS_TABLE . " c WHERE t.user_created = c.id ORDER BY created DESC LIMIT " . $limit;
             $rows = $db->rows($query);
             foreach ($rows as $row) {
                 $threads[] = new self($row);
@@ -71,6 +72,7 @@
                 // write first comment at the same time
                 $comment->createNew();
             $db->commit();
+            return $this->id;
         }
 
         /**

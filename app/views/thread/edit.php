@@ -28,30 +28,19 @@ if ($thread->hasError() || $comment->hasError()): ?>
                 <em>Comment</em> must have spaces to fit the screen.
             </div>        
         <?php endif ?>
-
-        <?php  // ERRORS FOR BODY LENGTH VALIDATION //
-        if (!empty($comment->validation_errors['body']['length'])): ?>        
-            <div>
-                <em>Comment</em> must be between
-                <?php eh($comment->validation['body']['length'][1]) ?> and
-                <?php eh($comment->validation['body']['length'][2]) ?> characters in length.
-            </div>        
-        <?php endif ?>
     </div>
 <?php endif ?>
 
 <form class="well" method="post" action="<?php eh(url('')) ?>">
     <label>Title</label>
     <input type="text" class="span2" name="title" value="<?= $thread->title; ?>">
-    <input type="hidden" name="username" value="<?php eh($_SESSION['uname']) ?>">
 
     <label>Comment</label>
     <textarea name="body"><?php eh(Param::get('body')) ?></textarea>
     <br />
 
-    <input type="hidden" name="page_next" value="edit_end">
     <button type="submit" class="btn btn-primary">Save Changes</button><br/><br/>
-    <a href="<?php eh(url('comment/view', array('thread_id' => $thread->id))) ?>">
+    <a href="<?php eh(url('thread/index')) ?>">
         &larr; Back to All Threads
     </a>
 </form>

@@ -59,8 +59,13 @@
     }
     
     // FOR REDIRECT //
-    function redirect($controller, $view)
+    function redirect($controller, $view, array $urlQuery = NULL)
     {
         $url = "/$controller/$view";
+        if(!is_null($urlQuery)){
+            foreach ($urlQuery as $key => $value) {
+                $url .= "?$key=$value";
+            }
+        }
         header("location: {$url}");
     }

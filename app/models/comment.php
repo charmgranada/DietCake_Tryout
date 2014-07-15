@@ -2,6 +2,7 @@
 class Comment extends AppModel
 {
     const COMMENT_TABLE = "comment";
+    
     public $validation = array(
         "body" => array(
             "length" => array(
@@ -61,7 +62,7 @@ class Comment extends AppModel
      *SAVE CHANGES MADE TO A COMMENT
      *@throws ValidationException
      */
-    public function setBody()
+    public function update()
     {
         $this->validation["body"]["format"][] = $this->body;
         if (!$this->validate()) {
@@ -79,7 +80,7 @@ class Comment extends AppModel
      *CREATES A NEW COMMENT
      *@throws ValidationException
      */
-    public function createNew()
+    public function create()
     {
         $this->validation["body"]["format"][] = $this->body;
         if (!$this->validate()) {

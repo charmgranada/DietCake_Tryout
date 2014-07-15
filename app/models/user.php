@@ -4,6 +4,7 @@ class User extends AppModel
     const USERS_TABLE = "users";
     const PASS_MIN_LENGTH = 8;
     const PASS_MAX_LENGTH = 16;
+    
     public $validation = array(
         "username" => array(
             "length" => array(

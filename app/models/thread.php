@@ -2,6 +2,7 @@
 class Thread extends AppModel
 {
     const THREAD_TABLE = "thread";
+
     public $validation = array(
         "title" => array(
             "length" => array(
@@ -56,7 +57,7 @@ class Thread extends AppModel
      *@param $comment
      *@throws ValidationException
      */
-    public function createNew(Comment $comment)
+    public function create(Comment $comment)
     {
         if (!$this->validate() || !$comment->validate()) {
             throw new ValidationException("invalid thread or comment");
@@ -71,7 +72,7 @@ class Thread extends AppModel
             $this->id = $db->lastInsertId();
             $comment->thread_id = $this->id;
             // write first comment at the same time
-            $comment->createNew();
+            $comment->create();
         $db->commit();
         return $this->id;
     }
@@ -93,7 +94,7 @@ class Thread extends AppModel
         $db->update(self::THREAD_TABLE, $set_params, $where_params);
         $comment->thread_id = $this->id;
         // write first comment at the same time
-        $comment->createNew();
+        $comment->create();
         $db->commit();
     }
     

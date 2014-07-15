@@ -12,7 +12,8 @@ function readable_text($s)
     return $s;
 }
 
-function notice($text, $notice_type = NULL){
+function notice($text, $notice_type = NULL)
+{
     $msg = "<center>";
     switch ($notice_type) {
     case 'error':

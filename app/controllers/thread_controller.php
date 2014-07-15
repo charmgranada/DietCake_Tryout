@@ -34,7 +34,7 @@ class ThreadController extends AppController
                 $thread->user_id = $_SESSION['user_id'];
                 $comment->username = $_SESSION['uname'];
                 $comment->body = Param::get('body');
-                $new_thread_id = $thread->createNew($comment);
+                $new_thread_id = $thread->create($comment);
                 redirect("comment", "view", array("thread_id" => $new_thread_id));
             } catch (ValidationException $e) {
                 

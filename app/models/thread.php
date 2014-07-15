@@ -64,15 +64,15 @@ class Thread extends AppModel
         }
         $db = DB::conn();
         $db->begin();
-            $set_params = array(
-                "title" => $this->title, 
-                "user_created" => $this->user_id
-                );
-            $db->insert(self::THREAD_TABLE, $set_params);
-            $this->id = $db->lastInsertId();
-            $comment->thread_id = $this->id;
-            // write first comment at the same time
-            $comment->create();
+        $set_params = array(
+            "title" => $this->title, 
+            "user_created" => $this->user_id
+            );
+        $db->insert(self::THREAD_TABLE, $set_params);
+        $this->id = $db->lastInsertId();
+        $comment->thread_id = $this->id;
+        // write first comment at the same time
+        $comment->create();
         $db->commit();
         return $this->id;
     }

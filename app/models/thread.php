@@ -29,7 +29,7 @@ class Thread extends AppModel
     }
 
     /**
-     *REGISTERS A SPECIFIC THREAD
+     *RETURNS A SPECIFIC THREAD
      *@param $thread_id
      */
     public static function get($thread_id)

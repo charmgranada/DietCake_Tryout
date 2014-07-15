@@ -82,7 +82,7 @@ class Thread extends AppModel
      *@param $comment
      *@throws ValidationException
      */
-    public function setTitle(Comment $comment)
+    public function update(Comment $comment)
     {
         if (!$this->validate() || !$comment->validate()) {
             throw new ValidationException("invalid thread or comment");

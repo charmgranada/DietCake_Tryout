@@ -59,10 +59,10 @@ function user_logged_in()
 }
 
 // FOR REDIRECT //
-function redirect($controller, $view, array $url_query = NULL)
+function redirect($controller, $view, array $url_query = null)
 {
     $url = "/$controller/$view";
-    if (!is_null($url_query)) {
+    if ($url_query) {
         foreach ($url_query as $key => $value) {
             $url .= "?$key=$value";
         }

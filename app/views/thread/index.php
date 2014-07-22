@@ -1,5 +1,10 @@
 <?php $title = "Board Exercise in PHP DietCake" ?>
-<h1>All threads</h1>
+
+<form method='post' action='<?php eh(url('')) ?>'>
+    <input type='text' style='float:left;margin-right:10px;' name='search_item' placeholder='Enter your search here' value='<?php eh(Param::get('search_item'))?>'>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
 <?php if($num_rows > 0): ?>
     <p align='right' style='font-size:12px;line-height:12px;'>
         Total of 
@@ -17,6 +22,7 @@
             </b>
     </p>
 <?php endif; ?>
+
 <center>
     <?php foreach ($threads as $v): ?>
         <div class = "alert" style="border:1px dashed #bbb;width:70%;margin:2px;">
@@ -43,6 +49,7 @@
         </div>
     <?php endforeach; 
     echo $pagination["controls"]; ?>
-</center>
-<a class="btn btn-large btn-primary" href="<?php eh(url('thread/create')) ?>">Create</a>
+<br/>
+<a class="btn btn-large btn-primary" href="<?php eh(url('thread/create')) ?>">Create a new thread</a>
 <br/><br/>
+</center>

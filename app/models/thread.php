@@ -15,12 +15,16 @@ class Thread extends AppModel
      *RETURNS ALL THREADS IN DATABASE
      *@param $limit
      */
-    public static function getAll($limit)
+    public static function getAll($limit, $search)
     {
         $db = DB::conn();
         $threads = array();
         $query = 'SELECT t.*, u.username FROM ' .self::THREAD_TABLE. ' t INNER JOIN ' .User::USERS_TABLE. ' u 
             WHERE t.user_id = u.user_id ORDER BY created DESC LIMIT ' .$limit;
+        if ($search) {
+            $query = 'SELECT t.*, u.username FROM ' .self::THREAD_TABLE. ' t INNER JOIN ' .User::USERS_TABLE. ' u 
+                WHERE t.user_id = u.user_id AND ' .$search. ' ORDER BY created DESC LIMIT ' .$limit;
+        }
         $rows = $db->rows($query);
         foreach ($rows as $row) {
             $threads[] = new self($row);
@@ -44,10 +48,13 @@ class Thread extends AppModel
     /**
      *RETURNS TOTAL NUMBER OF THREADS
      */
-    public static function getNumRows()
+    public static function getNumRows($search)
     {
         $db = DB::conn();
-        $query = 'SELECT COUNT(*) FROM ' . self::THREAD_TABLE;
+        $query = 'SELECT COUNT(*) FROM ' .self::THREAD_TABLE;
+        if ($search) {            
+            $query = 'SELECT COUNT(*) FROM ' .self::THREAD_TABLE. ' WHERE ' .$search;
+        }
         $count = $db->value($query);
         return $count;            
     }

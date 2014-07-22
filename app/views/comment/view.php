@@ -24,6 +24,7 @@ if ($comment->hasError()): ?>
         eh($thread->title); 
     ?>
 </h1>
+<?php eh($thread->description)?>
 
 <?php if($num_rows > 0): ?>
     <p align='right' style='font-size:12px;line-height:12px;'>
@@ -80,7 +81,7 @@ echo $pagination['controls'];
 <hr/>
 <form class='well' method='post' action='<?php eh(url('')) ?>'>
     <center>
-    <textarea name='body' style='width:100%;'><?php eh(Param::get('body')) ?></textarea>
+    <textarea name='body' style='width:100%;'><?php eh($body) ?></textarea>
     <br/>
     <input type='hidden' name='thread_id' value='<?php eh($thread->thread_id) ?>'>
     <button type='submit' style='float:right;' class='btn btn-primary'>Add Comment</button>

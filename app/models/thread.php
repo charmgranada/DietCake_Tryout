@@ -7,7 +7,15 @@ class Thread extends AppModel
         'title' => array(
             'length' => array(
                 'validate_between', MIN_LENGTH, MAX_LENGTH,
+            )
+        ),
+        'description' => array(
+            'length' => array(
+                'validate_between', MIN_LENGTH, MAX_TEXT_LENGTH,
             ),
+            'format' => array(
+                'have_spaces'
+            )
         )
     );
 
@@ -87,24 +95,22 @@ class Thread extends AppModel
 
     /**
      *CREATES A NEW THREAD WITH A COMMENT
-     *@param $comment
      *@throws ValidationException
      */
-    public function create(Comment $comment)
+    public function create()
     {
-        if (!$this->validate() || !$comment->validate()) {
-            throw new ValidationException('invalid thread or comment');
+        $this->validation['description']['format'][] = $this->description;
+        if (!$this->validate()) {
+            throw new ValidationException('invalid title or description');
         }
         $db = DB::conn();
-        $db->begin();
-        $set_params = array('title' => $this->title, 'user_id' => $this->user_id);
+        $set_params = array(
+            'user_id' => $this->user_id,
+            'title' => $this->title,
+            'description' => $this->description
+        );
         $db->insert(self::THREAD_TABLE, $set_params);
-        $this->thread_id = $db->lastInsertId();
-        $comment->thread_id = $this->thread_id;
-        // write first comment at the same time
-        $comment->create();
-        $db->commit();
-        return $this->thread_id;
+        return $db->lastInsertId();
     }
 
     /**
@@ -112,20 +118,16 @@ class Thread extends AppModel
      *@param $comment
      *@throws ValidationException
      */
-    public function update(Comment $comment)
+    public function update()
     {
-        if (!$this->validate() || !$comment->validate()) {
+        $this->validation['description']['format'][] = $this->description;
+        if (!$this->validate()) {
             throw new ValidationException('invalid thread or comment');
         }
         $db = DB::conn();
-        $db->begin();
-        $set_params = array('title' => $this->title);
+        $set_params = array('title' => $this->title, 'description' => $this->description);
         $where_params = array('thread_id' => $this->thread_id);
         $db->update(self::THREAD_TABLE, $set_params, $where_params);
-        $comment->thread_id = $this->thread_id;
-        // write first comment at the same time
-        $comment->create();
-        $db->commit();
     }
     
     /**

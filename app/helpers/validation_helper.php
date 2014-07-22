@@ -26,7 +26,7 @@ function is_valid_email($email)
     return (preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/",$email));
 }
  
-function is_valid_comment($text)
+function have_spaces($text)
 {
     if (preg_match('/([^ ]){125}/', $text)) {
         return false;

@@ -9,7 +9,7 @@ class ThreadController extends AppController
     public function index()
     {
         check_user_logged_out();
-        $user_id = $_SESSION['user_id'];
+        $user = User::get($_SESSION['user_id']);
         $cur_page = Param::get('pn');
         $search_item = Param::get('search_item');
         $filter_by = Param::get('filter_by');
@@ -24,15 +24,15 @@ class ThreadController extends AppController
             $filter_by = 'All Threads';
         }
         if (isset($search_item)) {
-            $search = "title LIKE '%{$search_item}%'";
+            $search = "title LIKE '%".mysql_real_escape_string($search_item)."%'";
             if (!$search_item && $filter_by == 'All Threads') {
                 redirect('thread', 'index');
             }
         }
-        $num_rows = Thread::getNumRows($search, $filter_by, $user_id);
+        $num_rows = Thread::getNumRows($search, $filter_by, $user->user_id);
         $pagination = pagination($num_rows, $cur_page, self::THREADS_PER_PAGE);
         // TODO: Get all threads
-        $threads = Thread::getAll($pagination['limit'], $search, $filter_by, $user_id);
+        $threads = Thread::getAll($pagination['limit'], $search, $filter_by, $user->user_id);
         $this->set(get_defined_vars());
     }
 
@@ -45,15 +45,14 @@ class ThreadController extends AppController
         check_user_logged_out();
         $thread = new Thread;
         $comment = new Comment;
-        $title = Param::get('title');
-        $body = Param::get('body');
-        if(isset($title) || isset($body)) {
+        $thread_title = Param::get('title');
+        $description = Param::get('description');
+        if(isset($title) || isset($description)) {
             try {
-                $thread->title = $title;
+                $thread->title = $thread_title;
                 $thread->user_id = $_SESSION['user_id'];
-                $comment->user_id = $thread->user_id;
-                $comment->body = $body;
-                $new_thread_id = $thread->create($comment);
+                $thread->description = $description;
+                $new_thread_id = $thread->create();
                 redirect('comment', 'view', array('thread_id' => $new_thread_id));
             } catch (ValidationException $e) {
                 
@@ -70,18 +69,15 @@ class ThreadController extends AppController
     {            
         check_user_logged_out();
         $thread_id = Param::get('thread_id');
-        $title = Param::get('title');
-        $body = Param::get('body');
         $thread = Thread::get($thread_id);
-        $thread_title = $thread->title;
-        $comment = new Comment;
-        if(isset($title) || isset($body)){
+        $thread_title = Param::get('title');
+        $description = Param::get('description');
+        if(isset($title) || isset($description)){
             try {
-                $thread->title = Param::get('title');
+                $thread->title = $thread_title;
                 $thread->user_id = $_SESSION['user_id'];
-                $comment->user_id = $thread->user_id;
-                $comment->body = Param::get('body');
-                $thread->update($comment);
+                $thread->description = $description;
+                $thread->update();
                 redirect('comment', 'view', array('thread_id' => $thread_id));
             } catch (ValidationException $e) {
 
@@ -97,7 +93,6 @@ class ThreadController extends AppController
     {
         check_user_logged_out();
         $thread = Thread::get(Param::get('thread_id'));
-        $thread_title = $thread->title;
         $thread->delete(); 
         redirect('thread', 'index');
         $this->set(get_defined_vars());

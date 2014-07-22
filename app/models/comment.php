@@ -9,7 +9,7 @@ class Comment extends AppModel
                 'validate_between' , MIN_LENGTH, MAX_TEXT_LENGTH
             ),
             'format' => array(
-                'is_valid_comment'
+                'have_spaces'
             )
         )
     );

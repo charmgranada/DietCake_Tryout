@@ -24,7 +24,7 @@ class CommentController extends AppController
             try {
                 $comment->user_id = $_SESSION['user_id'];
                 $comment->body = $body;
-                $comment->create($thread);
+                $comment->create();
                 redirect('comment', 'view', array('thread_id' => $thread->thread_id));
             } catch (ValidationException $e) {
 
@@ -45,7 +45,7 @@ class CommentController extends AppController
         $body = Param::get('body');
         if (isset($body)) {
             try {
-                $comment->body = Param::get('body');
+                $comment->body = $body;
                 $comment->update();
                 redirect('comment', 'view', array('thread_id' => $thread->thread_id));
             } catch (ValidationException $e) {

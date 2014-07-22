@@ -15,7 +15,7 @@ class Thread extends AppModel
      *RETURNS ALL THREADS IN DATABASE
      *@param $limit
      */
-    public static function getAll($limit, $search)
+    public static function getAll($limit, $search, $filter, $user_id)
     {
         $db = DB::conn();
         $threads = array();
@@ -26,6 +26,20 @@ class Thread extends AppModel
                 WHERE t.user_id = u.user_id AND ' .$search. ' ORDER BY created DESC LIMIT ' .$limit;
         }
         $rows = $db->rows($query);
+        if ($filter != 'All Threads'){
+            if ($filter == 'My Threads') {
+                $query = 'SELECT t.*, u.username FROM ' .self::THREAD_TABLE. ' t INNER JOIN ' .User::USERS_TABLE. ' u 
+                    ON t.user_id = u.user_id WHERE u.user_id = ? AND ' .$search. ' ORDER BY created DESC LIMIT ' .$limit;
+            } elseif ($filter == 'Threads I commented') {
+                $query = 'SELECT t.*, u.username FROM ' .self::THREAD_TABLE. ' t INNER JOIN ' .User::USERS_TABLE. ' u ON t.user_id = u.user_id
+                    WHERE t.thread_id = ANY (SELECT DISTINCT t.thread_id FROM ' .self::THREAD_TABLE. ' t INNER JOIN ' .Comment::COMMENT_TABLE. ' c 
+                    ON t.thread_id = c.thread_id WHERE c.user_id = ?)  AND ' .$search. ' ORDER BY created DESC LIMIT ' .$limit;
+            } elseif ($filter == 'Other people\'s Threads') {
+                $query = 'SELECT t.*, u.username FROM ' .self::THREAD_TABLE. ' t INNER JOIN ' .User::USERS_TABLE. ' u 
+                    ON t.user_id = u.user_id WHERE u.user_id != ? AND ' .$search. ' ORDER BY created DESC LIMIT ' .$limit;
+            }
+            $rows = $db->rows($query, array($user_id));
+        }
         foreach ($rows as $row) {
             $threads[] = new self($row);
         }
@@ -48,7 +62,7 @@ class Thread extends AppModel
     /**
      *RETURNS TOTAL NUMBER OF THREADS
      */
-    public static function getNumRows($search)
+    public static function getNumRows($search, $filter, $user_id)
     {
         $db = DB::conn();
         $query = 'SELECT COUNT(*) FROM ' .self::THREAD_TABLE;
@@ -56,6 +70,18 @@ class Thread extends AppModel
             $query = 'SELECT COUNT(*) FROM ' .self::THREAD_TABLE. ' WHERE ' .$search;
         }
         $count = $db->value($query);
+        if ($filter != 'All Threads'){
+            if ($filter == 'My Threads') {
+                $query = 'SELECT COUNT(*) FROM ' .self::THREAD_TABLE. ' WHERE ' .$search. ' AND user_id = ?';
+            } elseif ($filter == 'Threads I commented') {
+                $query = 'SELECT COUNT(*) FROM ' .self::THREAD_TABLE. ' WHERE thread_id = ANY (SELECT DISTINCT 
+                    t.thread_id FROM ' .self::THREAD_TABLE. ' t INNER JOIN ' .Comment::COMMENT_TABLE. ' c 
+                    ON t.thread_id = c.thread_id WHERE c.user_id = ?) AND ' .$search;
+            } elseif ($filter == 'Other people\'s Threads') {
+                $query = 'SELECT COUNT(*) FROM ' .self::THREAD_TABLE. ' WHERE ' .$search. ' AND user_id != ?';
+            }
+            $count = $db->value($query, array($user_id));
+        }
         return $count;            
     }
 

@@ -9,19 +9,30 @@ class ThreadController extends AppController
     public function index()
     {
         check_user_logged_out();
+        $user_id = $_SESSION['user_id'];
         $cur_page = Param::get('pn');
         $search_item = Param::get('search_item');
+        $filter_by = Param::get('filter_by');
+        $filter_options = array(
+            'All Threads', 
+            'My Threads', 
+            'Threads I commented', 
+            'Other people\'s Threads'
+        );
         $search = null;
+        if (!$filter_by) {
+            $filter_by = 'All Threads';
+        }
         if (isset($search_item)) {
             $search = "title LIKE '%{$search_item}%'";
-            if (!$search_item) {
+            if (!$search_item && $filter_by == 'All Threads') {
                 redirect('thread', 'index');
             }
         }
-        $num_rows = Thread::getNumRows($search);
+        $num_rows = Thread::getNumRows($search, $filter_by, $user_id);
         $pagination = pagination($num_rows, $cur_page, self::THREADS_PER_PAGE);
         // TODO: Get all threads
-        $threads = Thread::getAll($pagination['limit'], $search);
+        $threads = Thread::getAll($pagination['limit'], $search, $filter_by, $user_id);
         $this->set(get_defined_vars());
     }
 

@@ -57,12 +57,12 @@ if ($comment->hasError()): ?>
         </p>
 
         <?php // FOR EDIT AND DELETE IF THE COMMENT CAME FROM THE USER LOGGED IN //
-            if($v->username == $_SESSION['uname']): ?>
+            if($v->user_id == $_SESSION['user_id']): ?>
             <p align='right'>
-                <a style='color:green;' href="<?php eh(url('comment/edit', array('thread_id' => $thread->id, 'comment_id' => $v->id)))?>">
+                <a style='color:green;' href="<?php eh(url('comment/edit', array('thread_id' => $thread->thread_id, 'comment_id' => $v->comment_id)))?>">
                     Edit
                 </a> | 
-                <a style='color:red;' href="<?php eh(url('comment/delete', array('thread_id' => $thread->id, 'comment_id' => $v->id)))?>">
+                <a style='color:red;' href="<?php eh(url('comment/delete', array('thread_id' => $thread->thread_id, 'comment_id' => $v->comment_id)))?>">
                     Delete
                 </a>
             </p>
@@ -78,11 +78,11 @@ echo $pagination['controls'];
 ?>
 </center>
 <hr/>
-<form class="well" method="post" action="<?php eh(url('comment/view', array('thread_id' => $thread->id))) ?>">
+<form class="well" method="post" action="<?php eh(url('')) ?>">
     <center>
     <textarea name="body" style='width:100%;'><?php eh(Param::get('body')) ?></textarea>
     <br/>
-    <input type="hidden" name="thread_id" value="<?php eh($thread->id) ?>">
+    <input type="hidden" name="thread_id" value="<?php eh($thread->thread_id) ?>">
     <button type="submit" style='float:right;' class="btn btn-primary">Add Comment</button>
     </center>
     <a href="<?php eh(url('thread/index'))?>">

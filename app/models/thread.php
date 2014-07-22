@@ -1,12 +1,12 @@
 <?php
 class Thread extends AppModel
 {
-    const THREAD_TABLE = "thread";
+    const THREAD_TABLE = 'threads';
 
     public $validation = array(
-        "title" => array(
-            "length" => array(
-                "validate_between", MIN_LENGTH, MAX_LENGTH,
+        'title' => array(
+            'length' => array(
+                'validate_between', MIN_LENGTH, MAX_LENGTH,
             ),
         )
     );
@@ -19,8 +19,8 @@ class Thread extends AppModel
     {
         $db = DB::conn();
         $threads = array();
-        $query = "SELECT t.*, c.uname FROM " . self::THREAD_TABLE . " t 
-        INNER JOIN " . User::USERS_TABLE . " c WHERE t.user_created = c.id ORDER BY created DESC LIMIT " . $limit;
+        $query = 'SELECT t.*, u.username FROM ' .self::THREAD_TABLE. ' t INNER JOIN ' .User::USERS_TABLE. ' u 
+            WHERE t.user_id = u.user_id ORDER BY created DESC LIMIT ' .$limit;
         $rows = $db->rows($query);
         foreach ($rows as $row) {
             $threads[] = new self($row);
@@ -35,7 +35,7 @@ class Thread extends AppModel
     public static function get($thread_id)
     {
         $db = DB::conn();
-        $query = "SELECT * FROM " . self::THREAD_TABLE . " WHERE id = ?";
+        $query = 'SELECT * FROM ' .self::THREAD_TABLE. ' WHERE thread_id = ?';
         $where_params = array($thread_id);
         $row = $db->row($query, $where_params);
         return new self($row);
@@ -47,7 +47,7 @@ class Thread extends AppModel
     public static function getNumRows()
     {
         $db = DB::conn();
-        $query = "SELECT COUNT(*) FROM " . self::THREAD_TABLE;
+        $query = 'SELECT COUNT(*) FROM ' . self::THREAD_TABLE;
         $count = $db->value($query);
         return $count;            
     }
@@ -60,21 +60,18 @@ class Thread extends AppModel
     public function create(Comment $comment)
     {
         if (!$this->validate() || !$comment->validate()) {
-            throw new ValidationException("invalid thread or comment");
+            throw new ValidationException('invalid thread or comment');
         }
         $db = DB::conn();
         $db->begin();
-        $set_params = array(
-            "title" => $this->title, 
-            "user_created" => $this->user_id
-            );
+        $set_params = array('title' => $this->title, 'user_id' => $this->user_id);
         $db->insert(self::THREAD_TABLE, $set_params);
-        $this->id = $db->lastInsertId();
-        $comment->thread_id = $this->id;
+        $this->thread_id = $db->lastInsertId();
+        $comment->thread_id = $this->thread_id;
         // write first comment at the same time
         $comment->create();
         $db->commit();
-        return $this->id;
+        return $this->thread_id;
     }
 
     /**
@@ -85,27 +82,27 @@ class Thread extends AppModel
     public function update(Comment $comment)
     {
         if (!$this->validate() || !$comment->validate()) {
-            throw new ValidationException("invalid thread or comment");
+            throw new ValidationException('invalid thread or comment');
         }
         $db = DB::conn();
         $db->begin();
-        $set_params = array("title" => $this->title);
-        $where_params = array("id" => $this->id);
+        $set_params = array('title' => $this->title);
+        $where_params = array('thread_id' => $this->thread_id);
         $db->update(self::THREAD_TABLE, $set_params, $where_params);
-        $comment->thread_id = $this->id;
+        $comment->thread_id = $this->thread_id;
         // write first comment at the same time
         $comment->create();
         $db->commit();
     }
     
     /**
-     *DELETES A THREAD AND ALL OF IT"S COMMENTS 
+     *DELETES A THREAD AND ALL OF IT'S COMMENTS 
      */
     public function delete(){
         $db = DB::conn();
-        $thread_query = "DELETE FROM " . self::THREAD_TABLE . " WHERE id = ?";
-        $comment_query = "DELETE FROM " . Comment::COMMENT_TABLE . " WHERE thread_id = ?";
-        $where_params = array($this->id);
+        $thread_query = 'DELETE FROM ' .self::THREAD_TABLE. ' WHERE thread_id = ?';
+        $comment_query = 'DELETE FROM ' .Comment::COMMENT_TABLE. ' WHERE thread_id = ?';
+        $where_params = array($this->thread_id);
         $db->query($thread_query, $where_params);    
         $db->query($comment_query, $where_params);    
     }

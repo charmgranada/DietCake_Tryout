@@ -12,7 +12,7 @@ function is_valid_username($username)
 
 function is_pass_match($confirm_password)
 {
-    $password = Param::get('pword');
+    $password = Param::get('password');
     return $password === $confirm_password;
 }
 

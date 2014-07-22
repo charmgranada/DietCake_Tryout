@@ -27,13 +27,13 @@ if ($comment->hasError()): ?>
     Edit comment on '<?php eh($thread->title); ?>' thread
 </h1>
 
-<form class="well" method="post" action="<?php eh(url('comment/edit', array('thread_id' => $thread->id, 'comment_id' => $comment->id))) ?>">
+<form class="well" method="post" action="<?php eh(url('')) ?>">
     <center>
         <textarea name="body" style='width:100%;'><?php eh($comment->body) ?></textarea><br/>
-        <input type="hidden" name="thread_id" value="<?php eh($thread->id) ?>">
+        <input type="hidden" name="thread_id" value="<?php eh($thread->thread_id) ?>">
         <button type="submit" style='float:right;' class="btn btn-primary">Save Changes</button>
     </center>
-    <a href="<?php eh(url('comment/view', array("thread_id" => $thread->id)))?>">
+    <a href="<?php eh(url('comment/view', array("thread_id" => $thread->thread_id)))?>">
         &larr; Back to thread
     </a>
 </form>

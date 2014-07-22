@@ -1,7 +1,7 @@
 <?php
 class ThreadController extends AppController
 {
-    const THREADS_PER_PAGE = 10;
+    const THREADS_PER_PAGE = 5;
 
     /**
      *VIEW ALL THREADS
@@ -14,6 +14,9 @@ class ThreadController extends AppController
         $search = null;
         if (isset($search_item)) {
             $search = "title LIKE '%{$search_item}%'";
+            if (!$search_item) {
+                redirect('thread', 'index');
+            }
         }
         $num_rows = Thread::getNumRows($search);
         $pagination = pagination($num_rows, $cur_page, self::THREADS_PER_PAGE);
@@ -40,9 +43,9 @@ class ThreadController extends AppController
                 $comment->user_id = $thread->user_id;
                 $comment->body = $body;
                 $new_thread_id = $thread->create($comment);
-                redirect("comment", "view", array("thread_id" => $new_thread_id));
+                redirect('comment', 'view', array('thread_id' => $new_thread_id));
             } catch (ValidationException $e) {
-                return;
+                
             }                
         }
         $this->set(get_defined_vars());
@@ -54,7 +57,8 @@ class ThreadController extends AppController
      */
     public function edit()
     {            
-        $thread_id = Param::get("thread_id");
+        check_user_logged_out();
+        $thread_id = Param::get('thread_id');
         $title = Param::get('title');
         $body = Param::get('body');
         $thread = Thread::get($thread_id);
@@ -67,7 +71,7 @@ class ThreadController extends AppController
                 $comment->user_id = $thread->user_id;
                 $comment->body = Param::get('body');
                 $thread->update($comment);
-                redirect("comment", "view", array("thread_id" => $thread_id));
+                redirect('comment', 'view', array('thread_id' => $thread_id));
             } catch (ValidationException $e) {
 
             }
@@ -84,7 +88,7 @@ class ThreadController extends AppController
         $thread = Thread::get(Param::get('thread_id'));
         $thread_title = $thread->title;
         $thread->delete(); 
-        redirect("thread", "index");
+        redirect('thread', 'index');
         $this->set(get_defined_vars());
     }
 }

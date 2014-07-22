@@ -1,6 +1,6 @@
 <?php $title = "Board Exercise in PHP DietCake" ?>
 
-<form method='post' action='<?php eh(url('')) ?>'>
+<form method='get' action='<?php eh(url('')) ?>'>
     <input type='text' style='float:left;margin-right:10px;' name='search_item' placeholder='Enter your search here' value='<?php eh(Param::get('search_item'))?>'>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>

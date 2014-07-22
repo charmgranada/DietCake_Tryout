@@ -81,4 +81,33 @@ class User extends AppModel
         );
         $db->insert(self::USERS_TABLE, $where_params);
     }
+
+    /**
+     *UPDATES A USER'S ACCOUNT INFO
+     *@param PersonalInfo $personal_info
+     *@throws ExistingUserException
+     *@throws ValidationException
+     */
+    public function update(PersonalInfo $personal_info)
+    {
+        $db = DB::conn();
+        $where = '(username = ? OR email_add = ?) AND user_id != ?';
+        $where_params = array($this->username, $personal_info->email_add, $this->user_id);
+        $row = $db->search(self::USERS_TABLE, $where, $where_params);
+        if(!$this->validate() || !$personal_info->validate()) {
+            throw new ValidationException(notice('Validation Error', 'error'));
+        }
+        if ($row) {
+            throw new ExistingUserException(notice('Username/Email Address has already been used', 'error'));
+        }
+        $set_params = array(
+            'username' => $this->username,
+            'password' => sha1($this->password),
+            'firstname' => $personal_info->firstname,
+            'lastname' => $personal_info->lastname,
+            'email_add' => $personal_info->email_add
+        );
+        $where_params = array('user_id' => $this->user_id);
+        $db->update(self::USERS_TABLE, $set_params, $where_params);
+    }
 }

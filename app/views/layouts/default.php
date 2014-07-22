@@ -29,6 +29,9 @@
                 <option value='<?php eh(url('thread/index'))?>'>
                     Home
                 </option>
+                <option value='<?php eh(url('user/edit_account_info'))?>'>
+                    Edit Account Info
+                </option>    
                 <option value='<?php eh(url('user/logout'))?>'>
                     Logout
                 </option>  

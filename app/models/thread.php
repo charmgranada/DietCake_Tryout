@@ -23,28 +23,42 @@ class Thread extends AppModel
      *RETURNS ALL THREADS IN DATABASE
      *@param $limit
      */
-    public static function getAll($limit, $search, $filter, $user_id)
+    public static function getAll($limit, $search, $filter, $order, $user_id)
     {
+        switch ($order) {
+            case 'Least Comments':
+                $order = 'comment_ctr ASC';
+                break;
+            case 'Most Comments':
+                $order = 'comment_ctr DESC';
+                break;
+            case 'Oldest First':
+                $order = 'created ASC';
+                break;            
+            default:
+                $order = 'created DESC';
+                break;
+        }
         $db = DB::conn();
         $threads = array();
         $select = 'SELECT t.*, u.username FROM '.self::THREAD_TABLE.' t INNER JOIN '.User::USERS_TABLE.' u
         ON t.user_id = u.user_id';
-        $order_limit = 'ORDER BY created DESC LIMIT ' .$limit;
-        $query = "{$select} {$order_limit}";
+        $where = null;
+        $order_limit = "ORDER BY {$order} LIMIT {$limit}";
         if ($search) {
-            $query = "{$select} WHERE {$search} {$order_limit}";
+            $where = "WHERE {$search}";
         }
         if ($filter != 'All Threads'){
             if ($filter == 'My Threads') {
-                $where = 'WHERE u.user_id = ?';
+                $where .= ' AND u.user_id = ?';
             } elseif ($filter == 'Threads I commented') {
-                $where = 'WHERE t.thread_id = ANY (SELECT DISTINCT t.thread_id FROM ' .self::THREAD_TABLE. ' t 
+                $where .= ' AND t.thread_id = ANY (SELECT DISTINCT t.thread_id FROM ' .self::THREAD_TABLE. ' t 
                     INNER JOIN ' .Comment::COMMENT_TABLE. ' c ON t.thread_id = c.thread_id WHERE c.user_id = ?)';
             } elseif ($filter == 'Other people\'s Threads') {
-                $where = 'WHERE u.user_id != ?';
+                $where .= ' AND u.user_id != ?';
             }
-            $query = "{$select} {$where} AND {$search} {$order_limit}";
         }
+        $query = "{$select} {$where} {$order_limit}";
         $rows = $db->rows($query, array($user_id));
         foreach ($rows as $row) {
             $threads[] = new self($row);
@@ -79,12 +93,12 @@ class Thread extends AppModel
         }
         if ($filter != 'All Threads'){
             if ($filter == 'My Threads') {
-                $where = 'WHERE user_id = ?';
+                $where = 'WHERE u.user_id = ?';
             } elseif ($filter == 'Threads I commented') {
-                $where = 'WHERE thread_id = ANY (SELECT DISTINCT t.thread_id FROM ' .self::THREAD_TABLE. ' t 
+                $where = 'WHERE t.thread_id = ANY (SELECT DISTINCT t.thread_id FROM ' .self::THREAD_TABLE. ' t 
                     INNER JOIN ' .Comment::COMMENT_TABLE. ' c ON t.thread_id = c.thread_id WHERE c.user_id = ?)';
             } elseif ($filter == 'Other people\'s Threads') {
-                $where = 'WHERE user_id != ?';
+                $where = 'WHERE u.user_id != ?';
             }
             $query = "{$select} {$where} AND {$search}";
         }

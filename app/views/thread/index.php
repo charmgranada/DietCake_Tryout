@@ -16,16 +16,28 @@
     value='<?php eh(Param::get('search_item'))?>'>
     <button type='submit' class='btn btn-primary'>Submit</button>
     <?php if ($search_by == 'Thread'): ?>
-        <select name='filter_by' style='width:auto;' class='btn btn-small btn-inverse' onchange='this.form.submit()'>
-            <option><?php eh($filter_by) ?></option>
-            <?php
-                foreach ($filter_options as $filter_option) {
-                    if ($filter_option != $filter_by) {
-                        echo "<option>{$filter_option}</option>";
+        <div class='well-small' style='margin-left:-10px;'>
+            <select name='filter_by' style='width:auto;' class='btn btn-small btn-inverse' onchange='this.form.submit()'>
+                <option><?php eh($filter_by) ?></option>
+                <?php
+                    foreach ($filter_options as $filter_option) {
+                        if ($filter_option != $filter_by) {
+                            echo "<option>{$filter_option}</option>";
+                        }
                     }
-                }
-            ?>
-        </select>
+                ?>
+            </select>
+            <select name='order_by' style='width:auto;' class='btn btn-small btn-inverse' onchange='this.form.submit()'>
+                <option><?php eh($order_by) ?></option>
+                <?php
+                    foreach ($order_options as $order_option) {
+                        if ($order_option != $order_by) {
+                            echo "<option>{$order_option}</option>";
+                        }
+                    }
+                ?>
+            </select>
+        </div>
     <?php endif; ?>
 </form>
 
@@ -55,7 +67,7 @@
                     </b>
             </p>
         <?php else: ?>
-            <h1>There are 0 result found</h1>
+            <h1>There are no thread(s) yet</h1>
         <?php endif; ?>
 
         <center>
@@ -112,7 +124,7 @@
                     </b>
             </p>
         <?php else: ?>
-            <h1>There are 0 result found</h1>
+            <h1>There are no user(s) yet</h1>
         <?php endif; ?>
 
         <center>

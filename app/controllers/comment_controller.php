@@ -63,6 +63,7 @@ class CommentController extends AppController
         check_user_logged_out();
         $thread = Thread::get(Param::get('thread_id'));
         $comment = Comment::get(Param::get('comment_id'));
+        $comment->thread_id = $thread->thread_id;
         $comment->delete(); 
         redirect('comment', 'view', array('thread_id' => $thread->thread_id));
         $this->set(get_defined_vars());

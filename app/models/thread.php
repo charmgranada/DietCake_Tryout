@@ -27,27 +27,25 @@ class Thread extends AppModel
     {
         $db = DB::conn();
         $threads = array();
-        $query = 'SELECT t.*, u.username FROM ' .self::THREAD_TABLE. ' t INNER JOIN ' .User::USERS_TABLE. ' u 
-            WHERE t.user_id = u.user_id ORDER BY created DESC LIMIT ' .$limit;
+        $select = 'SELECT t.*, u.username FROM '.self::THREAD_TABLE.' t INNER JOIN '.User::USERS_TABLE.' u
+        ON t.user_id = u.user_id';
+        $order_limit = 'ORDER BY created DESC LIMIT ' .$limit;
+        $query = "{$select} {$order_limit}";
         if ($search) {
-            $query = 'SELECT t.*, u.username FROM ' .self::THREAD_TABLE. ' t INNER JOIN ' .User::USERS_TABLE. ' u 
-                WHERE t.user_id = u.user_id AND ' .$search. ' ORDER BY created DESC LIMIT ' .$limit;
+            $query = "{$select} WHERE {$search} {$order_limit}";
         }
-        $rows = $db->rows($query);
         if ($filter != 'All Threads'){
             if ($filter == 'My Threads') {
-                $query = 'SELECT t.*, u.username FROM ' .self::THREAD_TABLE. ' t INNER JOIN ' .User::USERS_TABLE. ' u 
-                    ON t.user_id = u.user_id WHERE u.user_id = ? AND ' .$search. ' ORDER BY created DESC LIMIT ' .$limit;
+                $where = 'WHERE u.user_id = ?';
             } elseif ($filter == 'Threads I commented') {
-                $query = 'SELECT t.*, u.username FROM ' .self::THREAD_TABLE. ' t INNER JOIN ' .User::USERS_TABLE. ' u ON t.user_id = u.user_id
-                    WHERE t.thread_id = ANY (SELECT DISTINCT t.thread_id FROM ' .self::THREAD_TABLE. ' t INNER JOIN ' .Comment::COMMENT_TABLE. ' c 
-                    ON t.thread_id = c.thread_id WHERE c.user_id = ?)  AND ' .$search. ' ORDER BY created DESC LIMIT ' .$limit;
+                $where = 'WHERE t.thread_id = ANY (SELECT DISTINCT t.thread_id FROM ' .self::THREAD_TABLE. ' t 
+                    INNER JOIN ' .Comment::COMMENT_TABLE. ' c ON t.thread_id = c.thread_id WHERE c.user_id = ?)';
             } elseif ($filter == 'Other people\'s Threads') {
-                $query = 'SELECT t.*, u.username FROM ' .self::THREAD_TABLE. ' t INNER JOIN ' .User::USERS_TABLE. ' u 
-                    ON t.user_id = u.user_id WHERE u.user_id != ? AND ' .$search. ' ORDER BY created DESC LIMIT ' .$limit;
+                $where = 'WHERE u.user_id != ?';
             }
-            $rows = $db->rows($query, array($user_id));
+            $query = "{$select} {$where} AND {$search} {$order_limit}";
         }
+        $rows = $db->rows($query, array($user_id));
         foreach ($rows as $row) {
             $threads[] = new self($row);
         }
@@ -73,23 +71,24 @@ class Thread extends AppModel
     public static function getNumRows($search, $filter, $user_id)
     {
         $db = DB::conn();
-        $query = 'SELECT COUNT(*) FROM ' .self::THREAD_TABLE;
+        $select = 'SELECT COUNT(*) FROM ' .self::THREAD_TABLE. ' t INNER JOIN ' .User::USERS_TABLE. ' u ON 
+            t.user_id = u.user_id';
+        $query = $select;
         if ($search) {            
-            $query = 'SELECT COUNT(*) FROM ' .self::THREAD_TABLE. ' WHERE ' .$search;
+            $query = "{$select} WHERE {$search}";
         }
-        $count = $db->value($query);
         if ($filter != 'All Threads'){
             if ($filter == 'My Threads') {
-                $query = 'SELECT COUNT(*) FROM ' .self::THREAD_TABLE. ' WHERE ' .$search. ' AND user_id = ?';
+                $where = 'WHERE user_id = ?';
             } elseif ($filter == 'Threads I commented') {
-                $query = 'SELECT COUNT(*) FROM ' .self::THREAD_TABLE. ' WHERE thread_id = ANY (SELECT DISTINCT 
-                    t.thread_id FROM ' .self::THREAD_TABLE. ' t INNER JOIN ' .Comment::COMMENT_TABLE. ' c 
-                    ON t.thread_id = c.thread_id WHERE c.user_id = ?) AND ' .$search;
+                $where = 'WHERE thread_id = ANY (SELECT DISTINCT t.thread_id FROM ' .self::THREAD_TABLE. ' t 
+                    INNER JOIN ' .Comment::COMMENT_TABLE. ' c ON t.thread_id = c.thread_id WHERE c.user_id = ?)';
             } elseif ($filter == 'Other people\'s Threads') {
-                $query = 'SELECT COUNT(*) FROM ' .self::THREAD_TABLE. ' WHERE ' .$search. ' AND user_id != ?';
+                $where = 'WHERE user_id != ?';
             }
-            $count = $db->value($query, array($user_id));
+            $query = "{$select} {$where} AND {$search}";
         }
+        $count = $db->value($query, array($user_id));
         return $count;            
     }
 

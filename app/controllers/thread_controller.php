@@ -2,6 +2,7 @@
 class ThreadController extends AppController
 {
     const THREADS_PER_PAGE = 5;
+    const USERS_PER_PAGE = 5;
 
     /**
      *VIEW ALL THREADS
@@ -9,30 +10,50 @@ class ThreadController extends AppController
     public function index()
     {
         check_user_logged_out();
-        $user = User::get($_SESSION['user_id']);
+        $user_id = $_SESSION['user_id'];
+        $user = User::get($user_id);
         $cur_page = Param::get('pn');
+        $placeholder = 'Enter a thread title here';
         $search_item = Param::get('search_item');
         $filter_by = Param::get('filter_by');
+        $search_by = Param::get('search_by');
         $filter_options = array(
             'All Threads', 
             'My Threads', 
             'Threads I commented', 
             'Other people\'s Threads'
         );
+        $search_options = array(
+            'Thread', 
+            'User'
+        );
         $search = null;
+        // IF filter_by IS NOT SET, ALL THREADS IS THE DEFAULT FILTER //
         if (!$filter_by) {
             $filter_by = 'All Threads';
         }
+        // IF search_by IS NOT SET, THREAD IS THE DEFAULT SEARCH //
+        if (!$search_by) {
+            $search_by = 'Thread';
+        }
         if (isset($search_item)) {
-            $search = "title LIKE '%".mysql_real_escape_string($search_item)."%'";
-            if (!$search_item && $filter_by == 'All Threads') {
+            $search_item = mysql_real_escape_string($search_item);
+            $search = "title LIKE '%" .$search_item. "%'";
+            if (!$search_item && $filter_by == 'All Threads' && $search_by == 'Thread') {
                 redirect('thread', 'index');
             }
         }
-        $num_rows = Thread::getNumRows($search, $filter_by, $user->user_id);
+        $num_rows = Thread::getNumRows($search, $filter_by, $user_id);
         $pagination = pagination($num_rows, $cur_page, self::THREADS_PER_PAGE);
         // TODO: Get all threads
-        $threads = Thread::getAll($pagination['limit'], $search, $filter_by, $user->user_id);
+        $threads = Thread::getAll($pagination['limit'], $search, $filter_by, $user_id);
+        // IF SEARCH OPTION IS USER, ONLY USER INFORMATION IS SEEN //
+        if ($search_by == 'User') {
+            $num_rows = User::getNumFound($search_item);
+            $pagination = pagination($num_rows, $cur_page, self::USERS_PER_PAGE);
+            $users_found = User::search($search_item, $pagination['limit']);
+            $placeholder = 'Enter a user\'s username here';
+        }
         $this->set(get_defined_vars());
     }
 

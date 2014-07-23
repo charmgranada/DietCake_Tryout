@@ -42,6 +42,35 @@ class User extends AppModel
     }
 
     /**
+     *SEARCH FOR A USER WITH THE GIVEN USERNAME
+     *@param $username, $limit
+     */
+    public static function search($username, $limit)
+    {
+        $users_found = array();
+        $db = DB::conn();
+        $query = 'SELECT * FROM ' .self::USERS_TABLE. ' WHERE username LIKE \'%' .$username. '%\' 
+        ORDER BY username LIMIT ' .$limit;
+        $users = $db->rows($query); 
+        foreach ($users as $user) {
+            $users_found[] = new self($user);
+        }
+        return $users_found;
+    }
+
+    /**
+     *GET NUMBER OF USERS FOUND
+     *@param $username
+     */
+    public static function getNumFound($username)
+    {
+        $db = DB::conn();
+        $query = 'SELECT COUNT(*) FROM ' .self::USERS_TABLE. ' WHERE username LIKE \'%' .$username. '%\'';
+        $count = $db->value($query); 
+        return $count;
+    }
+
+    /**
      *RETURNS ALL INFO OF A USER
      *@param $id
      */

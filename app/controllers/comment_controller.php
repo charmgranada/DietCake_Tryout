@@ -17,7 +17,8 @@ class CommentController extends AppController
         // FOR PAGINATION //
         $cur_page = Param::get('pn');
         $num_rows = $comment->getNumRows();
-        $pagination = pagination($num_rows, $cur_page, self::COMMENTS_PER_PAGE, array('thread_id' => $thread->thread_id));
+        $pagination = pagination($num_rows, $cur_page, self::COMMENTS_PER_PAGE, 
+            array('thread_id' => $thread->thread_id));
         // PASS LIMIT TO THE COMMENT QUERY //
         $all_comments = $comment->getAll($pagination['limit']);
         if (isset($body)) {

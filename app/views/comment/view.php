@@ -60,10 +60,12 @@ if ($comment->hasError()): ?>
         <?php // FOR EDIT AND DELETE IF THE COMMENT CAME FROM THE USER LOGGED IN //
             if($v->user_id == $_SESSION['user_id']): ?>
             <p align='right'>
-                <a style='color:green;' href='<?php eh(url('comment/edit', array('thread_id' => $thread->thread_id, 'comment_id' => $v->comment_id)))?>'>
+                <a style='color:green;' href='<?php eh(url('comment/edit', 
+                array('thread_id' => $thread->thread_id, 'comment_id' => $v->comment_id)))?>'>
                     Edit
                 </a> | 
-                <a style='color:red;' href='<?php eh(url('comment/delete', array('thread_id' => $thread->thread_id, 'comment_id' => $v->comment_id)))?>'>
+                <a style='color:red;' href='<?php eh(url('comment/delete', 
+                array('thread_id' => $thread->thread_id, 'comment_id' => $v->comment_id)))?>'>
                     Delete
                 </a>
             </p>

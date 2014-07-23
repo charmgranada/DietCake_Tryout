@@ -47,6 +47,7 @@ class User extends AppModel
      */
     public static function search($username, $limit)
     {
+        $username = mysql_real_escape_string($username);
         $users_found = array();
         $db = DB::conn();
         $query = 'SELECT * FROM ' .self::USERS_TABLE. ' WHERE username LIKE \'%' .$username. '%\' 

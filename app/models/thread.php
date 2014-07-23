@@ -2,6 +2,7 @@
 class Thread extends AppModel
 {
     const THREAD_TABLE = 'threads';
+    const THREAD_LIKES_TABLE = 'thread_likes';
 
     public $validation = array(
         'title' => array(
@@ -104,6 +105,68 @@ class Thread extends AppModel
         }
         $count = $db->value($query, array($user_id));
         return $count;            
+    }
+    
+    /**
+     *GET A THREAD'S NUMBER OF LIKES 
+     */
+    public function getLikes()
+    {
+        $db = DB::conn();
+        $query = 'SELECT COUNT(*) FROM ' .self::THREAD_LIKES_TABLE. ' WHERE thread_id = ? AND like_status = 1';
+        $where_params = array($this->thread_id);
+        $likes = $db->value($query, $where_params);    
+        return $likes;
+    }
+    
+    /**
+     *ADD A LIKE OR DISLIKE FOR A THREAD
+     */
+    public function addLikeDislike($like_status)
+    {
+        $like_status = mysql_real_escape_string($like_status);
+        $db = DB::conn();
+        $db->begin();
+        $query = 'SELECT * FROM ' .self::THREAD_LIKES_TABLE. ' WHERE thread_id = ? AND user_id = ?';
+        $where_params = array($this->thread_id, $this->user_id);
+        $user_has_record = $db->row($query, $where_params); 
+        if ($user_has_record) {
+            if ($user_has_record['like_status'] != $like_status) {
+                $set_params = array (
+                    'like_status' => $like_status
+                );
+                $where_params = array (
+                    'thread_id' => $this->thread_id,
+                    'user_id' => $this->user_id
+                );
+                $db->update(self::THREAD_LIKES_TABLE, $set_params, $where_params);
+            } else {
+                $query = 'DELETE FROM ' .self::THREAD_LIKES_TABLE. ' WHERE thread_id = ? AND user_id = ? 
+                    AND like_status = ?';
+                $where_params = array($this->thread_id, $this->user_id, $like_status);
+                $db->query($query, $where_params);                
+            }
+        } else {
+            $set_params = array (
+                'thread_id' => $this->thread_id,
+                'user_id' => $this->user_id,
+                'like_status' => $like_status
+            );
+            $db->insert(self::THREAD_LIKES_TABLE, $set_params);
+        }   
+        $db->commit();
+    }
+    
+    /**
+     *GET A THREAD'S NUMBER OF DISLIKES 
+     */
+    public function getDislikes()
+    {
+        $db = DB::conn();
+        $query = 'SELECT COUNT(*) FROM ' .self::THREAD_LIKES_TABLE. ' WHERE thread_id = ? AND like_status = 0';
+        $where_params = array($this->thread_id);
+        $dislikes = $db->value($query, $where_params);    
+        return $dislikes;
     }
 
     /**

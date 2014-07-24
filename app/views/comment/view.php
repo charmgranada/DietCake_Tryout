@@ -48,8 +48,12 @@ if ($comment->hasError()): ?>
     <div class='alert alert-info'>
         <div class='meta'>
             <b><?php eh($comment->username) ?></b> said:  
-            <i style='font-size:12px;float:right;'>
-                <?php eh(date_format(new DateTime($comment->created),'F d, Y h:ia')) ?>
+            <i style='font-size:9px;float:right;'>
+                <?php 
+                    eh(($comment->updated != 0) ? 'Updated: ' 
+                        .date_format(new DateTime($comment->updated),'F d, Y h:ia'). ' | ' : '') 
+                ?>
+                Created: <?php eh(date_format(new DateTime($comment->created),'F d, Y h:ia')) ?>
             </i>
         </div>    
 

@@ -209,7 +209,11 @@ class Thread extends AppModel
             throw new ValidationException('invalid thread or comment');
         }
         $db = DB::conn();
-        $set_params = array('title' => $this->title, 'description' => $this->description);
+        $set_params = array(
+            'title' => $this->title, 
+            'description' => $this->description, 
+            'updated' => date('Y-m-d H:i:s')
+        );
         $where_params = array('thread_id' => $this->thread_id);
         $db->update(self::THREAD_TABLE, $set_params, $where_params);
     }

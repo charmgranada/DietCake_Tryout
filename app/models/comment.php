@@ -69,7 +69,7 @@ class Comment extends AppModel
             throw new ValidationException('invalid comment');
         }
         $db = DB::conn();
-        $set_params = array('body' => $this->body);
+        $set_params = array('body' => $this->body, 'updated' => date('Y-m-d H:i:s'));
         $where_params = array('comment_id' => $this->comment_id);
         $db->update(self::COMMENT_TABLE, $set_params, $where_params);
     }

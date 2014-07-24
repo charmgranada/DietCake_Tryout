@@ -22,7 +22,7 @@ if ($comment->hasError()): ?>
 
 <h1>
     <?php // THIS IS THE START OF THE THREAD COMMENTS //
-        $title = 'Edit my comment on '' . $thread->title . '' thread';
+        $title = 'Edit my comment on \'' . $thread->title . '\' thread';
     ?>
     Edit comment on '<?php eh($thread->title); ?>' thread
 </h1>

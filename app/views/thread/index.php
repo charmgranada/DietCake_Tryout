@@ -106,11 +106,15 @@
                     <?php endif; ?>
                 </p>
 
-                <p align='left' style='font-size:10px;font-style:italic;line-height:5px;'>
-                    Posted by: <?php eh($thread->username) ?>
+                <p align='left' style='font-size:9px;font-style:italic;line-height:5px;'>
                     <font style='float:right;'>
-                        <?php eh(date_format(new DateTime($thread->created),'F d, Y h:ia')) ?>
-                    </font>
+                        <?php 
+                            eh(($thread->updated != 0) ? 'Updated: ' 
+                                .date_format(new DateTime($thread->updated),'F d, Y h:ia'). ' | ' : '') 
+                        ?>
+                        Created: <?php eh(date_format(new DateTime($thread->created),'F d, Y h:ia')) ?>
+                    </font> <br/> <br/>
+                    Posted by: <?php eh($thread->username) ?>
                 </p>
             </div>
         <?php endforeach; 

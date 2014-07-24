@@ -91,8 +91,6 @@ class Comment extends AppModel
             "body" => $this->body
         );
         $db->insert(self::COMMENT_TABLE, $set_params);
-        $db->query('UPDATE ' .Thread::THREAD_TABLE. ' SET comment_ctr = comment_ctr + 1 
-            WHERE thread_id = ?', array($this->thread_id));
     }
     
     /**
@@ -101,16 +99,8 @@ class Comment extends AppModel
     public function delete()
     {
         $db = DB::conn();
-        $db->begin();
         $query = 'DELETE FROM ' .self::COMMENT_TABLE. ' WHERE comment_id = ?';
         $where_params = array($this->comment_id);
         $db->query($query, $where_params);
-        $comment_ctr = $db->value('SELECT comment_ctr FROM ' .Thread::THREAD_TABLE. ' WHERE thread_id = ?', 
-            array($this->thread_id));
-        if ($comment_ctr > 0) {
-            $db->query('UPDATE ' .Thread::THREAD_TABLE. ' SET comment_ctr = comment_ctr - 1 
-                WHERE thread_id = ?', array($this->thread_id));            
-        }
-        $db->commit();
     }
 }

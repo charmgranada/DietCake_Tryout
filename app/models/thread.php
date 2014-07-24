@@ -119,18 +119,6 @@ class Thread extends AppModel
     }
     
     /**
-     *GET A THREAD'S NUMBER OF LIKES 
-     */
-    public function getLikes()
-    {
-        $db = DB::conn();
-        $query = 'SELECT COUNT(*) FROM ' .self::THREAD_LIKES_TABLE. ' WHERE thread_id = ? AND like_status = 1';
-        $where_params = array($this->thread_id);
-        $likes = $db->value($query, $where_params);    
-        return $likes;
-    }
-    
-    /**
      *ADD A LIKE OR DISLIKE FOR A THREAD
      */
     public function addLikeDislike($like_status)
@@ -166,6 +154,18 @@ class Thread extends AppModel
             $db->insert(self::THREAD_LIKES_TABLE, $set_params);
         }   
         $db->commit();
+    }
+    
+    /**
+     *GET A THREAD'S NUMBER OF LIKES 
+     */
+    public function getLikes()
+    {
+        $db = DB::conn();
+        $query = 'SELECT COUNT(*) FROM ' .self::THREAD_LIKES_TABLE. ' WHERE thread_id = ? AND like_status = 1';
+        $where_params = array($this->thread_id);
+        $likes = $db->value($query, $where_params);    
+        return $likes;
     }
     
     /**

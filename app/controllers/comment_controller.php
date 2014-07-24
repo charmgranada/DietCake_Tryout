@@ -48,7 +48,7 @@ class CommentController extends AppController
             try {
                 $comment->body = $body;
                 $comment->update();
-                redirect("comment", "view", array("thread_id" => $thread->thread_id));
+                redirect('comment', 'view', array('thread_id' => $thread->thread_id));
             } catch (ValidationException $e) {
 
             }
@@ -66,7 +66,7 @@ class CommentController extends AppController
         $comment = Comment::get(Param::get('comment_id'));
         $comment->thread_id = $thread->thread_id;
         $comment->delete(); 
-        redirect("comment", "view", array("thread_id" => $thread->thread_id));
+        redirect('comment', 'view', array('thread_id' => $thread->thread_id));
         $this->set(get_defined_vars());
     }
 }

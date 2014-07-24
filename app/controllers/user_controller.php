@@ -19,9 +19,9 @@ class UserController extends AppController
             $_SESSION['username'] = $valid_user->username;
             redirect('thread','index');
         } catch (ValidationException $e) {
-            $status = notice($e->getMessage(),"error");
+            $status = notice($e->getMessage(),'error');
         } catch (RecordNotFoundException $e) {
-            $status = notice($e->getMessage(),"error");                        
+            $status = notice($e->getMessage(),'error');                        
         }
         $this->set(get_defined_vars());
     }
@@ -51,18 +51,18 @@ class UserController extends AppController
             foreach ($registration_form as $field => $value) {
                 // FOR ERRORS IN THE ACCOUNT INFO //
                 if (!empty($user->validation_errors[$field]['length'])) {
-                    $errors[$field] = notice("Character length must be " 
-                        .$user->validation[$field]['length'][1]. " - " 
-                        .$user->validation[$field]['length'][2]. " long", 'error');
+                    $errors[$field] = notice('Character length must be ' 
+                        .$user->validation[$field]['length'][1]. ' - ' 
+                        .$user->validation[$field]['length'][2]. ' long', 'error');
                 }
                 if (!empty($user->validation_errors[$field]['format'])) {
                     $errors[$field] = notice($user->validation[$field]['format'][1], 'error');
                 }
                 // FOR ERRORS IN THE PERSONAL INFO //
                 if (!empty($personal_info->validation_errors[$field]['length'])) {
-                    $errors[$field] = notice("Character length must be " 
-                        .$personal_info->validation[$field]['length'][1]. " - " 
-                        .$personal_info->validation[$field]['length'][2]. " long", 'error');
+                    $errors[$field] = notice('Character length must be ' 
+                        .$personal_info->validation[$field]['length'][1]. ' - ' 
+                        .$personal_info->validation[$field]['length'][2]. ' long', 'error');
                 }
                 if (!empty($personal_info->validation_errors[$field]['format'])) {
                     $errors[$field] = notice($personal_info->validation[$field]['format'][1], 'error');
@@ -101,18 +101,18 @@ class UserController extends AppController
             foreach ($registration_form as $field => $value) {
                 // FOR ERRORS IN THE ACCOUNT INFO //
                 if (!empty($user->validation_errors[$field]['length'])) {
-                    $errors[$field] = notice("Character length must be " 
-                        .$user->validation[$field]['length'][1]. " - " 
-                        .$user->validation[$field]['length'][2]. " long", 'error');
+                    $errors[$field] = notice('Character length must be ' 
+                        .$user->validation[$field]['length'][1]. ' - ' 
+                        .$user->validation[$field]['length'][2]. ' long', 'error');
                 }
                 if (!empty($user->validation_errors[$field]['format'])) {
                     $errors[$field] = notice($user->validation[$field]['format'][1], 'error');
                 }
                 // FOR ERRORS IN THE PERSONAL INFO //
                 if (!empty($personal_info->validation_errors[$field]['length'])) {
-                    $errors[$field] = notice("Character length must be " 
-                        .$personal_info->validation[$field]['length'][1]. " - " 
-                        .$personal_info->validation[$field]['length'][2]. " long", 'error');
+                    $errors[$field] = notice('Character length must be ' 
+                        .$personal_info->validation[$field]['length'][1]. ' - ' 
+                        .$personal_info->validation[$field]['length'][2]. ' long', 'error');
                 }
                 if (!empty($personal_info->validation_errors[$field]['format'])) {
                     $errors[$field] = notice($personal_info->validation[$field]['format'][1], 'error');

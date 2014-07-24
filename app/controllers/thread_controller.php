@@ -53,7 +53,7 @@ class ThreadController extends AppController
         }
         if (isset($search_item)) {
             $search_item = mysql_real_escape_string($search_item);
-            $search = "title LIKE '%" .$search_item. "%'";
+            $search = 'title LIKE \'%' .$search_item. '%\'';
             if (!$search_item && $filter_by == 'All Threads' && $search_by == 'Thread' 
                 && $order_by == 'Latest First') {
                 redirect('thread', 'index');
@@ -99,7 +99,7 @@ class ThreadController extends AppController
         $comment = new Comment;
         $thread_title = Param::get('title');
         $description = Param::get('description');
-        if(isset($title) || isset($description)) {
+        if (isset($title) || isset($description)) {
             try {
                 $thread->title = $thread_title;
                 $thread->user_id = $_SESSION['user_id'];
@@ -125,7 +125,7 @@ class ThreadController extends AppController
         $new_title = Param::get('title');
         $old_description = $thread->description;
         $new_description = Param::get('description');
-        if(isset($new_title) || isset($new_description)){
+        if (isset($new_title) || isset($new_description)) {
             try {
                 $thread->title = $new_title;
                 $thread->user_id = $_SESSION['user_id'];
@@ -133,6 +133,7 @@ class ThreadController extends AppController
                 $thread->update();
                 redirect('comment', 'view', array('thread_id' => $thread->thread_id));
             } catch (ValidationException $e) {
+                
             }
         }
         $this->set(get_defined_vars());
@@ -146,7 +147,7 @@ class ThreadController extends AppController
         check_user_logged_out();
         $thread = Thread::get(Param::get('thread_id'));
         $thread->delete(); 
-        redirect("thread", "index");
+        redirect('thread', 'index');
         $this->set(get_defined_vars());
     }
 }

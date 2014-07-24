@@ -18,13 +18,24 @@ class Comment extends AppModel
      *RETURNS ALL COMMENTS OF A THREAD
      *@param $limit
      */
-    public function getAll($limit)
+    public function getAll($limit, $filter, $user_id)
     {
         $comments = array();
         $db = DB::conn();
-        $query = 'SELECT c.*, u.* FROM ' .self::COMMENT_TABLE. ' c INNER JOIN ' .User::USERS_TABLE. ' u 
-            WHERE thread_id = ? AND c.user_id = u.user_id ORDER BY created DESC LIMIT ' .$limit;
+        $select = 'SELECT c.*, u.* FROM ' .self::COMMENT_TABLE. ' c INNER JOIN ' .User::USERS_TABLE. ' u ON 
+            c.user_id = u.user_id';
+        $where = 'WHERE c.thread_id = ?';
         $where_params = array($this->thread_id);
+        $order_limit = 'ORDER BY created DESC LIMIT ' .$limit;
+        if ($filter != 'All Comments'){
+            if ($filter == 'My Comments') {
+                $where .= ' AND u.user_id = ?';
+            } elseif ($filter == 'Other people\'s Comments') {
+                $where .= ' AND u.user_id != ?';
+            }
+            $where_params = array($this->thread_id, $user_id);
+        } 
+        $query = "{$select} {$where} {$order_limit}";       
         $rows = $db->rows($query, $where_params);
         foreach ($rows as $row) {
             $comments[] = new self($row);
@@ -49,11 +60,21 @@ class Comment extends AppModel
     /**
      *RETURNS TOTAL NUMBER OF COMMENTS
      */
-    public function count()
+    public function count($filter, $user_id)
     {
         $db = DB::conn();
-        $query = 'SELECT COUNT(*) FROM ' .self::COMMENT_TABLE. ' WHERE thread_id = ?';
+        $select = 'SELECT COUNT(*) FROM ' .self::COMMENT_TABLE;        
+        $where = 'WHERE thread_id = ?';
         $where_params = array($this->thread_id);
+        if ($filter != 'All Comments'){
+            if ($filter == 'My Comments') {
+                $where .= 'AND user_id = ?';
+            } elseif ($filter == 'Other people\'s Comments') {
+                $where .= 'AND user_id != ?';
+            }
+            $where_params = array($this->thread_id, $user_id);
+        }
+        $query = "{$select} {$where}";
         $count = $db->value($query, $where_params);
         return $count;            
     }

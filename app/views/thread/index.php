@@ -7,7 +7,7 @@
     <b>Email Address: </b><?php eh($user->email_add)?> <br/>
 </div>
 
-<form id='filter_and_search' method='get' action='<?php eh(url('')) ?>'>
+<form method='get' action='<?php eh(url('')) ?>'>
     <select name='search_by' style='float:left;margin-right:10px;width:auto;' 
     class='btn btn-small btn-inverse' onchange='this.form.submit()'>
         <option value='<?php eh($search_by); ?>'><?php eh($search_by) ?> Search</option>

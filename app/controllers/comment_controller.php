@@ -10,20 +10,32 @@ class CommentController extends AppController
     public function view()
     {       
         check_user_logged_out();     
+        $user_id = $_SESSION['user_id'];
         $thread = Thread::get(Param::get('thread_id'));
         $comment = new Comment();
         $comment->thread_id = $thread->thread_id;
         $body = Param::get('body');
+        // FOR FILTERING RESULTS OF COMMENTS
+        $filter_by = Param::get('filter_by');
+        $filter_options = array(
+            'All Comments', 
+            'My Comments', 
+            'Other people\'s Comments'
+        );
+        // IF filter_by IS NOT SET, ALL COMMENTS IS THE DEFAULT FILTER
+        if (!$filter_by) {
+            $filter_by = 'All Comments';
+        }
         // FOR PAGINATION //
         $cur_page = Param::get('pn');
-        $num_rows = $comment->count();
+        $num_rows = $comment->count($filter_by, $user_id);
         $pagination = pagination($num_rows, $cur_page, self::COMMENTS_PER_PAGE, 
             array('thread_id' => $thread->thread_id));
         // PASS LIMIT TO THE COMMENT QUERY //
-        $all_comments = $comment->getAll($pagination['limit']);
+        $all_comments = $comment->getAll($pagination['limit'], $filter_by, $user_id);
         if (isset($body)) {
             try {
-                $comment->user_id = $_SESSION['user_id'];
+                $comment->user_id = $user_id;
                 $comment->body = $body;
                 $comment->create();
                 redirect('comment', 'view', array('thread_id' => $thread->thread_id));

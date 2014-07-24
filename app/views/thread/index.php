@@ -74,42 +74,42 @@
     <?php endif; ?>
 
     <center>
-        <?php foreach ($threads as $v): ?>
+        <?php foreach ($threads as $thread): ?>
             <div class = 'alert' style='border:1px dashed #bbb;width:70%;margin:5px;'>
                 <p align='left' style='font-weight:bold;'>
-                	<a href='<?php eh(url('comment/view', array('thread_id' => $v->thread_id))) ?>'>
-                        <?php eh($v->title) ?>
+                	<a href='<?php eh(url('comment/view', array('thread_id' => $thread->thread_id))) ?>'>
+                        <?php eh($thread->title) ?>
                     </a>
                 </p>
 
-                <font size=2><?php eh($v->description) ?></font><br/>
+                <font size=2><?php eh($thread->description) ?></font><br/>
 
                 <p align='right'>
                     <font size=1>
-                        <?php eh($v->comment_ctr) ?> comment(s)
-                        &nbsp;|&nbsp; <?php eh($v->getLikes()) ?> 
+                        <?php eh($thread->comment_ctr) ?> comment(s)
+                        &nbsp;|&nbsp; <?php eh($thread->countLikes()) ?> 
                         <a href='<?php echo url('thread/addLikeDislike', 
-                        array('thread_id' => $v->thread_id, 'home_page' => url(), 'like_status' => 1)) ?>'><img 
+                        array('thread_id' => $thread->thread_id, 'home_page' => url(), 'like_status' => 1)) ?>'><img 
                             src='/bootstrap/img/like.png' width='12px'></a>
-                        &nbsp;|&nbsp; <?php eh($v->getDislikes()) ?> 
+                        &nbsp;|&nbsp; <?php eh($thread->countDislikes()) ?> 
                         <a href='<?php echo url('thread/addLikeDislike', 
-                        array('thread_id' => $v->thread_id, 'home_page' => url(), 'like_status' => 0)) ?>'><img 
+                        array('thread_id' => $thread->thread_id, 'home_page' => url(), 'like_status' => 0)) ?>'><img 
                             src='/bootstrap/img/dislike.png' width='12px'></a>
                     </font>
                     <?php // THE EDIT AND DELETE CONTROLS FOR THE THREAD OF THE USER WHO CREATED IT
-                    if($v->user_id == $_SESSION['user_id']): ?>
+                    if($thread->user_id == $_SESSION['user_id']): ?>
                         <br/>
-                        <a href='<?php eh(url('thread/edit', array('thread_id' => $v->thread_id)))?>'><button 
+                        <a href='<?php eh(url('thread/edit', array('thread_id' => $thread->thread_id)))?>'><button 
                             class='btn btn-success btn-small'>Edit Info</button></a>
-                        <a href='<?php eh(url('thread/delete', array('thread_id' => $v->thread_id)))?>'><button 
+                        <a href='<?php eh(url('thread/delete', array('thread_id' => $thread->thread_id)))?>'><button 
                             class='btn btn-danger btn-small'>Delete Thread</button></a>
                     <?php endif; ?>
                 </p>
 
                 <p align='left' style='font-size:10px;font-style:italic;line-height:5px;'>
-                    Posted by: <?php eh($v->username) ?>
+                    Posted by: <?php eh($thread->username) ?>
                     <font style='float:right;'>
-                        <?php eh(date_format(new DateTime($v->created),'F d, Y h:ia')) ?>
+                        <?php eh(date_format(new DateTime($thread->created),'F d, Y h:ia')) ?>
                     </font>
                 </p>
             </div>
@@ -143,13 +143,13 @@
     <?php endif; ?>
 
     <center>
-        <?php foreach ($users_found as $u): ?>
+        <?php foreach ($users_found as $user): ?>
             <div class = 'well alert-info' style='color:#555555;border:1px dashed #bbb;width:70%;margin:5px;'>
                 <p align='left' style='font-weight:bold;'>
-                    <?php eh($u->username) ?>
+                    <?php eh($user->username) ?>
                 </p>
-                <b>Fullname: </b><?php eh($u->firstname. " " .$u->lastname) ?> <br/>
-                <b>Email Address: </b><?php eh($u->email_add) ?>
+                <b>Fullname: </b><?php eh($user->firstname. " " .$user->lastname) ?> <br/>
+                <b>Email Address: </b><?php eh($user->email_add) ?>
             </div>
         <?php endforeach; 
         echo $pagination['controls']; ?>

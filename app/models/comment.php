@@ -49,7 +49,7 @@ class Comment extends AppModel
     /**
      *RETURNS TOTAL NUMBER OF COMMENTS
      */
-    public function getNumRows()
+    public function count()
     {
         $db = DB::conn();
         $query = 'SELECT COUNT(*) FROM ' .self::COMMENT_TABLE. ' WHERE thread_id = ?';

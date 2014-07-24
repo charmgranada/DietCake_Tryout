@@ -35,7 +35,7 @@ class User extends AppModel
         $query = 'SELECT * FROM ' .self::USERS_TABLE. ' WHERE username = ? AND password = ?';
         $where_params = array($this->username, sha1($this->password));
         $row = $db->row($query, $where_params);
-        if(!$row) {
+        if (!$row) {
             throw new RecordNotFoundException('Username/Password is incorrect');
         }        
         return new self ($row);
@@ -63,7 +63,7 @@ class User extends AppModel
      *GET NUMBER OF USERS FOUND
      *@param $username
      */
-    public static function getNumFound($username)
+    public static function countFound($username)
     {
         $db = DB::conn();
         $query = 'SELECT COUNT(*) FROM ' .self::USERS_TABLE. ' WHERE username LIKE \'%' .$username. '%\'';
@@ -96,7 +96,7 @@ class User extends AppModel
         $where = 'username = ? OR email_add = ?';
         $where_params = array($this->username, $personal_info->email_add);
         $row = $db->search(self::USERS_TABLE, $where, $where_params);
-        if(!$this->validate() || !$personal_info->validate()) {
+        if (!$this->validate() || !$personal_info->validate()) {
             throw new ValidationException(notice('Validation Error', 'error'));
         }
         if ($row) {
@@ -124,7 +124,7 @@ class User extends AppModel
         $where = '(username = ? OR email_add = ?) AND user_id != ?';
         $where_params = array($this->username, $personal_info->email_add, $this->user_id);
         $row = $db->search(self::USERS_TABLE, $where, $where_params);
-        if(!$this->validate() || !$personal_info->validate()) {
+        if (!$this->validate() || !$personal_info->validate()) {
             throw new ValidationException(notice('Validation Error', 'error'));
         }
         if ($row) {

@@ -5,7 +5,7 @@ if ($thread->hasError()): ?>
     <div class='alert alert-block'>
         <h4 class='alert-heading'>Validation error!</h4>        
         <?php // ERRORS FOR TITLE LENGTH VALIDATION //
-        if (!empty($thread->validation_errors['title']['length'])): ?>
+        if (!$thread->validation_errors['title']['length']): ?>
             <div>
                 <em>Title</em> must be between
                 <?php eh($thread->validation['title']['length'][1]) ?> and
@@ -14,7 +14,7 @@ if ($thread->hasError()): ?>
         <?php endif ?>
           
         <?php // ERRORS FOR DESCRIPTION LENGTH VALIDATION //
-        if (!empty($thread->validation_errors['description']['length'])): ?>
+        if (!$thread->validation_errors['description']['length']): ?>
             <div>
                 <em>Description</em> must be between
                 <?php eh($thread->validation['description']['length'][1]) ?> and
@@ -23,7 +23,7 @@ if ($thread->hasError()): ?>
         <?php endif ?>
 
         <?php  // ERRORS FOR TOO LONG CHARACTERS WITH NO SPACES AND CAN'T FIT THE SCREEN ANYMORE //
-        if (!empty($thread->validation_errors['description']['format'])): ?>
+        if (!$thread->validation_errors['description']['format']): ?>
             <div>
                 <em>Description</em> must have spaces to fit the screen.
             </div>        

@@ -59,13 +59,13 @@ class ThreadController extends AppController
                 redirect('thread', 'index');
             }
         }
-        $num_rows = Thread::getNumRows($search, $filter_by, $user->user_id);
+        $num_rows = Thread::count($search, $filter_by, $user->user_id);
         $pagination = pagination($num_rows, $cur_page, self::THREADS_PER_PAGE);
         // TODO: Get all threads
         $threads = Thread::getAll($pagination['limit'], $search, $filter_by, $order_by, $user->user_id);
         // IF SEARCH OPTION IS USER, ONLY USER INFORMATION IS SEEN
         if ($search_by == 'User') {
-            $num_rows = User::getNumFound($search_item);
+            $num_rows = User::countFound($search_item);
             $pagination = pagination($num_rows, $cur_page, self::USERS_PER_PAGE);
             $users_found = User::search($search_item, $pagination['limit']);
             $placeholder = 'Enter a user\'s username here';

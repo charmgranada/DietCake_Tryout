@@ -12,18 +12,17 @@ function readable_text($s)
     return $s;
 }
 
-function notice($text, $notice_type = NULL)
+function notice($text, $notice_type = null)
 {
-    $msg = "<center>";
+    $msg = '<center>';
     switch ($notice_type) {
-    case 'error':
-        $msg .= "<font color=red size=2>";
-        break;
-    
-    default:
-        $msg .= "<font color=green size=2>";
-        break;
+        case 'error':
+            $msg .= '<font color=red size=2>';
+            break;        
+        default:
+            $msg .= '<font color=green size=2>';
+            break;
     }
-    $msg .= $text. "</font></center>";
+    $msg .= $text. '</font></center>';
     return $msg;
 }

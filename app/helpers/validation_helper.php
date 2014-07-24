@@ -12,7 +12,7 @@ function is_valid_username($username)
 
 function is_pass_match($confirm_password)
 {
-    $password = Param::get('pword');
+    $password = Param::get('password');
     return $password === $confirm_password;
 }
 
@@ -26,7 +26,7 @@ function is_valid_email($email)
     return (preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/",$email));
 }
  
-function is_valid_comment($text)
+function have_spaces($text)
 {
     if (preg_match('/([^ ]){125}/', $text)) {
         return false;
@@ -62,6 +62,9 @@ function user_logged_in()
 function redirect($controller, $view, array $url_query = null)
 {
     $url = "/$controller/$view";
+    if (!$view) {
+        $url = $controller;
+    }
     if ($url_query) {
         foreach ($url_query as $key => $value) {
             $url .= "?$key=$value";

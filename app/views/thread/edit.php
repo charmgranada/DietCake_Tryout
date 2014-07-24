@@ -1,9 +1,9 @@
-<?php $title = "Edit '". $thread_title ."' Thread" ?>
-<h1>Edit '<?= $thread_title; ?>' thread</h1>
+<?php $title = "Edit '{$thread->title}' Thread" ?>
+<h1>Edit '<?php eh($old_title); ?>' thread</h1>
 <?php // Checks for validation errors in the inputs passed
-if ($thread->hasError() || $comment->hasError()): ?>
-    <div class="alert alert-block">
-        <h4 class="alert-heading">Validation error!</h4>        
+if ($thread->hasError()): ?>
+    <div class='alert alert-block'>
+        <h4 class='alert-heading'>Validation error!</h4>        
         <?php // ERRORS FOR TITLE LENGTH VALIDATION //
         if (!empty($thread->validation_errors['title']['length'])): ?>
             <div>
@@ -12,35 +12,37 @@ if ($thread->hasError() || $comment->hasError()): ?>
                 <?php eh($thread->validation['title']['length'][2]) ?> characters in length.
             </div>
         <?php endif ?>
-
-        <?php // ERRORS FOR BODY LENGTH VALIDATION //
-        if (!empty($comment->validation_errors['body']['length'])): ?>
+          
+        <?php // ERRORS FOR DESCRIPTION LENGTH VALIDATION //
+        if (!empty($thread->validation_errors['description']['length'])): ?>
             <div>
-                <em>Comment</em> must be between
-                <?php eh($comment->validation['body']['length'][1]) ?> and
-                <?php eh($comment->validation['body']['length'][2]) ?> characters in length.
+                <em>Description</em> must be between
+                <?php eh($thread->validation['description']['length'][1]) ?> and
+                <?php eh($thread->validation['description']['length'][2]) ?> characters in length.
             </div>
         <?php endif ?>
-        
+
         <?php  // ERRORS FOR TOO LONG CHARACTERS WITH NO SPACES AND CAN'T FIT THE SCREEN ANYMORE //
-        if (!empty($comment->validation_errors['body']['format'])): ?>
+        if (!empty($thread->validation_errors['description']['format'])): ?>
             <div>
-                <em>Comment</em> must have spaces to fit the screen.
+                <em>Description</em> must have spaces to fit the screen.
             </div>        
         <?php endif ?>
     </div>
 <?php endif ?>
 
-<form class="well" method="post" action="<?php eh(url('')) ?>">
+<form class='well' method='post' action='<?php eh(url('')) ?>'>
     <label>Title</label>
-    <input type="text" class="span2" name="title" value="<?= $thread->title; ?>">
+    <input type='text' class='span2' name='title' 
+        value='<?php eh(isset($new_title) ? $new_title : $old_title) ?>'>
 
-    <label>Comment</label>
-    <textarea name="body"><?php eh(Param::get('body')) ?></textarea>
+    <label>Description</label>
+    <textarea name='description'><?php 
+        eh(isset($new_description) ? $new_description : $old_description) ?></textarea>
     <br />
 
-    <button type="submit" class="btn btn-primary">Save Changes</button><br/><br/>
-    <a href="<?php eh(url('thread/index')) ?>">
+    <button type='submit' class='btn btn-primary'>Save Changes</button><br/><br/>
+    <a href='<?php eh(url('thread/index')) ?>'>
         &larr; Back to All Threads
     </a>
 </form>

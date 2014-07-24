@@ -22,8 +22,10 @@
             ? " <tr><td colspan=2>" . $errors['password'] . "</td></tr>"
             : ""); ?>
         <tr>
-            <td><p align='right'>Confirm Password: </td>
-            <td><input type="password" name="confirm_password" value="<?php eh(Param::get("confirm_password")); ?>"></td>
+            <td><p align='right'>Confirm Password: </p></td>
+            <td>
+                <input type="password" name="confirm_password" value="<?php eh(Param::get("confirm_password"))?>">
+            </td>
         </tr>
         <?php //VALIDATES CONFIRM PASSWORD
             echo (isset($errors['confirm_password'])

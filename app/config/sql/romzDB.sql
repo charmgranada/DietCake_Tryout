@@ -7,7 +7,7 @@ FLUSH PRIVILEGES;
 use romzDB;
 
 CREATE TABLE IF NOT EXISTS users(
-    user_id              INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    user_id         INT UNSIGNED NOT NULL AUTO_INCREMENT,
     username        VARCHAR(50) NOT NULL,    
     password        VARCHAR(250) NOT NULL,
     firstname       VARCHAR(50) NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS users(
 )ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS threads (
-    thread_id              INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    thread_id       INT UNSIGNED NOT NULL AUTO_INCREMENT,
     user_id         INT UNSIGNED NOT NULL,
     title           VARCHAR(50) NOT NULL,
     description     TEXT NOT NULL,

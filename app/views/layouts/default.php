@@ -8,6 +8,10 @@
     <style>
       body {
         padding-top: 60px;
+        background-image: url(/bootstrap/img/bg.jpg);
+        background-size: 30%;
+        background-attachment: fixed;
+        background-position: center;
       }
     </style>
   </head>

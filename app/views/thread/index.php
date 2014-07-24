@@ -75,7 +75,7 @@
 
     <center>
         <?php foreach ($threads as $thread): ?>
-            <div class = 'alert' style='border:1px dashed #bbb;width:70%;margin:5px;'>
+            <div class = 'well' style='border:1px dashed #bbb;width:70%;margin:5px;'>
                 <p align='left' style='font-weight:bold;'>
                 	<a href='<?php eh(url('comment/view', array('thread_id' => $thread->thread_id))) ?>'>
                         <?php eh($thread->title) ?>
@@ -125,7 +125,7 @@
     <br/><br/>
 </div>
 <?php elseif ($search_by == 'User'): ?>
-<div class='well alert-info' style='width:600px;'>
+<div class='alert alert-info' style='width:600px;'>
     <?php if ($num_rows > 0): ?>
         <p align='right' style='font-size:12px;line-height:12px;'>
             Total of 
@@ -148,7 +148,7 @@
 
     <center>
         <?php foreach ($users_found as $user): ?>
-            <div class = 'well alert-info' style='color:#555555;border:1px dashed #bbb;width:70%;margin:5px;'>
+            <div class = 'well' style='color:#555555;border:1px dashed #bbb;width:70%;margin:5px;'>
                 <p align='left' style='font-weight:bold;'>
                     <?php eh($user->username) ?>
                 </p>
@@ -158,5 +158,6 @@
         <?php endforeach; 
         echo $pagination['controls']; ?>
     </center>
+    <br/>
 </div>
 <?php endif; ?>

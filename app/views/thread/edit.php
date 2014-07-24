@@ -1,5 +1,5 @@
 <?php $title = "Edit '{$thread->title}' Thread" ?>
-<h1>Edit '<?= $thread->title; ?>' thread</h1>
+<h1>Edit '<?php eh($old_title); ?>' thread</h1>
 <?php // Checks for validation errors in the inputs passed
 if ($thread->hasError()): ?>
     <div class='alert alert-block'>
@@ -33,10 +33,12 @@ if ($thread->hasError()): ?>
 
 <form class='well' method='post' action='<?php eh(url('')) ?>'>
     <label>Title</label>
-    <input type='text' class='span2' name='title' value='<?php eh($thread->title) ?>'>
+    <input type='text' class='span2' name='title' 
+        value='<?php eh(isset($new_title) ? $new_title : $old_title) ?>'>
 
     <label>Description</label>
-    <textarea name='description'><?php eh($thread->description) ?></textarea>
+    <textarea name='description'><?php 
+        eh(isset($new_description) ? $new_description : $old_description) ?></textarea>
     <br />
 
     <button type='submit' class='btn btn-primary'>Save Changes</button><br/><br/>

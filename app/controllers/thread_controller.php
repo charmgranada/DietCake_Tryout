@@ -5,7 +5,7 @@ class ThreadController extends AppController
     const USERS_PER_PAGE = 5;
 
     /**
-     *VIEW ALL THREADS
+     *VIEW ALL THREADS OR USERS
      */        
     public function index()
     {
@@ -43,7 +43,9 @@ class ThreadController extends AppController
             'Latest First', 
             'Oldest First', 
             'Most Comments', 
-            'Least Comments'
+            'Least Comments',
+            'Most Likes', 
+            'Least Likes'
         );
         // IF order_by IS NOT SET, LATEST FIRST IS THE DEFAULT ORDER
         if (!$order_by) {
@@ -72,18 +74,6 @@ class ThreadController extends AppController
     }
     
     /**
-     *LIKE A THREAD
-     */
-    public function like()
-    {
-        check_user_logged_out();
-        $thread = Thread::get(Param::get('thread_id'));
-        $thread->addLike(); 
-        redirect('thread', 'index');
-        $this->set(get_defined_vars());
-    }
-    
-    /**
      *LIKE OR DISLIKE A THREAD
      */
     public function addLikeDislike()
@@ -91,6 +81,7 @@ class ThreadController extends AppController
         check_user_logged_out();
         $thread = Thread::get(Param::get('thread_id'));
         $like_status = Param::get('like_status');
+        $thread->user_id = $_SESSION['user_id'];
         $thread->addLikeDislike($like_status); 
         redirect('thread', 'index');
         $this->set(get_defined_vars());
@@ -128,19 +119,19 @@ class ThreadController extends AppController
     public function edit()
     {            
         check_user_logged_out();
-        $thread_id = Param::get('thread_id');
-        $thread = Thread::get($thread_id);
-        $thread_title = Param::get('title');
-        $description = Param::get('description');
-        if(isset($title) || isset($description)){
+        $thread = Thread::get(Param::get('thread_id'));
+        $old_title = $thread->title;
+        $new_title = Param::get('title');
+        $old_description = $thread->description;
+        $new_description = Param::get('description');
+        if(isset($new_title) || isset($new_description)){
             try {
-                $thread->title = $thread_title;
+                $thread->title = $new_title;
                 $thread->user_id = $_SESSION['user_id'];
-                $thread->description = $description;
+                $thread->description = $new_description;
                 $thread->update();
-                redirect('comment', 'view', array('thread_id' => $thread_id));
+                redirect('comment', 'view', array('thread_id' => $thread->thread_id));
             } catch (ValidationException $e) {
-
             }
         }
         $this->set(get_defined_vars());

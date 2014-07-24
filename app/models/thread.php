@@ -27,6 +27,12 @@ class Thread extends AppModel
     public static function getAll($limit, $search, $filter, $order, $user_id)
     {
         switch ($order) {
+            case 'Least Likes':
+                $order = 'like_ctr ASC';
+                break;
+            case 'Most Likes':
+                $order = 'like_ctr DESC';
+                break;
             case 'Least Comments':
                 $order = 'comment_ctr ASC';
                 break;
@@ -42,10 +48,15 @@ class Thread extends AppModel
         }
         $db = DB::conn();
         $threads = array();
-        $select = 'SELECT t.*, u.username FROM '.self::THREAD_TABLE.' t INNER JOIN '.User::USERS_TABLE.' u
-        ON t.user_id = u.user_id';
+        $comments_tbl_join = Comment::COMMENT_TABLE.' c RIGHT JOIN '.self::THREAD_TABLE.' t ON 
+            t.thread_id = c.thread_id';
+        $users_tbl_join = 'INNER JOIN '.User::USERS_TABLE.' u ON t.user_id = u.user_id';
+        $thread_likes_tbl_join = 'LEFT OUTER JOIN '.self::THREAD_LIKES_TABLE.' l ON l.thread_id = t.thread_id AND 
+            l.user_id = u.user_id AND l.like_status = 1';
+        $select = "SELECT  DISTINCT t.*, u.username, COUNT(c.comment_id) AS comment_ctr, COUNT(l.thread_id) AS 
+                    like_ctr FROM {$comments_tbl_join} {$users_tbl_join} {$thread_likes_tbl_join}";
         $where = null;
-        $order_limit = "ORDER BY {$order} LIMIT {$limit}";
+        $order_limit = "GROUP BY thread_id ORDER BY {$order} LIMIT {$limit}";
         if ($search) {
             $where = "WHERE {$search}";
         }

@@ -100,11 +100,9 @@
                     if($v->user_id == $_SESSION['user_id']): ?>
                         <br/>
                         <a href='<?php eh(url('thread/edit', array('thread_id' => $v->thread_id)))?>'><button 
-                            class='btn btn-success btn-small'>Edit Info</button>
-                        </a>
+                            class='btn btn-success btn-small'>Edit Info</button></a>
                         <a href='<?php eh(url('thread/delete', array('thread_id' => $v->thread_id)))?>'><button 
-                            class='btn btn-danger btn-small'>Delete Thread</button>
-                        </a>
+                            class='btn btn-danger btn-small'>Delete Thread</button></a>
                     <?php endif; ?>
                 </p>
 

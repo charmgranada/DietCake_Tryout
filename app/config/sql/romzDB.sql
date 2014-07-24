@@ -21,7 +21,6 @@ CREATE TABLE IF NOT EXISTS threads (
     user_id         INT UNSIGNED NOT NULL,
     title           VARCHAR(50) NOT NULL,
     description     TEXT NOT NULL,
-    comment_ctr     INT UNSIGNED NOT NULL,
     created         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated         DATETIME NOT NULL,
     PRIMARY KEY (thread_id),

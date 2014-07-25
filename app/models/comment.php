@@ -1,8 +1,6 @@
 <?php
 class Comment extends AppModel
 {
-    const COMMENT_TABLE = 'comments';
-    
     public $validation = array(
         'body' => array(
             'length' => array(
@@ -22,11 +20,8 @@ class Comment extends AppModel
     {
         $comments = array();
         $db = DB::conn();
-        $select = 'SELECT c.*, u.* FROM '.self::COMMENT_TABLE.' c INNER JOIN '.User::USERS_TABLE.' u ON 
-            c.user_id = u.user_id';
         $where = 'WHERE c.thread_id = ?';
         $where_params = array($this->thread_id);
-        $order_limit = 'ORDER BY created DESC LIMIT '.$limit;
         switch ($filter) {
             case 'My Comments':
                 $where .= ' AND u.user_id = ?';
@@ -38,9 +33,9 @@ class Comment extends AppModel
                 break;
             default:
                 break;
-        }
-        $query = "{$select} {$where} {$order_limit}";       
-        $rows = $db->rows($query, $where_params);
+        }       
+        $rows = $db->rows("SELECT c.*, u.* FROM comments c INNER JOIN users u ON c.user_id = u.user_id {$where} 
+            ORDER BY created DESC LIMIT {$limit}", $where_params);
         foreach ($rows as $row) {
             $comments[] = new self($row);
         }
@@ -55,9 +50,7 @@ class Comment extends AppModel
     {
         $comments = array();
         $db = DB::conn();
-        $query = 'SELECT * FROM '.self::COMMENT_TABLE.' WHERE comment_id = ?';
-        $where_params = array($comment_id);
-        $row = $db->row($query, $where_params);
+        $row = $db->row('SELECT * FROM comments WHERE comment_id = ?', array($comment_id));
         return new self ($row);
     }
 
@@ -66,24 +59,22 @@ class Comment extends AppModel
      */
     public function count($filter, $user_id)
     {
-        $db = DB::conn();
-        $select = 'SELECT COUNT(*) FROM '.self::COMMENT_TABLE;        
+        $db = DB::conn();    
         $where = 'WHERE thread_id = ?';
         $where_params = array($this->thread_id);
         switch ($filter) {
             case 'My Comments':
-                $where .= ' AND u.user_id = ?';
+                $where .= ' AND user_id = ?';
                 $where_params = array($this->thread_id, $user_id);
                 break;
             case 'Other people\'s Comments':
-                $where .= ' AND u.user_id != ?';
+                $where .= ' AND user_id != ?';
                 $where_params = array($this->thread_id, $user_id);
                 break;
             default:
                 break;
         }
-        $query = "{$select} {$where}";
-        $count = $db->value($query, $where_params);
+        $count = $db->value("SELECT COUNT(*) FROM comments {$where}", $where_params);
         return $count;            
     }
 
@@ -98,9 +89,8 @@ class Comment extends AppModel
             throw new ValidationException('invalid comment');
         }
         $db = DB::conn();
-        $set_params = array('body' => $this->body, 'updated' => date('Y-m-d H:i:s'));
-        $where_params = array('comment_id' => $this->comment_id);
-        $db->update(self::COMMENT_TABLE, $set_params, $where_params);
+        $db->update('comments', array('body' => $this->body, 'updated' => date('Y-m-d H:i:s')), 
+            array('comment_id' => $this->comment_id));
     }
 
     /**
@@ -114,12 +104,11 @@ class Comment extends AppModel
             throw new ValidationException('invalid comment');
         }
         $db = DB::conn();
-        $set_params = array(
+        $db->insert('comments', array(
             'thread_id' => $this->thread_id, 
             'user_id' => $this->user_id, 
             'body' => $this->body
-        );
-        $db->insert(self::COMMENT_TABLE, $set_params);
+        ));
     }
     
     /**
@@ -128,8 +117,6 @@ class Comment extends AppModel
     public function delete()
     {
         $db = DB::conn();
-        $query = 'DELETE FROM '.self::COMMENT_TABLE.' WHERE comment_id = ?';
-        $where_params = array($this->comment_id);
-        $db->query($query, $where_params);
+        $db->query('DELETE FROM comments WHERE comment_id = ?', array($this->comment_id));
     }
 }

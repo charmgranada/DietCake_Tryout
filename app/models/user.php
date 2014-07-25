@@ -1,7 +1,6 @@
 <?php    
 class User extends AppModel
 {
-    const USERS_TABLE = 'users';
     const PASS_MIN_LENGTH = 8;
     const PASS_MAX_LENGTH = 16;
     
@@ -49,9 +48,8 @@ class User extends AppModel
         $username = mysql_real_escape_string($username);
         $users_found = array();
         $db = DB::conn();
-        $query = 'SELECT * FROM '.self::USERS_TABLE.' WHERE username LIKE \'%'.$username.'%\' 
-        ORDER BY username LIMIT '.$limit;
-        $users = $db->rows($query); 
+        $users = $db->rows('SELECT * FROM users WHERE username LIKE \'%' .$username. '%\' 
+            ORDER BY username LIMIT ' .$limit); 
         foreach ($users as $user) {
             $users_found[] = new self($user);
         }
@@ -65,8 +63,7 @@ class User extends AppModel
     public static function countFound($username)
     {
         $db = DB::conn();
-        $query = 'SELECT COUNT(*) FROM '.self::USERS_TABLE.' WHERE username LIKE \'%'.$username.'%\'';
-        $count = $db->value($query); 
+        $count = $db->value('SELECT COUNT(*) FROM users WHERE username LIKE \'%' .$username. '%\''); 
         return $count;
     }
 
@@ -77,9 +74,7 @@ class User extends AppModel
     public static function get($id)
     {
         $db = DB::conn();
-        $query = 'SELECT * FROM '.self::USERS_TABLE.' WHERE user_id = ?';
-        $where_params = array($id);
-        $row = $db->row($query, $where_params); 
+        $row = $db->row('SELECT * FROM users WHERE user_id = ?', array($id)); 
         return new self ($row);
     }
 
@@ -92,23 +87,21 @@ class User extends AppModel
     public function register(PersonalInfo $personal_info)
     {
         $db = DB::conn();
-        $where = 'username = ? OR email_add = ?';
-        $where_params = array($this->username, $personal_info->email_add);
-        $row = $db->search(self::USERS_TABLE, $where, $where_params);
+        $row = $db->search('users', 'username = ? OR email_add = ?', 
+            array($this->username, $personal_info->email_add));
         if (!$this->validate() || !$personal_info->validate()) {
             throw new ValidationException(notice('Validation Error', 'error'));
         }
         if ($row) {
             throw new ExistingUserException(notice('Username/Email Address has already been used', 'error'));
         }
-        $where_params = array(
+        $db->insert('users', array(
             'username' => $this->username,
             'password' => sha1($this->password),
             'firstname' => $personal_info->firstname,
             'lastname' => $personal_info->lastname,
             'email_add' => $personal_info->email_add
-        );
-        $db->insert(self::USERS_TABLE, $where_params);
+        ));
     }
 
     /**
@@ -120,9 +113,8 @@ class User extends AppModel
     public function update(PersonalInfo $personal_info)
     {
         $db = DB::conn();
-        $where = '(username = ? OR email_add = ?) AND user_id != ?';
-        $where_params = array($this->username, $personal_info->email_add, $this->user_id);
-        $row = $db->search(self::USERS_TABLE, $where, $where_params);
+        $row = $db->search('users', '(username = ? OR email_add = ?) AND user_id != ?', 
+            array($this->username, $personal_info->email_add, $this->user_id));
         if (!$this->validate() || !$personal_info->validate()) {
             throw new ValidationException(notice('Validation Error', 'error'));
         }
@@ -136,7 +128,6 @@ class User extends AppModel
             'lastname' => $personal_info->lastname,
             'email_add' => $personal_info->email_add
         );
-        $where_params = array('user_id' => $this->user_id);
-        $db->update(self::USERS_TABLE, $set_params, $where_params);
+        $db->update('users', $set_params, array('user_id' => $this->user_id));
     }
 }

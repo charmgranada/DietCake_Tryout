@@ -1,5 +1,5 @@
 <?php $title = "Edit '{$thread->title}' Thread" ?>
-<h1>Edit '<?php eh($old_title); ?>' thread</h1>
+<h1 style='color:#aee;'>Edit '<?php eh($old_title); ?>' thread</h1>
 <?php // Checks for validation errors in the inputs passed
 if ($thread->hasError()): ?>
     <div class='alert alert-block'>

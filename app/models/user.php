@@ -32,9 +32,8 @@ class User extends AppModel
             throw new ValidationException('Invalid Username/Password');
         }
         $db = DB::conn();
-        $query = 'SELECT * FROM ' .self::USERS_TABLE. ' WHERE username = ? AND password = ?';
-        $where_params = array($this->username, sha1($this->password));
-        $row = $db->row($query, $where_params);
+        $row = $db->row('SELECT * FROM users WHERE username = ? AND password = ?', 
+            array($this->username, sha1($this->password)));
         if (!$row) {
             throw new RecordNotFoundException('Username/Password is incorrect');
         }        
@@ -50,8 +49,8 @@ class User extends AppModel
         $username = mysql_real_escape_string($username);
         $users_found = array();
         $db = DB::conn();
-        $query = 'SELECT * FROM ' .self::USERS_TABLE. ' WHERE username LIKE \'%' .$username. '%\' 
-        ORDER BY username LIMIT ' .$limit;
+        $query = 'SELECT * FROM '.self::USERS_TABLE.' WHERE username LIKE \'%'.$username.'%\' 
+        ORDER BY username LIMIT '.$limit;
         $users = $db->rows($query); 
         foreach ($users as $user) {
             $users_found[] = new self($user);
@@ -66,7 +65,7 @@ class User extends AppModel
     public static function countFound($username)
     {
         $db = DB::conn();
-        $query = 'SELECT COUNT(*) FROM ' .self::USERS_TABLE. ' WHERE username LIKE \'%' .$username. '%\'';
+        $query = 'SELECT COUNT(*) FROM '.self::USERS_TABLE.' WHERE username LIKE \'%'.$username.'%\'';
         $count = $db->value($query); 
         return $count;
     }
@@ -78,7 +77,7 @@ class User extends AppModel
     public static function get($id)
     {
         $db = DB::conn();
-        $query = 'SELECT * FROM ' .self::USERS_TABLE. ' WHERE user_id = ?';
+        $query = 'SELECT * FROM '.self::USERS_TABLE.' WHERE user_id = ?';
         $where_params = array($id);
         $row = $db->row($query, $where_params); 
         return new self ($row);

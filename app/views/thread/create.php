@@ -1,5 +1,5 @@
 <?php $title = 'Create a Thread' ?>
-<h1>Create a thread</h1>
+<h1 style='color:#aee;'>Create a thread</h1>
 <?php // Checks for validation errors in the inputs passed
 if ($thread->hasError()): ?>
     <div class='alert alert-block'>

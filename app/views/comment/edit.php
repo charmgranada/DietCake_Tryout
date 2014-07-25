@@ -20,7 +20,7 @@ if ($comment->hasError()): ?>
     </div>
 <?php endif ?>
 
-<h1>
+<h1 style='color:#aee;'>
     <?php // THIS IS THE START OF THE THREAD COMMENTS //
         $title = 'Edit my comment on \'' . $thread->title . '\' thread';
     ?>

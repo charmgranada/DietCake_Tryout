@@ -22,19 +22,23 @@ class Comment extends AppModel
     {
         $comments = array();
         $db = DB::conn();
-        $select = 'SELECT c.*, u.* FROM ' .self::COMMENT_TABLE. ' c INNER JOIN ' .User::USERS_TABLE. ' u ON 
+        $select = 'SELECT c.*, u.* FROM '.self::COMMENT_TABLE.' c INNER JOIN '.User::USERS_TABLE.' u ON 
             c.user_id = u.user_id';
         $where = 'WHERE c.thread_id = ?';
         $where_params = array($this->thread_id);
-        $order_limit = 'ORDER BY created DESC LIMIT ' .$limit;
-        if ($filter != 'All Comments'){
-            if ($filter == 'My Comments') {
+        $order_limit = 'ORDER BY created DESC LIMIT '.$limit;
+        switch ($filter) {
+            case 'My Comments':
                 $where .= ' AND u.user_id = ?';
-            } elseif ($filter == 'Other people\'s Comments') {
+                $where_params = array($this->thread_id, $user_id);
+                break;
+            case 'Other people\'s Comments':
                 $where .= ' AND u.user_id != ?';
-            }
-            $where_params = array($this->thread_id, $user_id);
-        } 
+                $where_params = array($this->thread_id, $user_id);
+                break;
+            default:
+                break;
+        }
         $query = "{$select} {$where} {$order_limit}";       
         $rows = $db->rows($query, $where_params);
         foreach ($rows as $row) {
@@ -51,7 +55,7 @@ class Comment extends AppModel
     {
         $comments = array();
         $db = DB::conn();
-        $query = 'SELECT * FROM ' .self::COMMENT_TABLE. ' WHERE comment_id = ?';
+        $query = 'SELECT * FROM '.self::COMMENT_TABLE.' WHERE comment_id = ?';
         $where_params = array($comment_id);
         $row = $db->row($query, $where_params);
         return new self ($row);
@@ -63,16 +67,20 @@ class Comment extends AppModel
     public function count($filter, $user_id)
     {
         $db = DB::conn();
-        $select = 'SELECT COUNT(*) FROM ' .self::COMMENT_TABLE;        
+        $select = 'SELECT COUNT(*) FROM '.self::COMMENT_TABLE;        
         $where = 'WHERE thread_id = ?';
         $where_params = array($this->thread_id);
-        if ($filter != 'All Comments'){
-            if ($filter == 'My Comments') {
-                $where .= 'AND user_id = ?';
-            } elseif ($filter == 'Other people\'s Comments') {
-                $where .= 'AND user_id != ?';
-            }
-            $where_params = array($this->thread_id, $user_id);
+        switch ($filter) {
+            case 'My Comments':
+                $where .= ' AND u.user_id = ?';
+                $where_params = array($this->thread_id, $user_id);
+                break;
+            case 'Other people\'s Comments':
+                $where .= ' AND u.user_id != ?';
+                $where_params = array($this->thread_id, $user_id);
+                break;
+            default:
+                break;
         }
         $query = "{$select} {$where}";
         $count = $db->value($query, $where_params);
@@ -120,7 +128,7 @@ class Comment extends AppModel
     public function delete()
     {
         $db = DB::conn();
-        $query = 'DELETE FROM ' .self::COMMENT_TABLE. ' WHERE comment_id = ?';
+        $query = 'DELETE FROM '.self::COMMENT_TABLE.' WHERE comment_id = ?';
         $where_params = array($this->comment_id);
         $db->query($query, $where_params);
     }

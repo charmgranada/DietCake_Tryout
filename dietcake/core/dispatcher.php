@@ -3,21 +3,17 @@ class Dispatcher
 {
     public static function invoke()
     {
-        list($controller_name, $action_name) = self::parseAction(Param::get(DC_ACTION));
-
-        $controller = self::getController($controller_name);
-
-        $controller->action = $action_name;
-        $controller->beforeFilter();
-
         try {
-            $controller->dispatchAction();    
+            list($controller_name, $action_name) = self::parseAction(Param::get(DC_ACTION));
+            $controller = self::getController($controller_name);
+            $controller->action = $action_name;
+
+            $controller->beforeFilter();
+            $controller->dispatchAction(); 
+            $controller->afterFilter();      
         } catch (DCException $e) {
             die(notice('<h1>The page you\'re trying to access ' .$e->getMessage(). '</h1>', 'error'));
         }
-
-        $controller->afterFilter();    
-
         echo $controller->output;
     }
 
@@ -32,7 +28,7 @@ class Dispatcher
         $action = explode('/', $action);
 
         if (count($action) < 2) {
-            throw new DCException('invalid url format');
+            throw new DCException('is invalid');
         }
         $action_name = array_pop($action);
         $controller_name = join("_", $action);

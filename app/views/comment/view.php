@@ -17,7 +17,7 @@ if ($comment->hasError()): ?>
         <?php endif ?>
     </div>
 <?php endif ?>
-
+<font color='#aee'>
 <h1>
     <?php // THIS IS THE START OF THE THREAD COMMENTS //
         $title = "Comments on '{$thread->title}' thread";

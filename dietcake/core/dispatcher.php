@@ -9,8 +9,14 @@ class Dispatcher
 
         $controller->action = $action_name;
         $controller->beforeFilter();
-        $controller->dispatchAction();
-        $controller->afterFilter();
+
+        try {
+            $controller->dispatchAction();    
+        } catch (DCException $e) {
+            die(notice('<h1>The page you\'re trying to access ' .$e->getMessage(). '</h1>', 'error'));
+        }
+
+        $controller->afterFilter();    
 
         echo $controller->output;
     }

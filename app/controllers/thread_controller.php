@@ -15,30 +15,22 @@ class ThreadController extends AppController
         $placeholder = 'Enter a thread title here';
         $search_item = Param::get('search_item');
         // FOR FILTERING RESULTS OF THREADS
-        $filter_by = Param::get('filter_by');
+        $filter_by = Param::get('filter_by', 'All Threads');
         $filter_options = array(
             'All Threads', 
             'My Threads', 
             'Threads I commented', 
             'Other people\'s Threads'
         );
-        // IF filter_by IS NOT SET, ALL THREADS IS THE DEFAULT FILTER
-        if (!$filter_by) {
-            $filter_by = 'All Threads';
-        }
         // FOR SEARCHING THREADS OR USERS
-        $search_by = Param::get('search_by');
+        $search_by = Param::get('search_by', 'Thread');
         $search_options = array(
             'Thread', 
             'User'
         );
         $search = null;
-        // IF search_by IS NOT SET, THREAD IS THE DEFAULT SEARCH
-        if (!$search_by) {
-            $search_by = 'Thread';
-        }
         // FOR SORTING OF THREADS
-        $order_by = Param::get('order_by');
+        $order_by = Param::get('order_by', 'Latest First');
         $order_options = array(
             'Latest First', 
             'Oldest First', 
@@ -47,10 +39,6 @@ class ThreadController extends AppController
             'Most Likes', 
             'Least Likes'
         );
-        // IF order_by IS NOT SET, LATEST FIRST IS THE DEFAULT ORDER
-        if (!$order_by) {
-            $order_by = 'Latest First';
-        }
         if (isset($search_item)) {
             $search_item = mysql_real_escape_string($search_item);
             $search = 'title LIKE \'%' .$search_item. '%\'';

@@ -16,16 +16,12 @@ class CommentController extends AppController
         $comment->thread_id = $thread->thread_id;
         $body = Param::get('body');
         // FOR FILTERING RESULTS OF COMMENTS
-        $filter_by = Param::get('filter_by');
+        $filter_by = Param::get('filter_by', 'All Comments');
         $filter_options = array(
             'All Comments', 
             'My Comments', 
             'Other people\'s Comments'
         );
-        // IF filter_by IS NOT SET, ALL COMMENTS IS THE DEFAULT FILTER
-        if (!$filter_by) {
-            $filter_by = 'All Comments';
-        }
         // FOR PAGINATION //
         $cur_page = Param::get('pn');
         $num_rows = $comment->count($filter_by, $user_id);

@@ -18,6 +18,30 @@ class Thread extends AppModel
     );
 
     /**
+     *FILTER FUNCTION FOR THREADS
+     *@param $filter, $search
+     */
+    public static function filter($filter, $search)
+    {
+        $where = "WHERE {$search}";
+        switch($filter) {
+            case 'My Threads':
+                $where .= ' AND u.user_id = ?';
+                break;
+            case 'Threads I commented':
+                $where .= ' AND t.thread_id = ANY (SELECT DISTINCT t.thread_id FROM threads t 
+                    INNER JOIN comments c ON t.thread_id = c.thread_id WHERE c.user_id = ?)';
+                break;
+            case 'Other people\'s Threads':
+                $where .= ' AND u.user_id != ?';
+                break;
+            default:
+                break;
+        }
+        return $where;
+    }
+
+    /**
      *RETURNS ALL THREADS IN DATABASE
      *@param $limit
      */
@@ -25,10 +49,10 @@ class Thread extends AppModel
     {
         switch ($order) {
             case 'Least Likes':
-                $order = 'like_ctr';
+                $order = 'l.like_ctr';
                 break;
             case 'Most Likes':
-                $order = 'like_ctr DESC';
+                $order = 'l.like_ctr DESC';
                 break;
             case 'Least Comments':
                 $order = 'comment_ctr';
@@ -45,32 +69,18 @@ class Thread extends AppModel
         }
         $db = DB::conn();
         $threads = array();
-        // TABLE JOINS
-        $comments_tbl_join = 'comments c RIGHT JOIN threads t ON t.thread_id = c.thread_id';
-        $users_tbl_join = 'INNER JOIN users u ON t.user_id = u.user_id';
-        $thread_likes_tbl_join = 'LEFT OUTER JOIN thread_likes l ON l.thread_id = t.thread_id 
-            AND l.like_status = 1';
-        // END OF TABLE JOINS
-        $select = "SELECT  t.*, u.username, COUNT(c.comment_id) AS comment_ctr, COUNT(l.user_id) AS 
-            like_ctr FROM {$comments_tbl_join} {$users_tbl_join} {$thread_likes_tbl_join}";
+        $select = "SELECT t.*, u.username, COUNT(c.thread_id) AS comment_ctr, l.like_ctr
+            FROM threads t
+            INNER JOIN users u ON t.user_id = u.user_id
+            LEFT OUTER JOIN comments c ON c.thread_id = t.thread_id
+            LEFT OUTER JOIN 
+                (SELECT t.thread_id, COUNT(*) AS like_ctr FROM threads t 
+                    INNER JOIN thread_likes l ON l.thread_id = t.thread_id 
+                    WHERE l.like_status=1 GROUP BY t.thread_id) l ON l.thread_id = t.thread_id";
         $where = null;
-        $order_limit = "GROUP BY user_id ORDER BY {$order} LIMIT {$limit}";
+        $order_limit = "GROUP BY t.thread_id ORDER BY {$order} LIMIT {$limit}";
         if ($search) {
-            $where = "WHERE {$search}";
-        }
-        switch ($filter) {
-            case 'My Threads':
-                $where .= ' AND u.user_id = ?';
-                break;
-            case 'Threads I commented':
-                $where .= ' AND t.thread_id = ANY (SELECT DISTINCT t.thread_id FROM threads t 
-                    INNER JOIN comments c ON t.thread_id = c.thread_id WHERE c.user_id = ?)';
-                break;
-            case 'Other people\'s Threads':
-                $where .= ' AND u.user_id != ?';
-                break;
-            default:
-                break;
+            $where = self::filter($filter, $search);
         }
         $rows = $db->rows("{$select} {$where} {$order_limit}", array($user_id));
         foreach ($rows as $row) {
@@ -98,24 +108,10 @@ class Thread extends AppModel
         $db = DB::conn();
         $select = 'SELECT COUNT(*) FROM threads t INNER JOIN users u ON t.user_id = u.user_id';
         $where = null;
-        switch ($filter) {
-            case 'My Threads':
-                $where = 'WHERE u.user_id = ?';
-                break;
-            case 'Threads I commented':
-                $where = 'WHERE t.thread_id = ANY (SELECT DISTINCT t.thread_id FROM threads t 
-                    INNER JOIN comments c ON t.thread_id = c.thread_id WHERE c.user_id = ?)';
-                break;
-            case 'Other people\'s Threads':
-                $where = 'WHERE u.user_id != ?';
-                break;
-            default:
-                break;
+        if ($search) {
+            $where = self::filter($filter, $search);
         }
-        if ($search) {            
-            $search = "AND {$search}";
-        }
-        $count = $db->value("{$select} {$where} {$search}", array($user_id));
+        $count = $db->value("{$select} {$where}", array($user_id));
         return $count;            
     }
     
@@ -132,11 +128,11 @@ class Thread extends AppModel
             array($this->thread_id, $this->user_id)); 
         if ($user_has_record) {
             if ($user_has_record['like_status'] != $like_status) {
-                // CHANGE LIKE STATUS IF USERS PREVIOUS LIKE STATUS IS DIFFERENT
+                // CHANGE LIKE STATUS IF USER'S PREVIOUS LIKE STATUS IS DIFFERENT
                 $db->update('thread_likes', array('like_status' => $like_status), 
                     array('thread_id' => $this->thread_id, 'user_id' => $this->user_id));
             } else {
-                // DELETE LIKE STATUS IF USERS PREVIOUS LIKE STATUS IS THE SAME
+                // DELETE LIKE STATUS IF USER'S PREVIOUS LIKE STATUS IS THE SAME
                 $db->query('DELETE FROM thread_likes WHERE thread_id = ? AND user_id = ? AND like_status = ?', 
                     array($this->thread_id, $this->user_id, $like_status));                
             }

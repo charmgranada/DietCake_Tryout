@@ -13,6 +13,28 @@ class Comment extends AppModel
     );
 
     /**
+     *FILTER FUNCTION FOR COMMENTS
+     *@param $filter, $user_id
+     */
+    public function filter($filter, $user_id)
+    {
+        $where = 'WHERE c.thread_id = ?';
+        $where_params = array($this->thread_id, $user_id);
+        switch($filter) {
+            case 'My Comments':
+                $where .= ' AND u.user_id = ?';
+                break;
+            case 'Other people\'s Comments':
+                $where .= ' AND u.user_id != ?';
+                break;
+            default:
+                $where_params = array($this->thread_id);
+                break;
+        }
+        return array($where, $where_params);
+    }
+
+    /**
      *RETURNS ALL COMMENTS OF A THREAD
      *@param $limit
      */
@@ -20,20 +42,7 @@ class Comment extends AppModel
     {
         $comments = array();
         $db = DB::conn();
-        $where = 'WHERE c.thread_id = ?';
-        $where_params = array($this->thread_id);
-        switch ($filter) {
-            case 'My Comments':
-                $where .= ' AND u.user_id = ?';
-                $where_params = array($this->thread_id, $user_id);
-                break;
-            case 'Other people\'s Comments':
-                $where .= ' AND u.user_id != ?';
-                $where_params = array($this->thread_id, $user_id);
-                break;
-            default:
-                break;
-        }       
+        list($where, $where_params) = $this->filter($filter, $user_id);
         $rows = $db->rows("SELECT c.*, u.* FROM comments c INNER JOIN users u ON c.user_id = u.user_id {$where} 
             ORDER BY created DESC LIMIT {$limit}", $where_params);
         foreach ($rows as $row) {
@@ -60,21 +69,9 @@ class Comment extends AppModel
     public function count($filter, $user_id)
     {
         $db = DB::conn();    
-        $where = 'WHERE thread_id = ?';
-        $where_params = array($this->thread_id);
-        switch ($filter) {
-            case 'My Comments':
-                $where .= ' AND user_id = ?';
-                $where_params = array($this->thread_id, $user_id);
-                break;
-            case 'Other people\'s Comments':
-                $where .= ' AND user_id != ?';
-                $where_params = array($this->thread_id, $user_id);
-                break;
-            default:
-                break;
-        }
-        $count = $db->value("SELECT COUNT(*) FROM comments {$where}", $where_params);
+        list($where, $where_params) = $this->filter($filter, $user_id);
+        $count = $db->value("SELECT COUNT(*) FROM comments c INNER JOIN users u ON c.user_id = u.user_id 
+            {$where}", $where_params);
         return $count;            
     }
 

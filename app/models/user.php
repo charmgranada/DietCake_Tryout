@@ -94,13 +94,14 @@ class User extends AppModel
         if ($row) {
             throw new ExistingUserException(notice('Username/Email Address has already been used', 'error'));
         }
-        $db->insert('users', array(
+        $params = array(
             'username' => $this->username,
             'password' => sha1($this->password),
             'firstname' => $personal_info->firstname,
             'lastname' => $personal_info->lastname,
             'email_add' => $personal_info->email_add
-        ));
+        );
+        $db->insert('users', $params);
     }
 
     /**

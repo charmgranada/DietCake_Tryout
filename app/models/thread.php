@@ -134,11 +134,12 @@ class Thread extends AppModel
                     array($this->thread_id, $this->user_id, $like_status));                
             }
         } else {
-            $db->insert('thread_likes', array(
+            $params = array(
                 'thread_id' => $this->thread_id,
                 'user_id' => $this->user_id,
                 'like_status' => $like_status
-            ));
+            );
+            $db->insert('thread_likes', $params);
         }   
         $db->commit();
     }
@@ -166,7 +167,7 @@ class Thread extends AppModel
     }
 
     /**
-     *CREATES A NEW THREAD WITH A COMMENT
+     *CREATES A NEW THREAD
      *@throws ValidationException
      */
     public function create()
@@ -176,18 +177,18 @@ class Thread extends AppModel
             throw new ValidationException('invalid title or description');
         }
         $db = DB::conn();
-        $db->insert('threads', array(
+        $params = array(
             'user_id' => $this->user_id,
             'title' => $this->title,
             'description' => $this->description,
             'updated' => date('Y-m-d H:i:s')
-        ));
+        );
+        $db->insert('threads', $params);
         return $db->lastInsertId();
     }
 
     /**
-     *EDITS A THREAD AND ADDS A COMMENT FOR IT
-     *@param $comment
+     *EDIT A THREAD
      *@throws ValidationException
      */
     public function update()

@@ -21,10 +21,10 @@ class Comment extends AppModel
         $where = 'WHERE c.thread_id = ?';
         $where_params = array($this->thread_id, $user_id);
         switch($filter) {
-            case 'My Comments':
+            case 1:
                 $where .= ' AND u.user_id = ?';
                 break;
-            case 'Other people\'s Comments':
+            case 2:
                 $where .= ' AND u.user_id != ?';
                 break;
             default:

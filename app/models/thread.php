@@ -1,6 +1,11 @@
 <?php
 class Thread extends AppModel
 {
+    const ALL_THREADS = 'All Threads';
+    const MY_THREADS = 'My Threads';
+    const COMMENTED_THREADS = 'Threads I commented';
+    const THEIR_THREADS = 'Other people\'s Threads';
+
     public $validation = array(
         'title' => array(
             'length' => array(
@@ -26,14 +31,14 @@ class Thread extends AppModel
         $where = "WHERE t.title LIKE ?";
         $where_params = array("%{$title}%", $user_id);
         switch($filter) {
-            case 'My Threads':
+            case self::MY_THREADS:
                 $where .= ' AND u.user_id = ?';
                 break;
-            case 'Threads I commented':
+            case self::COMMENTED_THREADS:
                 $where .= ' AND t.thread_id = ANY (SELECT DISTINCT t.thread_id FROM threads t 
                     INNER JOIN comments c ON t.thread_id = c.thread_id WHERE c.user_id = ?)';
                 break;
-            case 'Other people\'s Threads':
+            case self::THEIR_THREADS:
                 $where .= ' AND u.user_id != ?';
                 break;
             default:

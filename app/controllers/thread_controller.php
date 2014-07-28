@@ -15,12 +15,12 @@ class ThreadController extends AppController
         $search_item = Param::get('search_item', null);
         $placeholder = 'Enter a thread title here';
         // FOR FILTERING RESULTS OF THREADS
-        $filter_by = Param::get('filter_by', 'All Threads');
+        $filter_by = Param::get('filter_by', Thread::ALL_THREADS);
         $filter_options = array(
-            'All Threads', 
-            'My Threads', 
-            'Threads I commented', 
-            'Other people\'s Threads'
+            Thread::ALL_THREADS, 
+            Thread::MY_THREADS, 
+            Thread::COMMENTED_THREADS, 
+            Thread::THEIR_THREADS
         );
         // FOR SEARCHING THREADS OR USERS
         $search_by = Param::get('search_by', 'Thread');

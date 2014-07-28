@@ -29,19 +29,11 @@ if ($comment->hasError()): ?>
     <input type='hidden' name='thread_id' value='<?php eh($thread->thread_id) ?>'>
     <select name='filter_by' style='width:auto;' class='btn btn-small btn-inverse' 
     onchange='this.form.submit()'>
+        <option><?php eh($filter_by) ?></option>
         <?php
-            // DISPLAY THE VALUE OF FILTER_BY AS THE SELECTED OPTION
-            foreach ($filter_options as $k => $v) {
-                if ($k == $filter_by) {
-                    echo "<option value='{$k}'>{$v}</option>";
-                }
-            }
-        ?>
-        <?php
-            // DISPLAY OTHER FILTER OPTIONS 
-            foreach ($filter_options as $k => $v) {
-                if ($k != $filter_by) {
-                    echo "<option value='{$k}'>{$v}</option>";
+            foreach ($filter_options as $filter_option) {
+                if ($filter_option != $filter_by) {
+                    echo "<option>{$filter_option}</option>";
                 }
             }
         ?>

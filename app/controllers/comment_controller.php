@@ -2,9 +2,6 @@
 class CommentController extends AppController
 {
     const COMMENTS_PER_PAGE = 5;
-    const ALL_COMMENTS = 'All Comments';
-    const MY_COMMENTS = 'My Comments';
-    const THEIR_COMMENTS = 'Other people\'s Comments';
 
     /**
      *VIEW ALL COMMENTS OF A THREAD
@@ -18,11 +15,11 @@ class CommentController extends AppController
         $comment = new Comment();
         $comment->thread_id = $thread->thread_id;
         // FOR FILTERING RESULTS OF COMMENTS
-        $filter_by = Param::get('filter_by', 0);
+        $filter_by = Param::get('filter_by', Comment::ALL_COMMENTS);
         $filter_options = array(
-            self::ALL_COMMENTS, 
-            self::MY_COMMENTS, 
-            self::THEIR_COMMENTS
+            Comment::ALL_COMMENTS, 
+            Comment::MY_COMMENTS, 
+            Comment::THEIR_COMMENTS
         );
         // FOR PAGINATION //
         $cur_page = Param::get('pn');

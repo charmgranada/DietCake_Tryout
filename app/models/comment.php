@@ -1,6 +1,10 @@
 <?php
 class Comment extends AppModel
 {
+    const ALL_COMMENTS = 'All Comments';
+    const MY_COMMENTS = 'My Comments';
+    const THEIR_COMMENTS = 'Other people\'s Comments';
+
     public $validation = array(
         'body' => array(
             'length' => array(
@@ -21,10 +25,10 @@ class Comment extends AppModel
         $where = 'WHERE c.thread_id = ?';
         $where_params = array($this->thread_id, $user_id);
         switch($filter) {
-            case 1:
+            case self::MY_COMMENTS:
                 $where .= ' AND u.user_id = ?';
                 break;
-            case 2:
+            case self::THEIR_COMMENTS:
                 $where .= ' AND u.user_id != ?';
                 break;
             default:

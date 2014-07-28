@@ -211,7 +211,9 @@ class Thread extends AppModel
      */
     public function delete(){
         $db = DB::conn();
+        $db->begin();
         $db->query('DELETE FROM threads WHERE thread_id = ?', array($this->thread_id));    
-        $db->query('DELETE FROM comments WHERE thread_id = ?', array($this->thread_id));    
+        $db->query('DELETE FROM comments WHERE thread_id = ?', array($this->thread_id));  
+        $db->commit();  
     }
 }

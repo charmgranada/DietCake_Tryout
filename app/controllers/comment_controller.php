@@ -5,16 +5,15 @@ class CommentController extends AppController
 
     /**
      *VIEW ALL COMMENTS OF A THREAD
-     *@throws ValidationException
      */
     public function view()
     {       
         check_user_logged_out();     
         $user_id = $_SESSION['user_id'];
+        $body = Param::get('body');
         $thread = Thread::get(Param::get('thread_id'));
         $comment = new Comment();
         $comment->thread_id = $thread->thread_id;
-        $body = Param::get('body');
         // FOR FILTERING RESULTS OF COMMENTS
         $filter_by = Param::get('filter_by', 'All Comments');
         $filter_options = array(
@@ -44,7 +43,6 @@ class CommentController extends AppController
 
     /**
      *EDIT A COMMENT
-     *@throws ValidationException
      */
     public function edit()
     {       
@@ -70,11 +68,9 @@ class CommentController extends AppController
     public function delete()
     {
         check_user_logged_out();
-        $thread = Thread::get(Param::get('thread_id'));
         $comment = Comment::get(Param::get('comment_id'));
-        $comment->thread_id = $thread->thread_id;
         $comment->delete(); 
-        redirect('comment', 'view', array('thread_id' => $thread->thread_id));
+        redirect('comment', 'view', array('thread_id' => Param::get('thread_id')));
         $this->set(get_defined_vars());
     }
 }

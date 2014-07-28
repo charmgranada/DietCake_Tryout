@@ -38,7 +38,6 @@ function have_spaces($text)
 function check_user_logged_in()
 {
     if (isset($_SESSION['user_id'])) {
-        $user = User::get($_SESSION['user_id']);
         redirect('thread','index');
     }
 }

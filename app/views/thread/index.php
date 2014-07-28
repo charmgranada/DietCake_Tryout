@@ -88,30 +88,34 @@
                     <font size=1>
                         <?php eh($thread->comment_ctr) ?> comment(s)
                         &nbsp;|&nbsp; <?php eh($thread->countLikes()) ?> 
-                        <a href='<?php echo url('thread/addLikeDislike', 
-                        array('thread_id' => $thread->thread_id, 'home_page' => url(), 'like_status' => 1)) ?>'><img 
-                            src='/bootstrap/img/like.png' width='12px'></a>
+                        <a href='<?php echo url('thread/addLikeDislike', array(
+                            'thread_id' => $thread->thread_id, 
+                            'home_page' => url(), 
+                            'like_status' => 1)) ?>'><img src='/bootstrap/img/like.png' width='12px'></a>
                         &nbsp;|&nbsp; <?php eh($thread->countDislikes()) ?> 
-                        <a href='<?php echo url('thread/addLikeDislike', 
-                        array('thread_id' => $thread->thread_id, 'home_page' => url(), 'like_status' => 0)) ?>'><img 
-                            src='/bootstrap/img/dislike.png' width='12px'></a>
+                        <a href='<?php echo url('thread/addLikeDislike', array(
+                            'thread_id' => $thread->thread_id, 
+                            'home_page' => url(), 
+                            'like_status' => 0)) ?>'><img src='/bootstrap/img/dislike.png' width='12px'></a>
                     </font>
                     <?php // THE EDIT AND DELETE CONTROLS FOR THE THREAD OF THE USER WHO CREATED IT
                     if($thread->user_id == $_SESSION['user_id']): ?>
                         <br/>
-                        <a href='<?php eh(url('thread/edit', array('thread_id' => $thread->thread_id)))?>'><button 
+                        <a href='<?php eh(url('thread/edit', 
+                            array('thread_id' => $thread->thread_id)))?>'><button 
                             class='btn btn-success btn-small'>Edit Info</button></a>
-                        <a href='<?php eh(url('thread/delete', array('thread_id' => $thread->thread_id)))?>'><button 
+                        <a href='<?php eh(url('thread/delete', 
+                            array('thread_id' => $thread->thread_id)))?>'><button 
                             class='btn btn-danger btn-small'>Delete Thread</button></a>
                     <?php endif; ?>
                 </p>
 
                 <p align='left' style='font-size:9px;font-style:italic;line-height:5px;'>
+                    <?php 
+                        eh(($thread->updated != $thread->created) ? 'Updated: ' 
+                            .date_format(new DateTime($thread->updated),'F d, Y h:ia'): '') 
+                    ?>
                     <font style='float:right;'>
-                        <?php 
-                            eh(($thread->updated != 0) ? 'Updated: ' 
-                                .date_format(new DateTime($thread->updated),'F d, Y h:ia'). ' | ' : '') 
-                        ?>
                         Created: <?php eh(date_format(new DateTime($thread->created),'F d, Y h:ia')) ?>
                     </font> <br/> <br/>
                     Posted by: <?php eh($thread->username) ?>

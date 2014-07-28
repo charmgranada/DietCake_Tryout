@@ -36,15 +36,16 @@ class Comment extends AppModel
 
     /**
      *RETURNS ALL COMMENTS OF A THREAD
-     *@param $limit
+     *@param $limit, $filter, $user_id
      */
     public function getAll($limit, $filter, $user_id)
     {
         $comments = array();
         $db = DB::conn();
         list($where, $where_params) = $this->filter($filter, $user_id);
-        $rows = $db->rows("SELECT c.*, u.* FROM comments c INNER JOIN users u ON c.user_id = u.user_id {$where} 
-            ORDER BY created DESC LIMIT {$limit}", $where_params);
+        $rows = $db->rows("SELECT c.*, u.* FROM comments c 
+            INNER JOIN users u ON c.user_id = u.user_id 
+            {$where} ORDER BY created DESC LIMIT {$limit}", $where_params);
         foreach ($rows as $row) {
             $comments[] = new self($row);
         }
@@ -65,12 +66,14 @@ class Comment extends AppModel
 
     /**
      *RETURNS TOTAL NUMBER OF COMMENTS
+     *@param $filter, $user_id
      */
     public function count($filter, $user_id)
     {
         $db = DB::conn();    
         list($where, $where_params) = $this->filter($filter, $user_id);
-        $count = $db->value("SELECT COUNT(*) FROM comments c INNER JOIN users u ON c.user_id = u.user_id 
+        $count = $db->value("SELECT COUNT(*) FROM comments c 
+            INNER JOIN users u ON c.user_id = u.user_id 
             {$where}", $where_params);
         return $count;            
     }

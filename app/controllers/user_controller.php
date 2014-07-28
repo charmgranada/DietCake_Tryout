@@ -3,8 +3,6 @@ class UserController extends AppController
 {        
     /**
      *USER LOGIN
-     *@throws ValidationException
-     *@throws RecordNotFoundException
      */
     public function index()
     {
@@ -28,8 +26,6 @@ class UserController extends AppController
 
     /**
      *REGISTER A NEW USER
-     *@throws ValidationException
-     *@throws ExistingUserException
      */
     public function register()
     {
@@ -76,9 +72,7 @@ class UserController extends AppController
     }
 
     /**
-     *REGISTER A NEW USER
-     *@throws ValidationException
-     *@throws ExistingUserException
+     *LOGGED IN USER EDIT HIS/HER INFO
      */
     public function edit_account_info()
     {

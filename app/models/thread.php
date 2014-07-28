@@ -19,11 +19,12 @@ class Thread extends AppModel
 
     /**
      *FILTER FUNCTION FOR THREADS
-     *@param $filter, $search
+     *@param $filter, $title, $user_id
      */
-    public static function filter($filter, $search)
+    public static function filter($filter, $title, $user_id)
     {
-        $where = "WHERE {$search}";
+        $where = "WHERE t.title LIKE ?";
+        $where_params = array("%{$title}%", $user_id);
         switch($filter) {
             case 'My Threads':
                 $where .= ' AND u.user_id = ?';
@@ -36,14 +37,15 @@ class Thread extends AppModel
                 $where .= ' AND u.user_id != ?';
                 break;
             default:
+                $where_params = array("%{$title}%");
                 break;
         }
-        return $where;
+        return array($where, $where_params);
     }
 
     /**
      *RETURNS ALL THREADS IN DATABASE
-     *@param $limit
+     *@param $limit, $search, $filter, $order, $user_id
      */
     public static function getAll($limit, $search, $filter, $order, $user_id)
     {
@@ -61,14 +63,13 @@ class Thread extends AppModel
                 $order = 'comment_ctr DESC';
                 break;
             case 'Oldest First':
-                $order = 'created';
+                $order = 'updated';
                 break;            
             default:
-                $order = 'created DESC';
+                $order = 'updated DESC';
                 break;
         }
         $db = DB::conn();
-        $threads = array();
         $select = "SELECT t.*, u.username, COUNT(c.thread_id) AS comment_ctr, l.like_ctr
             FROM threads t
             INNER JOIN users u ON t.user_id = u.user_id
@@ -77,12 +78,10 @@ class Thread extends AppModel
                 (SELECT t.thread_id, COUNT(*) AS like_ctr FROM threads t 
                     INNER JOIN thread_likes l ON l.thread_id = t.thread_id 
                     WHERE l.like_status=1 GROUP BY t.thread_id) l ON l.thread_id = t.thread_id";
-        $where = null;
+        list($where, $where_params) = self::filter($filter, $search, $user_id);
         $order_limit = "GROUP BY t.thread_id ORDER BY {$order} LIMIT {$limit}";
-        if ($search) {
-            $where = self::filter($filter, $search);
-        }
-        $rows = $db->rows("{$select} {$where} {$order_limit}", array($user_id));
+        $rows = $db->rows("{$select} {$where} {$order_limit}", $where_params);
+        $threads = array();
         foreach ($rows as $row) {
             $threads[] = new self($row);
         }
@@ -102,16 +101,15 @@ class Thread extends AppModel
 
     /**
      *RETURNS TOTAL NUMBER OF THREADS
+     *@param $search, $filter, $user_id
      */
     public static function count($search, $filter, $user_id)
     {
         $db = DB::conn();
-        $select = 'SELECT COUNT(*) FROM threads t INNER JOIN users u ON t.user_id = u.user_id';
-        $where = null;
-        if ($search) {
-            $where = self::filter($filter, $search);
-        }
-        $count = $db->value("{$select} {$where}", array($user_id));
+        list($where, $where_params) = self::filter($filter, $search, $user_id);
+        $count = $db->value("SELECT COUNT(*) FROM threads t 
+            INNER JOIN users u ON t.user_id = u.user_id 
+            {$where}", $where_params);
         return $count;            
     }
     
@@ -121,18 +119,17 @@ class Thread extends AppModel
      */
     public function addLikeDislike($like_status)
     {
-        $like_status = mysql_real_escape_string($like_status);
         $db = DB::conn();
         $db->begin();
         $user_has_record = $db->row('SELECT * FROM thread_likes WHERE thread_id = ? AND user_id = ?', 
             array($this->thread_id, $this->user_id)); 
         if ($user_has_record) {
+            // CHANGE LIKE STATUS IF USER'S PREVIOUS LIKE STATUS IS DIFFERENT
+            // DELETE LIKE STATUS IF USER'S PREVIOUS LIKE STATUS IS THE SAME
             if ($user_has_record['like_status'] != $like_status) {
-                // CHANGE LIKE STATUS IF USER'S PREVIOUS LIKE STATUS IS DIFFERENT
                 $db->update('thread_likes', array('like_status' => $like_status), 
                     array('thread_id' => $this->thread_id, 'user_id' => $this->user_id));
             } else {
-                // DELETE LIKE STATUS IF USER'S PREVIOUS LIKE STATUS IS THE SAME
                 $db->query('DELETE FROM thread_likes WHERE thread_id = ? AND user_id = ? AND like_status = ?', 
                     array($this->thread_id, $this->user_id, $like_status));                
             }
@@ -182,7 +179,8 @@ class Thread extends AppModel
         $db->insert('threads', array(
             'user_id' => $this->user_id,
             'title' => $this->title,
-            'description' => $this->description
+            'description' => $this->description,
+            'updated' => date('Y-m-d H:i:s')
         ));
         return $db->lastInsertId();
     }

@@ -48,8 +48,7 @@ class User extends AppModel
         $username = mysql_real_escape_string($username);
         $users_found = array();
         $db = DB::conn();
-        $users = $db->rows('SELECT * FROM users WHERE username LIKE \'%' .$username. '%\' 
-            ORDER BY username LIMIT ' .$limit); 
+        $users = $db->search('users', 'username LIKE ?', array("%{$username}%"), 'username', $limit); 
         foreach ($users as $user) {
             $users_found[] = new self($user);
         }
@@ -63,7 +62,7 @@ class User extends AppModel
     public static function countFound($username)
     {
         $db = DB::conn();
-        $count = $db->value('SELECT COUNT(*) FROM users WHERE username LIKE \'%' .$username. '%\''); 
+        $count = $db->value('SELECT COUNT(*) FROM users WHERE username LIKE ?', array("%{$username}%")); 
         return $count;
     }
 
@@ -81,8 +80,8 @@ class User extends AppModel
     /**
      *REGISTERS A NEW USER
      *@param PersonalInfo $personal_info
-     *@throws ExistingUserException
      *@throws ValidationException
+     *@throws ExistingUserException
      */
     public function register(PersonalInfo $personal_info)
     {
@@ -107,8 +106,8 @@ class User extends AppModel
     /**
      *UPDATES A USER'S ACCOUNT INFO
      *@param PersonalInfo $personal_info
-     *@throws ExistingUserException
      *@throws ValidationException
+     *@throws ExistingUserException
      */
     public function update(PersonalInfo $personal_info)
     {

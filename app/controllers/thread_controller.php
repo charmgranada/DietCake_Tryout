@@ -12,8 +12,8 @@ class ThreadController extends AppController
         check_user_logged_out();
         $user = User::get($_SESSION['user_id']);
         $cur_page = Param::get('pn');
+        $search_item = Param::get('search_item', null);
         $placeholder = 'Enter a thread title here';
-        $search_item = Param::get('search_item');
         // FOR FILTERING RESULTS OF THREADS
         $filter_by = Param::get('filter_by', 'All Threads');
         $filter_options = array(
@@ -28,7 +28,6 @@ class ThreadController extends AppController
             'Thread', 
             'User'
         );
-        $search = null;
         // FOR SORTING OF THREADS
         $order_by = Param::get('order_by', 'Latest First');
         $order_options = array(
@@ -39,18 +38,14 @@ class ThreadController extends AppController
             'Most Likes', 
             'Least Likes'
         );
-        if (isset($search_item)) {
-            $search_item = mysql_real_escape_string($search_item);
-            $search = 'title LIKE \'%' .$search_item. '%\'';
-            if (!$search_item && $filter_by == 'All Threads' && $search_by == 'Thread' 
-                && $order_by == 'Latest First') {
-                redirect('thread', 'index');
-            }
+        if (isset($search_item) && !$search_item && $filter_by == 'All Threads' && $search_by == 'Thread' 
+            && $order_by == 'Latest First') {
+            redirect('thread', 'index');
         }
-        $num_rows = Thread::count($search, $filter_by, $user->user_id);
+        $num_rows = Thread::count($search_item, $filter_by, $user->user_id);
         $pagination = pagination($num_rows, $cur_page, self::THREADS_PER_PAGE);
         // TODO: Get all threads
-        $threads = Thread::getAll($pagination['limit'], $search, $filter_by, $order_by, $user->user_id);
+        $threads = Thread::getAll($pagination['limit'], $search_item, $filter_by, $order_by, $user->user_id);
         // IF SEARCH OPTION IS USER, ONLY USER INFORMATION IS SEEN
         if ($search_by == 'User') {
             $num_rows = User::countFound($search_item);
@@ -67,9 +62,9 @@ class ThreadController extends AppController
     public function addLikeDislike()
     {
         check_user_logged_out();
-        $thread = Thread::get(Param::get('thread_id'));
         $like_status = Param::get('like_status');
         $home_page = Param::get('home_page');
+        $thread = Thread::get(Param::get('thread_id'));
         $thread->user_id = $_SESSION['user_id'];
         $thread->addLikeDislike($like_status); 
         redirect($home_page, null);
@@ -78,17 +73,15 @@ class ThreadController extends AppController
 
     /**
      *CREATE A NEW THREAD
-     *@throws ValidationException
      */
     public function create()
     {
         check_user_logged_out();
-        $thread = new Thread;
-        $comment = new Comment;
         $thread_title = Param::get('title');
         $description = Param::get('description');
         if (isset($title) || isset($description)) {
             try {
+                $thread = new Thread;
                 $thread->title = $thread_title;
                 $thread->user_id = $_SESSION['user_id'];
                 $thread->description = $description;
@@ -103,7 +96,6 @@ class ThreadController extends AppController
 
     /**
      *EDIT A THREAD
-     *@throws ValidationException
      */
     public function edit()
     {            
@@ -116,7 +108,6 @@ class ThreadController extends AppController
         if (isset($new_title) || isset($new_description)) {
             try {
                 $thread->title = $new_title;
-                $thread->user_id = $_SESSION['user_id'];
                 $thread->description = $new_description;
                 $thread->update();
                 redirect('comment', 'view', array('thread_id' => $thread->thread_id));

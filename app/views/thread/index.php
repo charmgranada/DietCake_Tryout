@@ -26,12 +26,10 @@
         <div class='well-small' style='margin-left:-10px;'>
             <select name='filter_by' style='width:auto;' class='btn btn-small btn-inverse' 
             onchange='this.form.submit()'>
-                <option><?php eh($filter_by) ?></option>
                 <?php
                     foreach ($filter_options as $filter_option) {
-                        if ($filter_option != $filter_by) {
-                            echo "<option>{$filter_option}</option>";
-                        }
+                        $selected = ($filter_option == $filter_by) ? 'selected' : '';
+                        echo "<option {$selected}>{$filter_option}</option>";
                     }
                 ?>
             </select>

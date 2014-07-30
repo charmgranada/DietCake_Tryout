@@ -27,18 +27,18 @@ class Controller
     {
         if (!self::isAction($this->action)) {
             // アクション名が予約語などで正しくないとき
-            throw new DCException('is invalid');
+            throw new DCException('invalid action name');
         } 
 
         if (!method_exists($this, '__call')) {
             if (!method_exists($this, $this->action)) {
                 // アクションがコントローラに存在しないとき
-                throw new DCException('does not exist');
+                throw new DCException('action does not exist');
             }
             $method = new ReflectionMethod($this, $this->action);
             if (!$method->isPublic()) {
                 // アクションが public メソッドではないとき
-                throw new DCException('is not public');
+                throw new DCException('action is not public');
             }
         }
 

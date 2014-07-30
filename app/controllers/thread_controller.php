@@ -3,6 +3,8 @@ class ThreadController extends AppController
 {
     const THREADS_PER_PAGE = 5;
     const USERS_PER_PAGE = 5;
+    const SEARCH_BY_THREAD = 'Thread';
+    const SEARCH_BY_USER = 'User';
 
     /**
      *VIEW ALL THREADS OR USERS
@@ -23,20 +25,20 @@ class ThreadController extends AppController
             Thread::THEIR_THREADS
         );
         // FOR SEARCHING THREADS OR USERS
-        $search_by = Param::get('search_by', 'Thread');
+        $search_by = Param::get('search_by', Thread::SEARCH_BY_THREAD);
         $search_options = array(
-            'Thread', 
-            'User'
+            Thread::SEARCH_BY_THREAD, 
+            Thread::SEARCH_BY_USER
         );
         // FOR SORTING OF THREADS
-        $order_by = Param::get('order_by', 'Latest First');
+        $order_by = Param::get('order_by', Thread::LATEST_FIRST);
         $order_options = array(
-            'Latest First', 
-            'Oldest First', 
-            'Most Comments', 
-            'Least Comments',
-            'Most Likes', 
-            'Least Likes'
+            Thread::LATEST_FIRST,
+            Thread::OLDEST_FIRST,
+            Thread::MOST_COMMENTS,
+            Thread::LEAST_COMMENTS,
+            Thread::MOST_LIKES,
+            Thread::LEAST_LIKES
         );
         if (isset($search_item) && !$search_item && $filter_by == 'All Threads' && $search_by == 'Thread' 
             && $order_by == 'Latest First') {
@@ -77,11 +79,11 @@ class ThreadController extends AppController
     public function create()
     {
         check_user_logged_out();
+        $thread = new Thread;
         $thread_title = Param::get('title');
         $description = Param::get('description');
         if (isset($title) || isset($description)) {
             try {
-                $thread = new Thread;
                 $thread->title = $thread_title;
                 $thread->user_id = $_SESSION['user_id'];
                 $thread->description = $description;

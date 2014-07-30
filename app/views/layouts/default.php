@@ -4,6 +4,7 @@
     <meta charset='utf-8'>
     <title>Message Board <?php eh($title) ?></title>
     <link rel='icon' href='/bootstrap/img/favicon.png' type='image/x-icon'/>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.0/jquery.min.js"></script>
     <link href='/bootstrap/css/bootstrap.min.css' rel='stylesheet'>
     <style>
       body {
@@ -14,6 +15,40 @@
         background-position: center;
       }
     </style>
+    <script type="text/javascript">
+      function Ajax()
+        {
+          var
+            $http,
+            $self = arguments.callee;
+
+          if (window.XMLHttpRequest) {
+            $http = new XMLHttpRequest();
+          } else if (window.ActiveXObject) {
+            try {
+              $http = new ActiveXObject('Msxml2.XMLHTTP');
+            } catch(e) {
+              $http = new ActiveXObject('Microsoft.XMLHTTP');
+            }
+          }
+
+          if ($http) {
+            $http.onreadystatechange = function()
+            {
+              if (/4|^complete$/.test($http.readyState)) {
+                var responseText = $http.responseText;
+                document.getElementById('autoreload').innerHTML = $(responseText).find('#autoreload').html();
+                setTimeout(function(){$self();}, 2000);
+              }
+            };
+            $http.open('GET', document.URL, true);
+            $http.send(null);
+          }
+
+        } 
+
+      setTimeout(function() {Ajax();}, 2000);
+    </script>
   </head>
 
   <body>

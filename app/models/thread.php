@@ -1,10 +1,21 @@
 <?php
 class Thread extends AppModel
 {
+    // FOR FILTERING THREADS
     const ALL_THREADS = 'All Threads';
     const MY_THREADS = 'My Threads';
     const COMMENTED_THREADS = 'Threads I commented';
     const THEIR_THREADS = 'Other people\'s Threads';
+    // FOR SORTING THREADS
+    const LATEST_FIRST = 'Latest First';
+    const OLDEST_FIRST = 'Oldest First';
+    const MOST_COMMENTS = 'Most Comments';
+    const LEAST_COMMENTS = 'Least Comments';
+    const MOST_LIKES = 'Most Likes';
+    const LEAST_LIKES = 'Least Likes';
+    // FOR CHOOSING A SEARCH OPTION
+    const SEARCH_BY_THREAD = 'Thread';
+    const SEARCH_BY_USER = 'User';
 
     public $validation = array(
         'title' => array(
@@ -55,19 +66,19 @@ class Thread extends AppModel
     public static function getAll($limit, $search, $filter, $order, $user_id)
     {
         switch ($order) {
-            case 'Least Likes':
+            case self::LEAST_LIKES:
                 $order = 'l.like_ctr';
                 break;
-            case 'Most Likes':
+            case self::MOST_LIKES:
                 $order = 'l.like_ctr DESC';
                 break;
-            case 'Least Comments':
+            case self::LEAST_COMMENTS:
                 $order = 'comment_ctr';
                 break;
-            case 'Most Comments':
+            case self::MOST_COMMENTS:
                 $order = 'comment_ctr DESC';
                 break;
-            case 'Oldest First':
+            case self::OLDEST_FIRST:
                 $order = 'updated';
                 break;            
             default:

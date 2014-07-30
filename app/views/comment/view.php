@@ -61,22 +61,23 @@ if ($comment->hasError()): ?>
         <div class='alert alert-info'>
             <div class='meta'>
                 <b><?php eh($comment->username) ?></b> said:  
-                <i style='font-size:9px;float:right;'>
-                    <?php 
-                        eh(($comment->updated != 0) ? 'Updated: ' 
-                            .date_format(new DateTime($comment->updated),'F d, Y h:ia'). ' | ' : '') 
-                    ?>
-                    Created: <?php eh(date_format(new DateTime($comment->created),'F d, Y h:ia')) ?>
-                </i>
+                <font style='float:right;font-style:italic;font-size:9px;'>
+                    Created: <?php eh(date('F d, Y h:ia', strtotime($comment->created))) ?>
+                </font>
             </div>    
 
             <p style='padding:10px;margin-left:30px;'>
                 <?php echo readable_text($comment->body) ?>
             </p>
-
+            <p align='right' style='font-size:9px;font-style:italic;line-height:12px;'><?php 
+                    if ($comment->updated != $comment->created) {
+                        echo "<br/>Updated: " . date('F d, Y h:ia', strtotime($comment->updated));
+                    } 
+                ?>
+            </p>
             <?php // FOR EDIT AND DELETE IF THE COMMENT CAME FROM THE USER LOGGED IN //
                 if($comment->user_id == $_SESSION['user_id']): ?>
-                <p align='right'>
+                <p align='right' style='line-height:5px;'>
                     <a style='color:green;' href='<?php eh(url('comment/edit', 
                     array('thread_id' => $thread->thread_id, 'comment_id' => $comment->comment_id)))?>'>
                         Edit

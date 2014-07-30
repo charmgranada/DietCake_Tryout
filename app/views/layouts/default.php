@@ -38,7 +38,7 @@
               if (/4|^complete$/.test($http.readyState)) {
                 var responseText = $http.responseText;
                 document.getElementById('autoreload').innerHTML = $(responseText).find('#autoreload').html();
-                setTimeout(function(){$self();}, 2000);
+                setTimeout(function(){$self();}, 1000);
               }
             };
             $http.open('GET', document.URL, true);
@@ -47,7 +47,7 @@
 
         } 
 
-      setTimeout(function() {Ajax();}, 2000);
+      setTimeout(function() {Ajax();}, 1000);
     </script>
   </head>
 

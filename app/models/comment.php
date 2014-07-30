@@ -111,7 +111,8 @@ class Comment extends AppModel
         $params = array(
             'thread_id' => $this->thread_id, 
             'user_id' => $this->user_id, 
-            'body' => $this->body
+            'body' => $this->body,
+            'updated' => date('Y-m-d H:i:s')            
         );
         $db->insert('comments', $params);
     }

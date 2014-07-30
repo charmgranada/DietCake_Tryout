@@ -107,11 +107,11 @@
                     <p align='left' style='font-size:9px;font-style:italic;line-height:5px;'>
                         <?php 
                             if ($thread->updated != $thread->created) {
-                                echo 'Updated: ' .date_format(new DateTime($thread->updated),'F d, Y h:ia');
+                                echo "Updated: " . date('F d, Y h:ia', strtotime($thread->updated));
                             } 
                         ?>
                         <font style='float:right;'>
-                            Created: <?php eh(date_format(new DateTime($thread->created),'F d, Y h:ia')) ?>
+                            Created: <?php eh(date('F d, Y h:ia', strtotime($thread->created))) ?>
                         </font> <br/> <br/>
                         Posted by: <?php eh($thread->username) ?>
                     </p>

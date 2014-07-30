@@ -1,6 +1,6 @@
 <?php $title = 'Board Exercise in PHP DietCake' ?>
 
-<div class='well' style='float:right; width:230px;' id='autoreload'>
+<div class='well' style='float:right; width:230px;'>
     <center><h2>My Info</h2></center>
     <b>Username: </b><?php eh($user->username)?> <br/>
     <b>Full Name: </b><?php eh($user->firstname. " " .$user->lastname)?> <br/>

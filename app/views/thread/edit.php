@@ -3,29 +3,33 @@
 <?php // Checks for validation errors in the inputs passed
 if ($thread->hasError()): ?>
     <div class='alert alert-block'>
-        <h4 class='alert-heading'>Validation error!</h4>        
-        <?php // ERRORS FOR TITLE LENGTH VALIDATION //
-        if (!$thread->validation_errors['title']['length']): ?>
+        <h4 class='alert-heading'>Validation error!</h4>     
+        
+        <?php if ($thread->validation_errors['title']['length']): ?>
+        <div>
+            <em>Title</em> must be between
+            <?php eh($thread->validation['title']['length'][1]) ?> and
+            <?php eh($thread->validation['title']['length'][2]) ?> characters in length.
+        </div>
+        <?php endif ?>
+        <?php if ($thread->validation_errors['title']['format']): ?>            
             <div>
-                <em>Title</em> must be between
-                <?php eh($thread->validation['title']['length'][1]) ?> and
-                <?php eh($thread->validation['title']['length'][2]) ?> characters in length.
-            </div>
+                <em>Title</em> has invalid amount of spaces.
+            </div>        
         <?php endif ?>
           
         <?php // ERRORS FOR DESCRIPTION LENGTH VALIDATION //
-        if (!$thread->validation_errors['description']['length']): ?>
+        if ($thread->validation_errors['description']['length']): ?>
             <div>
                 <em>Description</em> must be between
                 <?php eh($thread->validation['description']['length'][1]) ?> and
                 <?php eh($thread->validation['description']['length'][2]) ?> characters in length.
             </div>
         <?php endif ?>
-
-        <?php  // ERRORS FOR TOO LONG CHARACTERS WITH NO SPACES AND CAN'T FIT THE SCREEN ANYMORE //
-        if (!$thread->validation_errors['description']['format']): ?>
+        
+        <?php if ($thread->validation_errors['description']['format']): ?>            
             <div>
-                <em>Description</em> must have spaces to fit the screen.
+                <em>Description</em> has invalid amount of spaces.
             </div>        
         <?php endif ?>
     </div>

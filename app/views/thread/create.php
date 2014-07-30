@@ -5,16 +5,21 @@ if ($thread->hasError()): ?>
     <div class='alert alert-block'>
         <h4 class='alert-heading'>Validation error!</h4>
         
-        <?php if (!$thread->validation_errors['title']['length']): ?>
+        <?php if ($thread->validation_errors['title']['length']): ?>
         <div>
             <em>Title</em> must be between
             <?php eh($thread->validation['title']['length'][1]) ?> and
             <?php eh($thread->validation['title']['length'][2]) ?> characters in length.
         </div>
         <?php endif ?>
+        <?php if ($thread->validation_errors['title']['format']): ?>            
+            <div>
+                <em>Title</em> has invalid amount of spaces.
+            </div>        
+        <?php endif ?>
           
         <?php // ERRORS FOR DESCRIPTION LENGTH VALIDATION //
-        if (!$thread->validation_errors['description']['length']): ?>
+        if ($thread->validation_errors['description']['length']): ?>
             <div>
                 <em>Description</em> must be between
                 <?php eh($thread->validation['description']['length'][1]) ?> and
@@ -22,9 +27,9 @@ if ($thread->hasError()): ?>
             </div>
         <?php endif ?>
         
-        <?php if (!$thread->validation_errors['description']['format']): ?>            
+        <?php if ($thread->validation_errors['description']['format']): ?>            
             <div>
-                <em>Description</em> must have spaces to fit the screen.
+                <em>Description</em> has invalid amount of spaces.
             </div>        
         <?php endif ?>
     </div>
@@ -32,10 +37,12 @@ if ($thread->hasError()): ?>
 
 <form class='well' method='post' action='<?php eh(url('')) ?>'>
     <label>Title</label>
-    <input style='width=100%;' type='text' class='span2' name='title' value='<?php eh($thread_title) ?>'>
+    <input style='width=100%;' type='text' class='span2' name='thread_title' 
+        value='<?php eh(preg_replace('/(\s)+/', ' ', $thread_title)); ?>'>
 
     <label>Description</label>
-    <textarea style='width=100%;' name='description'><?php eh($description) ?></textarea><br/>
+    <textarea style='width=100%;' name='description'><?php 
+        eh(preg_replace('/(\s)+/', ' ', $description)) ?></textarea><br/>
     
     <button type='submit' class='btn btn-primary'>Submit</button><br/><br/>
     <a href='<?php eh(url('thread/index'))?>'>

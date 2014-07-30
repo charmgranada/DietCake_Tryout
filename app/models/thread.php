@@ -21,6 +21,9 @@ class Thread extends AppModel
         'title' => array(
             'length' => array(
                 'validate_between', MIN_LENGTH, MAX_LENGTH,
+            ),
+            'format' => array(
+                'is_valid_num_spaces'
             )
         ),
         'description' => array(
@@ -28,8 +31,8 @@ class Thread extends AppModel
                 'validate_between', MIN_LENGTH, MAX_TEXT_LENGTH,
             ),
             'format' => array(
-                'have_spaces'
-            )
+                'is_valid_num_spaces'
+            ),
         )
     );
 
@@ -188,6 +191,7 @@ class Thread extends AppModel
      */
     public function create()
     {
+        $this->validation['title']['format'][] = $this->title;
         $this->validation['description']['format'][] = $this->description;
         if (!$this->validate()) {
             throw new ValidationException('invalid title or description');
@@ -209,6 +213,7 @@ class Thread extends AppModel
      */
     public function update()
     {
+        $this->validation['title']['format'][] = $this->title;
         $this->validation['description']['format'][] = $this->description;
         if (!$this->validate()) {
             throw new ValidationException('invalid thread or comment');

@@ -11,12 +11,15 @@ class User extends AppModel
             ),
             'format' => array(
                 'is_valid_username', 'Username is invalid'
-            ),
+            )
         ),
         'password' => array(
             'length' => array(
                 'validate_between', self::PASS_MIN_LENGTH, self::PASS_MAX_LENGTH
-            ),
+            ), 
+            'format' => array(
+                'is_valid_num_spaces', 'Password has invalid number of spaces'
+            )
         ),
     );
 

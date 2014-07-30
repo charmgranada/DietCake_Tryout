@@ -8,7 +8,7 @@ class PersonalInfo extends AppModel
             ),
             'format' => array(
                 'is_pass_match', 'Passwords do not match' 
-            ),
+            )
         ),
         'firstname' => array(
             'length' => array(

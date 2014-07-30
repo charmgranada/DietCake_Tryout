@@ -2,13 +2,13 @@
 if ($comment->hasError()): ?>
     <div class='alert alert-block'>
         <h4 class='alert-heading'>Validation error!</h4>
-        <?php if (!$comment->validation_errors['body']['format']): ?>            
+        <?php if ($comment->validation_errors['body']['format']): ?>            
             <div>
-                <em>Comment</em> must have spaces to fit the screen.
+                <em>Comment</em> has invalid amount of spaces.
             </div>        
         <?php endif ?>
 
-        <?php if (!$comment->validation_errors['body']['length']): ?>
+        <?php if ($comment->validation_errors['body']['length']): ?>
             <div>
                 <em>Comment</em> must be between
                 <?php eh($comment->validation['body']['length'][1]) ?> and
@@ -24,7 +24,6 @@ if ($comment->hasError()): ?>
         eh($thread->title); 
     ?>
 </h1>
-<div id='autoreload'>
     <?php eh($thread->description)?>
     <form method='get' action='<?php eh(url('')) ?>' align='right' style='margin:0;'>
         <input type='hidden' name='thread_id' value='<?php eh($thread->thread_id) ?>'>
@@ -39,6 +38,7 @@ if ($comment->hasError()): ?>
         </select>
     </form>
 
+<div id='autoreload'>
     <?php if($num_rows): ?>
         <p align='right' style='font-size:12px;line-height:12px;'>
             Total of 

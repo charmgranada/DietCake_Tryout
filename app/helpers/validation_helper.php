@@ -7,7 +7,8 @@ function validate_between($string, $min, $max)
 
 function is_valid_username($username)
 {
-    return !((preg_match('/[^a-zA-Z0-9_]/', $username)) || (preg_match('/_{2}/', $username)));
+    return !((preg_match('/[^a-zA-Z0-9_]/', $username)) || (preg_match('/_{2}/', $username)) 
+        || (preg_match('/(\s)+/', $username)));
 }
 
 function is_pass_match($confirm_password)
@@ -18,17 +19,18 @@ function is_pass_match($confirm_password)
 
 function is_valid_name($string)
 {
-    return !((preg_match('/[^a-zA-Z\']/', $string)) || (preg_match('/\'{2}/', $string)));
+    return !((preg_match('/[^a-zA-Z \']/', $string)) || (preg_match('/\'{2}/', $string)))
+        && !(preg_match('/(\s\s)+/', $string));
 }
  
 function is_valid_email($email)
 {
-    return (preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/",$email));
+    return (preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/",$email) && !(preg_match('/(\s)+/', $email)));
 }
  
-function have_spaces($text)
+function is_valid_num_spaces($text)
 {
-    if (preg_match('/([^ ]){125}/', $text)) {
+    if (preg_match('/([^ ]){30}/', $text) || preg_match('/(\s\s)+/', $text)) {
         return false;
     }
     return true;

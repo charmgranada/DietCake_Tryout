@@ -11,7 +11,7 @@ class Comment extends AppModel
                 'validate_between' , MIN_LENGTH, MAX_TEXT_LENGTH
             ),
             'format' => array(
-                'have_spaces'
+                'is_valid_num_spaces'
             )
         )
     );
@@ -49,7 +49,7 @@ class Comment extends AppModel
         list($where, $where_params) = $this->filter($filter, $user_id);
         $rows = $db->rows("SELECT c.*, u.* FROM comments c 
             INNER JOIN users u ON c.user_id = u.user_id 
-            {$where} ORDER BY created DESC LIMIT {$limit}", $where_params);
+            {$where} ORDER BY updated DESC LIMIT {$limit}", $where_params);
         foreach ($rows as $row) {
             $comments[] = new self($row);
         }

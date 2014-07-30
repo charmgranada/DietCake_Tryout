@@ -79,10 +79,10 @@ class ThreadController extends AppController
     public function create()
     {
         check_user_logged_out();
-        $thread = new Thread;
-        $thread_title = Param::get('title');
+        $thread = new Thread();
+        $thread_title = Param::get('thread_title');
         $description = Param::get('description');
-        if (isset($title) || isset($description)) {
+        if (isset($thread_title) && isset($description)) {
             try {
                 $thread->title = $thread_title;
                 $thread->user_id = $_SESSION['user_id'];

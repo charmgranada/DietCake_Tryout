@@ -3,14 +3,14 @@ if ($comment->hasError()): ?>
     <div class='alert alert-block'>
         <h4 class='alert-heading'>Validation error!</h4>
         <?php  // ERRORS FOR TOO LONG CHARACTERS WITH NO SPACES AND CAN'T FIT THE SCREEN ANYMORE //
-        if (!$comment->validation_errors['body']['format']): ?>
+        if ($comment->validation_errors['body']['format']): ?>
             <div>
-                <em>Comment</em> must have spaces to fit the screen.
+                <em>Comment</em> has invalid amount of spaces.
             </div>        
         <?php endif ?>
 
         <?php  // ERRORS FOR BODY LENGTH VALIDATION //
-        if (!$comment->validation_errors['body']['length']): ?>        
+        if ($comment->validation_errors['body']['length']): ?>        
             <div>
                 <em>Comment</em> must be between
                 <?php eh($comment->validation['body']['length'][1]) ?> and

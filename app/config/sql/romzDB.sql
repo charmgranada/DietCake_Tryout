@@ -7,33 +7,43 @@ FLUSH PRIVILEGES;
 use romzDB;
 
 CREATE TABLE IF NOT EXISTS users(
-    id    INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    uname VARCHAR(250) NOT NULL,    
-    pword VARCHAR(250) NOT NULL,
-    fname VARCHAR(250) NOT NULL,
-    mname VARCHAR(250) NOT NULL,
-    lname VARCHAR(250) NOT NULL,
-    cnum  VARCHAR(50) NOT NULL,
-    home_add TEXT NOT NULL,
-    email_add VARCHAR(250) NOT NULL,
-    PRIMARY KEY(id)
+    user_id         INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    username        VARCHAR(50) NOT NULL,    
+    password        VARCHAR(250) NOT NULL,
+    firstname       VARCHAR(50) NOT NULL,
+    lastname        VARCHAR(50) NOT NULL,
+    email_add       VARCHAR(50) NOT NULL,
+    PRIMARY KEY(user_id)
 )ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS thread (
-    id              INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    user_created    VARCHAR(255) NOT NULL,
-    title           VARCHAR(255) NOT NULL,
+CREATE TABLE IF NOT EXISTS threads (
+    thread_id       INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    user_id         INT UNSIGNED NOT NULL,
+    title           VARCHAR(50) NOT NULL,
+    description     TEXT NOT NULL,
     created         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (id)
+    updated         DATETIME NOT NULL,
+    PRIMARY KEY (thread_id),
+    INDEX (user_id, created)
 )ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS comment (
-    id              INT UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS comments (
+    comment_id      INT UNSIGNED NOT NULL AUTO_INCREMENT,
     thread_id       INT UNSIGNED NOT NULL,
-    username        VARCHAR(255) NOT NULL,
+    user_id         INT UNSIGNED NOT NULL,
     body            TEXT NOT NULL,
     created         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (id),
-    INDEX (thread_id, created)
+    updated         DATETIME NOT NULL,
+    PRIMARY KEY (comment_id),
+    INDEX (thread_id, user_id, created)
 )ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS thread_likes (
+    thread_id       INT UNSIGNED NOT NULL,
+    user_id         INT UNSIGNED NOT NULL,
+    like_status     INT UNSIGNED NOT NULL,
+    INDEX (thread_id)
+)ENGINE=InnoDB;
+
+
 

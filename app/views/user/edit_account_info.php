@@ -1,13 +1,13 @@
-<?php $title = 'User Registration' ?>
+<?php $title = 'Edit Account Info' ?>
 <form method='post' class='well' action='<?php eh(url('')); ?>'>
-    <b>User Registration</b>
+    <b>Edit Account Info</b>
     <table align='center' cellpadding=1>
         <tr>
             <td colspan=2><center><b>Account Info</b></td>
         </tr>
         <tr>
             <td><p align='right'>Username: </td>
-            <td><input type='text' name='username' value='<?php eh(Param::get('username')); ?>'></td>
+            <td><input type='text' name='username' value='<?php eh($_SESSION['username']); ?>'></td>
         </tr>
         <?php //VALIDATES USERNAME
             if (isset($errors['username'])) {
@@ -42,7 +42,7 @@
         </tr>
         <tr>
             <td><p align='right'>First Name: </td>
-            <td><input type='text' name='firstname' value='<?php eh(Param::get('firstname')); ?>'></td>
+            <td><input type='text' name='firstname' value='<?php eh($user->firstname); ?>'></td>
         </tr>
         <?php //VALIDATES FIRST NAME
             if (isset($errors['firstname'])) {
@@ -51,7 +51,7 @@
         ?>
         <tr>
             <td><p align='right'>Last Name: </td>
-            <td><input type='text' name='lastname' value='<?php eh(Param::get('lastname')); ?>'></td>
+            <td><input type='text' name='lastname' value='<?php eh($user->lastname); ?>'></td>
         </tr>
         <?php //VALIDATES LAST NAME
             if (isset($errors['lastname'])) {
@@ -60,7 +60,7 @@
         ?>
         <tr>
             <td><p align='right'>Email Address: </td>
-            <td><input type='text' name='email_add' value='<?php eh(Param::get('email_add')); ?>'></td>
+            <td><input type='text' name='email_add' value='<?php eh($user->email_add); ?>'></td>
         </tr>
         <?php //VALIDATES LAST NAME
             if (isset($errors['email_add'])) {
@@ -79,6 +79,6 @@
         </tr>
    </table>
     <a href='<?php eh(url('thread/index'))?>'>
-        &larr; Back to Login
+        &larr; Back to Home
     </a>
 </form>

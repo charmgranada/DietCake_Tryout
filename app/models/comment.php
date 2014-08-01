@@ -1,31 +1,55 @@
 <?php
 class Comment extends AppModel
 {
-    const COMMENT_TABLE = "comment";
-    
+    const ALL_COMMENTS = 'All Comments';
+    const MY_COMMENTS = 'My Comments';
+    const THEIR_COMMENTS = 'Other people\'s Comments';
+
     public $validation = array(
-        "body" => array(
-            "length" => array(
-                "validate_between" , MIN_LENGTH, MAX_TEXT_LENGTH
+        'body' => array(
+            'length' => array(
+                'validate_between' , MIN_LENGTH, MAX_TEXT_LENGTH
             ),
-            "format" => array(
-                "is_valid_comment"
+            'format' => array(
+                'is_valid_num_spaces'
             )
         )
     );
 
     /**
-     *RETURNS ALL COMMENTS OF A THREAD
-     *@param $limit
+     *FILTER FUNCTION FOR COMMENTS
+     *@param $filter, $user_id
      */
-    public function getAll($limit)
+    public function filter($filter, $user_id)
+    {
+        $where = 'WHERE c.thread_id = ?';
+        $where_params = array($this->thread_id, $user_id);
+        switch($filter) {
+            case self::MY_COMMENTS:
+                $where .= ' AND u.user_id = ?';
+                break;
+            case self::THEIR_COMMENTS:
+                $where .= ' AND u.user_id != ?';
+                break;
+            default:
+                $where_params = array($this->thread_id);
+                break;
+        }
+        return array($where, $where_params);
+    }
+
+    /**
+     *RETURNS ALL COMMENTS OF A THREAD
+     *@param $limit, $filter, $user_id
+     */
+    public function getAll($limit, $filter, $user_id)
     {
         $comments = array();
         $db = DB::conn();
-        $where = "thread_id = ?";
-        $where_params = array($this->thread_id);
-        $order = "created DESC";
-        $rows = $db->search(self::COMMENT_TABLE, $where, $where_params, $order, $limit);
+        list($where, $where_params) = $this->filter($filter, $user_id);
+        $rows = $db->rows("SELECT c.*, u.* FROM comments c 
+            INNER JOIN users u ON c.user_id = u.user_id 
+            {$where} ORDER BY updated DESC LIMIT {$limit}", $where_params);
         foreach ($rows as $row) {
             $comments[] = new self($row);
         }
@@ -40,21 +64,21 @@ class Comment extends AppModel
     {
         $comments = array();
         $db = DB::conn();
-        $query = "SELECT * FROM " . self::COMMENT_TABLE . " WHERE id = ?";
-        $where_params = array($comment_id);
-        $row = $db->row($query, $where_params);
+        $row = $db->row('SELECT * FROM comments WHERE comment_id = ?', array($comment_id));
         return new self ($row);
     }
 
     /**
      *RETURNS TOTAL NUMBER OF COMMENTS
+     *@param $filter, $user_id
      */
-    public function getNumRows()
+    public function count($filter, $user_id)
     {
-        $db = DB::conn();
-        $query = "SELECT COUNT(*) FROM " . self::COMMENT_TABLE . " WHERE thread_id = ?";
-        $where_params = array($this->thread_id);
-        $count = $db->value($query, $where_params);
+        $db = DB::conn();    
+        list($where, $where_params) = $this->filter($filter, $user_id);
+        $count = $db->value("SELECT COUNT(*) FROM comments c 
+            INNER JOIN users u ON c.user_id = u.user_id 
+            {$where}", $where_params);
         return $count;            
     }
 
@@ -64,16 +88,13 @@ class Comment extends AppModel
      */
     public function update()
     {
-        $this->validation["body"]["format"][] = $this->body;
+        $this->validation['body']['format'][] = $this->body;
         if (!$this->validate()) {
-            throw new ValidationException("invalid comment");
+            throw new ValidationException('invalid comment');
         }
         $db = DB::conn();
-        $set_params = array(
-            "body" => $this->body
-            );
-        $where_params = array("id" => $this->id);
-        $db->update(self::COMMENT_TABLE, $set_params, $where_params);
+        $db->update('comments', array('body' => $this->body, 'updated' => date('Y-m-d H:i:s')), 
+            array('comment_id' => $this->comment_id));
     }
 
     /**
@@ -82,17 +103,18 @@ class Comment extends AppModel
      */
     public function create()
     {
-        $this->validation["body"]["format"][] = $this->body;
+        $this->validation['body']['format'][] = $this->body;
         if (!$this->validate()) {
-            throw new ValidationException("invalid comment");
+            throw new ValidationException('invalid comment');
         }
         $db = DB::conn();
-        $set_params = array(
-            "thread_id" => $this->thread_id, 
-            "username" => $this->username, 
-            "body" => $this->body
-            );
-        $db->insert(self::COMMENT_TABLE, $set_params);
+        $params = array(
+            'thread_id' => $this->thread_id, 
+            'user_id' => $this->user_id, 
+            'body' => $this->body,
+            'updated' => date('Y-m-d H:i:s')            
+        );
+        $db->insert('comments', $params);
     }
     
     /**
@@ -101,8 +123,6 @@ class Comment extends AppModel
     public function delete()
     {
         $db = DB::conn();
-        $query = "DELETE FROM " . self::COMMENT_TABLE . " WHERE id = ?";
-        $where_params = array($this->id);
-        $db->query($query, $where_params);    
+        $db->query('DELETE FROM comments WHERE comment_id = ?', array($this->comment_id));
     }
 }
